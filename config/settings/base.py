@@ -191,5 +191,9 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'neworld': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
     }
 }
