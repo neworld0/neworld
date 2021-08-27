@@ -26,4 +26,4 @@ urlpatterns = [
 
 handler404 = 'common.views.page_not_found'
 
-
+handler500 = 'common.views.internal_server_error'
