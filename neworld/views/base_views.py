@@ -3,9 +3,14 @@ from datetime import datetime
 
 from ..models import Scripture
 
+import logging
+
+logger = logging.getLogger('neworld')
 
 # index 페이지 생성
 def index(request):
+
+    logger.info("INFO 레벨로 출력")
     day = datetime.today()
     RealDay = str(day.year) + '-' + str(day.month).zfill(2) + '-' + str(day.day).zfill(2)
     title = RealDay
