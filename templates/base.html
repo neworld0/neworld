@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+        <!-- neworld CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <title>321son Family</title>
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" >
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    </head>
+    <body>
+    {% include "navbar.html" %}
+    <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    <!-- 기본 템플릿 안에 삽입될 내용 End -->
+    </main>
+    <footer class="footer">
+        <div class="container mt-3">
+            <div class="text-center">
+                <span class="text-muted">Copyright © 2021 Virtual Terranova Inc. All rights reserved.</span>
+                <address class="text-muted">Contact webmaster for more information. <a href="mailto:neworld0@gmail.com"><i class="fa fa-envelope"></i></a></address>
+            </div>
+        </div>
+    </footer>
+    <!-- jQuery JS -->
+    <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <!-- 자바스크립트 Start -->
+    {% block script %}
+    {% endblock %}
+    <!-- 자바스크립트 End -->
+    </body>
+</html>

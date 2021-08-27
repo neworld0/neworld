@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <div id="container">
+        <div class="card text-center">
+            <div class="my-3">
+                <h1 class="p-2">
+                    <a href="{% url 'neworld:index' %}" style="color:black">Examining the Scriptures Daily</a>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="my-3">
+            <h2 class="p-2" style="color:blue">{{ today_html }}</h2>
+        </div>
+    </div>
+    <div class="my-3">
+        <h2 class="text-center">{{ scripture_html }}</h2>
+        <div class="my-3">
+            <div class="p-4">
+                <p>{{ bodyText_html }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $("#menu_tab").on('click', function() {
+        $("nav-link").active();
+        $("nav-link").removeClass('active');
+        $(this).addClass('active');
+        $(this).css("color", "yellow");
+    });
+});
+</script>
+{% endblock %}

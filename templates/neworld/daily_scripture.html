@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load neworld_filter %}
+{% block content %}
+<div class="container my-3">
+    <!-- 사용자오류 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <h2 class="border-bottom py-2">{{ scripture.scripture }}</h2>
+    <div class="row my-3">
+        <div class="col-1">    <!-- 추천영역 -->
+            <div class="card-center">
+                <div class="center">
+                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
+                         data-toggle="popover" data-placement="right"
+                         data-uri="{% url 'neworld:vote_scripture' scripture.id %}">
+                        <i class="fas fa-thumbs-up mr-1"></i>  {{ scripture.voter.count }}
+                    </div>
+                    <div class="my-action-buttons">
+                    <a href="#" data-uri="{% url 'neworld:vote_scripture' scripture.id %}"
+                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-11"> <!-- scripture 영역 -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line;">{{ scripture.bodytext }}</div>
+                    <div class="d-flex justify-content-end">
+                        <div class="badge badge-light p-2">
+                            {{ scripture.real_date }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h5 class="border-bottom my-3 py-2">{{ scripture.meditation_set.count }}개의 묵상이 있습니다.</h5>
+    {% for meditation in scripture.meditation_set.all %}
+    <a name="meditation_{{ meditation.id }}"></a>
+    <div class="row my-3">
+        <div class="col-1">    <!-- 추천영역 -->
+            <div class="card-center">
+                <div>
+                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
+                         data-toggle="popover" data-placement="right"
+                         data-uri="{% url 'neworld:vote_meditation' meditation.id %}">
+                        <i class="fas fa-thumbs-up mr-1"></i> {{ meditation.voter.count }}
+                    </div>
+                    <div class="my-action-buttons">
+                    <a href="#" data-uri="{% url 'neworld:vote_meditation' meditation.id %}"
+                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-11">  <!-- 답변영역 -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text">{{ meditation.meditation|mark }}</div>
+                    <div class="d-flex justify-content-end">
+                        {% if meditation.modify_date %}
+                        <div class="badge badge-light p-2 text-left mx-3">
+                            <div class="mb-2">modified at</div>
+                            <div>{{ meditation.modify_date }}</div>
+                        </div>
+                        {% endif %}
+                        <div class="badge badge-light p-2 text-left">
+                            <div class="mb-2">{{ meditation.author.first_name }}</div>
+                            <div>{{ meditation.create_date }}</div>
+                        </div>
+                    </div>
+                    {% if request.user == meditation.author %}
+                    <div class="my-3">
+                        <a href="{% url 'neworld:meditation_modify' meditation.id %}"
+                            class="btn btn-sm btn-outline-secondary">수정</a>
+                        <a href="#" class="delete btn btn-sm btn-outline-secondary "
+                            data-uri="{% url 'neworld:meditation_delete' meditation.id  %}">삭제</a>
+                    </div>
+                    {% endif %}
+                    {% if meditation.comment_set.count > 0 %}
+                    <div class="mt-3">
+                    {% for comment in meditation.comment_set.all %}
+                        <a name="comment_{{ comment.id }}"></a>
+                        <div class="comment py-2 text-muted">
+                            <span style="white-space: pre-line;">{{ comment.content }}</span>
+                            <span>
+                                : <span class="small">{{ comment.author.first_name }}</span>, {{ comment.create_date }}
+                                {% if comment.modify_date %}
+                                (수정:{{ comment.modify_date }})
+                                {% endif %}
+                            </span>
+                            {% if request.user == comment.author %}
+                            <a href="{% url 'neworld:comment_modify_meditation' comment.id  %}" class="small">수정</a>,
+                            <a href="#" class="small delete"
+                               data-uri="{% url 'neworld:comment_delete_meditation' comment.id  %}">삭제</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'neworld:comment_create_meditation' meditation.id  %}"
+                           class="small"><small>댓글 추가...</small></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <a href="{% url 'neworld:scripture' %}" class="btn btn-primary" style="font-weight:bolder"><i class="fas fa-list" ></i>  목록으로</a>
+
+    <form action="{% url 'neworld:meditation_create' scripture.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+            {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+                      name="meditation" id="meditation" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="묵상등록" class="btn btn-primary" style="font-weight:bolder">
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function() {
+    $(document).on('click', ".delete", function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+    $(document).on('click', ".recommend", function() {
+        if(confirm("정말로 추천하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}
