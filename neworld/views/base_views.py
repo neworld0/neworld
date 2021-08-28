@@ -1,12 +1,10 @@
 from django.shortcuts import render
-import datetime
+from neworld.models import Scripture
 from django.utils import timezone
 from bs4 import BeautifulSoup
 import logging
 import requests
-import os
-import django
-from neworld.models import Scripture
+import datetime
 
 logger = logging.getLogger('neworld')
 
@@ -20,6 +18,12 @@ def index(request):
     t_day = datetime.date.today()
     Tomorrow = str(tmr.year) + '-' + str(tmr.month).zfill(2) + '-' + str(tmr.day).zfill(2)
     RealDay = str(t_day.year) + '-' + str(t_day.month).zfill(2) + '-' + str(t_day.day).zfill(2)
+
+    t = datetime.date.today() + datetime.timedelta(2)
+    y = str(t.year)
+    m = str(t.month).zfill(2)
+    d = str(t.day).zfill(2)
+    today = y + '/' + m + '/' + d
 
     def date_range(start, end):
         start = datetime.datetime.strptime(start, "%Y-%m-%d")
@@ -38,11 +42,11 @@ def index(request):
 
     d_week = get_day_of_week(yyyy, mm, dd)
     dates = date_range(Tomorrow, Tomorrow)
-
-    if dates[0] == Tomorrow:
+    last_real_date = Scripture.objects.last()
+    if dates[0] == last_real_date.real_date:
         pass
     else:
-        url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + dates[0]
+        url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + today
         r = requests.get(url)
         parser = BeautifulSoup(r.text, 'html.parser')
         s = parser.find_all('p', {'class': 'themeScrp'})
