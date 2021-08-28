@@ -37,17 +37,19 @@ def index(request):
     dd = tmr.day
 
     d_week = get_day_of_week(yyyy, mm, dd)
-
     dates = date_range(Tomorrow, Tomorrow)
-    # for i in dates:
-    url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + dates[0]
-    r = requests.get(url)
-    parser = BeautifulSoup(r.text, 'html.parser')
-    s = parser.find_all('p', {'class': 'themeScrp'})
-    scrip = s[0].text
-    bt = parser.find_all('p', {'class': 'sb'})
-    body = bt[0].text
-    Scripture(scripture=scrip, bodytext=body, real_date=dates[0], d_week=d_week, create_date=timezone.now()).save()
+
+    if dates[0] == Tomorrow:
+        pass
+    else:
+        url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + dates[0]
+        r = requests.get(url)
+        parser = BeautifulSoup(r.text, 'html.parser')
+        s = parser.find_all('p', {'class': 'themeScrp'})
+        scrip = s[0].text
+        bt = parser.find_all('p', {'class': 'sb'})
+        body = bt[0].text
+        Scripture(scripture=scrip, bodytext=body, real_date=dates[0], d_week=d_week, create_date=timezone.now()).save()
 
     title = RealDay
 
