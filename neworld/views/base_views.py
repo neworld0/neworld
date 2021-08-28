@@ -1,18 +1,54 @@
 from django.shortcuts import render
-from datetime import datetime
-
-from ..models import Scripture
-
+import datetime
+from django.utils import timezone
+from bs4 import BeautifulSoup
 import logging
+import requests
+import os
+import django
+from neworld.models import Scripture
 
 logger = logging.getLogger('neworld')
+
 
 # index 페이지 생성
 def index(request):
 
     logger.info("INFO 레벨로 출력")
-    day = datetime.today()
-    RealDay = str(day.year) + '-' + str(day.month).zfill(2) + '-' + str(day.day).zfill(2)
+
+    tmr = datetime.date.today() + datetime.timedelta(1)
+    t_day = datetime.date.today()
+    Tomorrow = str(tmr.year) + '-' + str(tmr.month).zfill(2) + '-' + str(tmr.day).zfill(2)
+    RealDay = str(t_day.year) + '-' + str(t_day.month).zfill(2) + '-' + str(t_day.day).zfill(2)
+
+    def date_range(start, end):
+        start = datetime.datetime.strptime(start, "%Y-%m-%d")
+        end = datetime.datetime.strptime(end, "%Y-%m-%d")
+        dates = [(start + datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range((end - start).days + 1)]
+        return dates
+
+    # 요일 표시
+    def get_day_of_week(yyyy, mm, dd):
+        days = ['(월)', '(화)', '(수)', '(목)', '(금)', '(토)', '(일)']
+        return days[datetime.date(yyyy, mm, dd).weekday()]
+
+    yyyy = tmr.year
+    mm = tmr.month
+    dd = tmr.day
+
+    d_week = get_day_of_week(yyyy, mm, dd)
+
+    dates = date_range(Tomorrow, Tomorrow)
+    # for i in dates:
+    url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + dates[0]
+    r = requests.get(url)
+    parser = BeautifulSoup(r.text, 'html.parser')
+    s = parser.find_all('p', {'class': 'themeScrp'})
+    scrip = s[0].text
+    bt = parser.find_all('p', {'class': 'sb'})
+    body = bt[0].text
+    Scripture(scripture=scrip, bodytext=body, real_date=dates[0], d_week=d_week, create_date=timezone.now()).save()
+
     title = RealDay
 
     # def scripture():
