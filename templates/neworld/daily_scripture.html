@@ -11,24 +11,24 @@
     {% endfor %}
     </div>
     {% endif %}
-    <h2 class="border-bottom py-2">{{ scripture.scripture }}</h2>
+    <h3 class="border-bottom py-2">{{ scripture.scripture }}</h3>
     <div class="row my-3">
-        <div class="col-1">    <!-- 추천영역 -->
-            <div class="card-center">
-                <div class="center">
-                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
-                         data-toggle="popover" data-placement="right"
-                         data-uri="{% url 'neworld:vote_scripture' scripture.id %}">
-                        <i class="fas fa-thumbs-up mr-1"></i>  {{ scripture.voter.count }}
-                    </div>
-                    <div class="my-action-buttons">
-                    <a href="#" data-uri="{% url 'neworld:vote_scripture' scripture.id %}"
-                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-11"> <!-- scripture 영역 -->
+<!--        <div class="col-1">    &lt;!&ndash; 추천영역 &ndash;&gt;-->
+<!--            <div class="card-center">-->
+<!--                <div class="center">-->
+<!--                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"-->
+<!--                         data-toggle="popover" data-placement="right"-->
+<!--                         data-uri="{% url 'neworld:vote_scripture' scripture.id %}">-->
+<!--                        <i class="fas fa-thumbs-up mr-1"></i>  {{ scripture.voter.count }}-->
+<!--                    </div>-->
+<!--                    <div class="my-action-buttons">-->
+<!--                    <a href="#" data-uri="{% url 'neworld:vote_scripture' scripture.id %}"-->
+<!--                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="col-12"> <!-- scripture 영역 -->
             <div class="card">
                 <div class="card-body">
                     <div class="card-text" style="white-space: pre-line;">{{ scripture.bodytext }}</div>
