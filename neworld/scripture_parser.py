@@ -15,7 +15,7 @@ def date_range(start, end):
 
 # 요일 표시
 def get_today_days():
-    days = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+    days = ['(월)', '(화)', '(수)', '(목)', '(금)', '(토)', '(일)']
     return days[datetime.today().weekday()]
 d_week = get_today_days()
 
@@ -30,5 +30,3 @@ if __name__=='__main__':
         bt = parser.find_all('div', {'class': 'bodyTxt'})
         body = bt[0].text
         Scripture(scripture=scrip, bodytext=body, real_date=dates[i], d_week=d_week, create_date=timezone.now()).save()
-
-
