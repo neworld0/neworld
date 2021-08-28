@@ -1,26 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-<div>
-    <div id="container">
-        <div class="card text-center">
-            <div class="my-3">
-                <h1 class="p-2">
-                    <a href="{% url 'neworld:scripture' %}" style="color:black">Examining the Scriptures Daily</a>
-                </h1>
-            </div>
-        </div>
-    </div>
+<div id="container">
     <div class="text-center">
         <div class="my-3">
-            <h2 class="p-2" style="color:blue">{{ today_html }}</h2>
+            <h2 class="p-2">
+                <a href="{% url 'neworld:scripture' %}" style="color:black">Examining the Scriptures Daily</a>
+            </h2>
         </div>
     </div>
+</div>
+<div class="text-center">
     <div class="my-3">
-        <h2 class="text-center">{{ scripture_html }}</h2>
-        <div class="my-3">
-            <div class="p-4">
-                <p>{{ bodyText_html }}</p>
-            </div>
+        <h3 class="p-2" style="color:blue">{{ today_html }}</h3>
+    </div>
+</div>
+<div class="my-3">
+    <h3 class="text-center"><em>{{ scripture_html }}</em></h3>
+    <div class="my-3">
+        <div class="p-4">
+            <p>{{ bodyText_html }}</p>
         </div>
     </div>
 </div>

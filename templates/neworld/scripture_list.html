@@ -15,11 +15,11 @@
             {% if scripture_list %}
                 {% for scripture in scripture_list %}
                     {% if scripture.real_date == d_today %}
-                    <tr class="text-center">
+                    <tr class="text-right">
                         <td>
                             {{ scripture.real_date }}
                         </td>
-                        <td class="text-center">
+                        <td class="text-left">
                             {{ scripture.d_week }}
                         </td>
                         <td class="text-left">
@@ -86,10 +86,10 @@
                 <span class="badge badge-warning px-2 py-1">{{ scripture.voter.count }}</span>
                 {% endif %}
                 </td>
-                <td class="text-center">
+                <td class="text-right">
                     {{ scripture.real_date }}
                 </td>
-                <td class="text-center">
+                <td class="text-left">
                     {{ scripture.d_week }}
                 </td>
                 <td class="text-left">
