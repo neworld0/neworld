@@ -1,13 +1,13 @@
 from django.urls import path
 
-from .views import base_views, scripture_views, meditation_views, question_views, answer_views, comment_views, vote_views
+from .views import base_views, scripture_views, meditation_views, question_views, \
+    answer_views, comment_views, vote_views, weeklybible_views, research_views
 
 app_name = 'neworld'
 
 urlpatterns = [
     # base_views.py
-    path('',
-         base_views.index, name='index'),
+    path('', base_views.index, name='index'),
 
     # scripture_views.py
     path('scripture/',
@@ -61,10 +61,31 @@ urlpatterns = [
          comment_views.comment_modify_meditation, name='comment_modify_meditation'),
     path('comment/delete/meditation/<int:comment_id>/',
          comment_views.comment_delete_meditation, name='comment_delete_meditation'),
+    path('comment/create/research/<int:research_id>/',
+         comment_views.comment_create_research, name='comment_create_research'),
+    path('comment/modify/research/<int:comment_id>/',
+         comment_views.comment_modify_research, name='comment_modify_research'),
+    path('comment/delete/research/<int:comment_id>/',
+         comment_views.comment_delete_research, name='comment_delete_research'),
 
     # vote_views.py
     path('vote/question/<int:question_id>/', vote_views.vote_question, name='vote_question'),
     path('vote/answer/<int:answer_id>/', vote_views.vote_answer, name='vote_answer'),
     path('vote/scripture/<int:scripture_id>/', vote_views.vote_scripture, name='vote_scripture'),
     path('vote/meditation/<int:meditation_id>/', vote_views.vote_meditation, name='vote_meditation'),
+    path('vote/weeklybible/<int:weeklybible_id>/', vote_views.vote_weeklybible, name='vote_weeklybible'),
+    path('vote/research/<int:research_id>/', vote_views.vote_research, name='vote_research'),
+
+    # weeklybible_views.py
+    path('weeklybible/', weeklybible_views.weeklybible, name='weeklybible'),
+    path('weeklybible/<int:weeklybible_id>/',
+         weeklybible_views.weeklybible_detail, name='weeklybible_detail'),
+
+    # research_views.py
+    path('research/create/<int:weeklybible_id>/',
+         research_views.research_create, name='research_create'),
+    path('research/modify/<int:research_id>/',
+         research_views.research_modify, name='research_modify'),
+    path('research/delete/<int:research_id>/',
+         research_views.research_delete, name='research_delete'),
 ]

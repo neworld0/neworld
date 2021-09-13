@@ -11,51 +11,65 @@
     {% endfor %}
     </div>
     {% endif %}
-    <h3 class="border-bottom py-2">{{ scripture.scripture }}</h3>
+    <h4 class="border-bottom py-2"><a href="{{ weeklybible.bible_link }}" target="_blank">{{ weeklybible.bible_range }}</a></h4>
     <div class="row my-3">
 <!--        <div class="col-1">    &lt;!&ndash; 추천영역 &ndash;&gt;-->
 <!--            <div class="card-center">-->
 <!--                <div class="center">-->
 <!--                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"-->
 <!--                         data-toggle="popover" data-placement="right"-->
-<!--                         data-uri="{% url 'neworld:vote_scripture' scripture.id %}">-->
-<!--                        <i class="fas fa-thumbs-up mr-1"></i>  {{ scripture.voter.count }}-->
+<!--                         data-uri="{% url 'neworld:vote_weeklybible' weeklybible.id %}">-->
+<!--                        <i class="fas fa-thumbs-up mr-1"></i>  {{ weeklybible.voter.count }}-->
 <!--                    </div>-->
 <!--                    <div class="my-action-buttons">-->
-<!--                    <a href="#" data-uri="{% url 'neworld:vote_scripture' scripture.id %}"-->
+<!--                    <a href="#" data-uri="{% url 'neworld:vote_weeklybible' weeklybible.id %}"-->
 <!--                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>-->
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
 <!--        </div>-->
-        <div class="col-12"> <!-- scripture 영역 -->
+        <div class="col-12"> <!-- weeklybible 영역 -->
             <div class="card">
                 <div class="card-body">
-                    <div class="card-text" style="white-space: pre-line;">{{ scripture.bodytext }}</div>
+                    {% for wbsummary in weeklybible.wbsummary_set.all %}
+                    <div class="m-1 p-1" style="white-space:normal">
+                        <p class="m-1 p-1" style="white-space:pre-line"><strong>{{ wbsummary.chapter }}</strong> <strong> 장 </strong></p>
+                        <p class="m-1 p-1" style="white-space:pre-line">{{ wbsummary.bible_summary }}</p>
+                    </div>
+                    {% endfor %}
                     <div class="d-flex justify-content-end">
                         <div class="badge badge-light p-2">
-                            {{ scripture.real_date }}
+                            {{ weeklybible.week }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <h5 class="border-bottom my-3 py-2">{{ scripture.meditation_set.count }}개의 일용할 성구 묵상이 있습니다.</h5>
-    {% for meditation in scripture.meditation_set.all %}
-    <a name="meditation_{{ meditation.id }}"></a>
+    <h5 class="border-bottom my-3 py-2">{{ weeklybible.research_set.count }}개의 연구 조사 내용이 있습니다.</h5>
+    {% for research in weeklybible.research_set.all %}
+    <a name="research_{{ weeklybible.id }}"></a>
+    <div class="card bg-light text-dark my-3">
+        <div class="card-body border-color:white py-1">
+            <div class="card-text">
+                <div class="d-flex justify-content" style="border:none">
+                    <p class="my-1">이번 주 성경 읽기를 통해 <strong><em>여호와 하느님</em></strong>이나 <strong><em>야외 봉사</em></strong>, 또는 그 밖의 점에 관해 어떤 <strong><em>영적 보물</em></strong>을 발견했습니까?</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row my-3">
         <div class="col-1">    <!-- 추천영역 -->
             <div class="card-center">
                 <div>
                     <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
                          data-toggle="popover" data-placement="right"
-                         data-uri="{% url 'neworld:vote_meditation' meditation.id %}">
-                        <i class="fas fa-thumbs-up mr-1"></i> {{ meditation.voter.count }}
+                         data-uri="{% url 'neworld:vote_research' research.id %}">
+                        <i class="fas fa-thumbs-up mr-1"></i> {{ research.voter.count }}
                     </div>
-                    <div class="my-action-buttons">
-                    <a href="#" data-uri="{% url 'neworld:vote_meditation' meditation.id %}"
-                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+                    <div class="popup-ajax badge badge-warning border mt-1 p-2 px-3">
+                        <a href="#" data-uri="{% url 'neworld:vote_research' research.id %}"
+                            class="fas fa-thumbs-up center mr-1"></a>
                     </div>
                 </div>
             </div>
@@ -63,30 +77,30 @@
         <div class="col-11">  <!-- 답변영역 -->
             <div class="card">
                 <div class="card-body">
-                    <div class="card-text">{{ meditation.meditation|mark }}</div>
+                    <div class="card-text">{{ research.content|mark }}</div>
                     <div class="d-flex justify-content-end">
-                        {% if meditation.modify_date %}
+                        {% if research.modify_date %}
                         <div class="badge badge-light p-2 text-left mx-3">
                             <div class="mb-2">modified at</div>
-                            <div>{{ meditation.modify_date }}</div>
+                            <div>{{ research.modify_date }}</div>
                         </div>
                         {% endif %}
                         <div class="badge badge-light p-2 text-left">
-                            <div class="mb-2">{{ meditation.author.first_name }}</div>
-                            <div>{{ meditation.create_date }}</div>
+                            <div class="mb-2">{{ research.author.first_name }}</div>
+                            <div>{{ research.create_date }}</div>
                         </div>
                     </div>
-                    {% if request.user == meditation.author %}
+                    {% if request.user == research.author %}
                     <div class="my-3">
-                        <a href="{% url 'neworld:meditation_modify' meditation.id %}"
+                        <a href="{% url 'neworld:research_modify' research.id %}"
                             class="btn btn-sm btn-outline-secondary">수정</a>
                         <a href="#" class="delete btn btn-sm btn-outline-secondary "
-                            data-uri="{% url 'neworld:meditation_delete' meditation.id  %}">삭제</a>
+                            data-uri="{% url 'neworld:research_delete' research.id  %}">삭제</a>
                     </div>
                     {% endif %}
-                    {% if meditation.comment_set.count > 0 %}
+                    {% if research.comment_set.count > 0 %}
                     <div class="mt-3">
-                    {% for comment in meditation.comment_set.all %}
+                    {% for comment in research.comment_set.all %}
                         <a name="comment_{{ comment.id }}"></a>
                         <div class="comment py-2 text-muted">
                             <span style="white-space: pre-line;">{{ comment.content }}</span>
@@ -97,16 +111,16 @@
                                 {% endif %}
                             </span>
                             {% if request.user == comment.author %}
-                            <a href="{% url 'neworld:comment_modify_meditation' comment.id  %}" class="small">수정</a>,
+                            <a href="{% url 'neworld:comment_modify_research' comment.id  %}" class="small">수정</a>,
                             <a href="#" class="small delete"
-                               data-uri="{% url 'neworld:comment_delete_meditation' comment.id  %}">삭제</a>
+                               data-uri="{% url 'neworld:comment_delete_research' comment.id  %}">삭제</a>
                             {% endif %}
                         </div>
                     {% endfor %}
                     </div>
                     {% endif %}
                     <div>
-                        <a href="{% url 'neworld:comment_create_meditation' meditation.id  %}"
+                        <a href="{% url 'neworld:comment_create_research' research.id %}"
                            class="small"><small>댓글 추가...</small></a>
                     </div>
                 </div>
@@ -114,10 +128,17 @@
         </div>
     </div>
     {% endfor %}
-
-    <a href="{% url 'neworld:scripture' %}" class="btn btn-primary" style="font-weight:bolder"><i class="fas fa-list" ></i>  목록으로</a>
-
-    <form action="{% url 'neworld:meditation_create' scripture.id %}" method="post" class="my-3">
+    <a href="{% url 'neworld:weeklybible' %}" class="btn btn-primary" style="font-weight:bolder"><i class="fas fa-list" ></i>  목록으로</a>
+    <div class="card bg-light text-dark my-3">
+        <div class="card-body border-color:white py-1">
+            <div class="card-text">
+                <div class="d-flex justify-content" style="border:none">
+                    <p class="my-1">이번 주 성경 읽기를 통해 <strong><em>여호와 하느님</em></strong>이나 <strong><em>야외 봉사</em></strong>, 또는 그 밖의 점에 관해 어떤 <strong><em>영적 보물</em></strong>을 발견했습니까?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="{% url 'neworld:research_create' weeklybible.id %}" method="post" class="my-3">
         {% csrf_token %}
         {% if form.errors %}
         <div class="alert alert-danger" role="alert">
@@ -131,9 +152,9 @@
         {% endif %}
         <div class="form-group">
             <textarea {% if not user.is_authenticated %}disabled{% endif %}
-                      name="meditation" id="meditation" class="form-control" rows="10"></textarea>
+                      name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
-        <input type="submit" value="묵상등록" class="btn btn-primary" style="font-weight:bolder">
+        <input type="submit" value="저장" class="btn btn-primary" style="font-weight:bolder">
     </form>
 </div>
 {% endblock %}

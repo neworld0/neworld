@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
-from ..models import Question, Answer, Scripture, Meditation
+from ..models import Question, Answer, Scripture, Meditation, WeeklyBible, Research
 
 
 # 질문 추천 등록
@@ -38,7 +38,7 @@ def vote_scripture(request, scripture_id):
     return redirect('neworld:daily_scripture', scripture_id=scripture.id)
 
 
-# 묵상 추천 등록
+# Meditation 추천 등록
 @login_required(login_url='common:login')
 def vote_meditation(request, meditation_id):
     meditation = get_object_or_404(Meditation, pk=meditation_id)
@@ -47,3 +47,26 @@ def vote_meditation(request, meditation_id):
     else:
         meditation.voter.add(request.user)
     return redirect('neworld:daily_scripture', scripture_id=meditation.scripture.id)
+
+
+
+# Weeklybible 추천 등록
+@login_required(login_url='common:login')
+def vote_weeklybible(request, weeklybible_id):
+    weeklybible = get_object_or_404(WeeklyBible, pk=weeklybible_id)
+    if request.user == weeklybible.author:
+        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
+    else:
+        weeklybible.voter.add(request.user)
+    return redirect('neworld:weeklybible_detail', weeklybible_id=weeklybible.id)
+
+
+# Research 추천 등록
+@login_required(login_url='common:login')
+def vote_research(request, research_id):
+    research = get_object_or_404(Research, pk=research_id)
+    if request.user == research.author:
+        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
+    else:
+        research.voter.add(request.user)
+    return redirect('neworld:weeklybible_detail', weeklybible_id=research.weeklybible.id)
