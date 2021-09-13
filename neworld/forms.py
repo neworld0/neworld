@@ -1,5 +1,5 @@
 from django import forms
-from neworld.models import Question, Answer, Meditation, Comment
+from neworld.models import Question, Answer, Meditation, Comment, Research
 
 
 class QuestionForm(forms.ModelForm):
@@ -37,3 +37,13 @@ class CommentForm(forms.ModelForm):
         labels = {
             'content': '댓글내용',
         }
+
+
+class ResearchForm(forms.ModelForm):
+    class Meta:
+        model = Research
+        fields = ['content']
+        labels = {
+            'content': '조사내용',
+        }
+

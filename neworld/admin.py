@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Scripture, Answer, Meditation, Comment
+from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, Research, Bible, WBsummary
 
 class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['subject']
@@ -27,3 +27,27 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ['content']
 
 admin.site.register(Comment, CommentAdmin)
+
+
+class WeeklyBibleAdmin(admin.ModelAdmin):
+    search_fields = ['n_week']
+
+admin.site.register(WeeklyBible, WeeklyBibleAdmin)
+
+
+class ResearchAdmin(admin.ModelAdmin):
+    search_fields = ['n_week']
+
+admin.site.register(Research, ResearchAdmin)
+
+
+class BibleAdmin(admin.ModelAdmin):
+    search_fields = ['bible']
+
+admin.site.register(Bible, BibleAdmin)
+
+
+class WBsummaryAdmin(admin.ModelAdmin):
+    search_fields = ['bible_summary']
+
+admin.site.register(WBsummary, WBsummaryAdmin)

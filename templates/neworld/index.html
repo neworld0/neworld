@@ -3,22 +3,26 @@
 <div id="container">
     <div class="text-center">
         <div class="my-3">
-            <h2 class="p-2">
+            <h3 class="p-2">
                 <a href="{% url 'neworld:scripture' %}" style="color:black">Examining the Scriptures Daily</a>
-            </h2>
+            </h3>
         </div>
     </div>
 </div>
 <div class="text-center">
     <div class="my-3">
-        <h3 class="p-2" style="color:blue">{{ today_html }}</h3>
+        <h4 class="p-2" style="font-bolder color:blue">
+            {{ today_html }} {{ day_of_week_html }}요일
+        </h4>
     </div>
 </div>
 <div class="my-3">
-    <h3 class="text-center"><em>{{ scripture_html }}</em></h3>
+    <h5 class="text-center">
+        <strong><em>{{ scripture_html }}</em></strong>
+    </h5>
     <div class="my-3">
         <div class="p-4">
-            <p>{{ bodyText_html }}</p>
+            {{ bodyText_html }}
         </div>
     </div>
 </div>
