@@ -9,6 +9,7 @@ import datetime
 logger = logging.getLogger('neworld')
 
 # index 페이지 생성
+# @login_required(login_url='common:login')
 def index(request):
     logger.info("INFO 레벨로 출력")
 

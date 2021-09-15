@@ -1,5 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
+
+{% if not user.is_authenticated %}
+<div class="container-fluid">
+	<div class="row">
+        <div class="col-12 text-center">
+            <h3>Hi, This is Website of Neworld.</h3>
+            <h3>Log-in is required to explore the Neworld.</h3>
+        </div>
+        <div class="col-12 text-center">
+            <a href="https://www.jw.org">
+                <img src="https://visitrainier.com/wp-content/uploads/2015/07/DSC_0787_6stackweb_for-web.jpg"
+                     alt="neworld" title="paradise" class="img-responsive img-rounded">
+            </a>
+        </div>
+	</div>
+</div>
+{% endif %}
+{% if user.is_authenticated %}
 <div id="container">
     <div class="text-center">
         <div class="my-3">
@@ -26,6 +44,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}
 {% block script %}
 <script type='text/javascript'>

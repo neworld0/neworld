@@ -6,7 +6,7 @@
         {% csrf_token %}
         {% include "form_errors.html" %}
         <div class="form-group">
-            <label for="meditation">묵상내용</label>
+            <label for="meditation"><strong>묵상내용</strong></label>
             <textarea class="form-control" name="meditation" id="meditation"
                       rows="10">{{ form.meditation.value|default_if_none:'' }}</textarea>
         </div>

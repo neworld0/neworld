@@ -44,6 +44,6 @@ class ResearchForm(forms.ModelForm):
         model = Research
         fields = ['content']
         labels = {
-            'content': '조사내용',
+            'content': '묵상 및 조사내용',
         }
 
