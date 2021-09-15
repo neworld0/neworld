@@ -19,7 +19,7 @@ def research_create(request, weeklybible_id):
             research.create_date = timezone.now()
             research.weeklybible = weeklybible
             research.save()
-            return redirect('{}#weeklybible_{}'.format(
+            return redirect('{}#research_{}'.format(
                 resolve_url('neworld:weeklybible_detail', weeklybible_id=weeklybible.id), research.id))
     else:
         form = ResearchForm()

@@ -19,11 +19,12 @@
                     <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
                          data-toggle="popover" data-placement="right"
                          data-uri="{% url 'neworld:vote_question' question.id %}">
-                        <i class="fas fa-thumbs-up mr-1"></i> {{ question.voter.count }}
+                        <p> {{ question.voter.count }} </p>
+                        <i class="fas fa-thumbs-up mr-1"></i>
                     </div>
                     <div class="my-action-buttons">
                     <a href="#" data-uri="{% url 'neworld:vote_question' question.id %}"
-                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+                        class="recommend btn fas fa-thumbs-up center mr-1"></a>
                     </div>
                 </div>
             </div>
@@ -92,11 +93,12 @@
                     <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
                          data-toggle="popover" data-placement="right"
                          data-uri="{% url 'neworld:vote_answer' answer.id %}">
-                        <i class="fas fa-thumbs-up mr-1"></i>  {{ answer.voter.count }}
+                        <p> {{ answer.voter.count }} </p>
+                        <i class="fas fa-thumbs-up mr-1"></i>
                     </div>
                     <div class="my-action-buttons">
                     <a href="#" data-uri="{% url 'neworld:vote_answer' answer.id %}"
-                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+                        class="recommend btn fas fa-thumbs-up center mr-1"></a>
                     </div>
                 </div>
             </div>

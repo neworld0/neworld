@@ -46,9 +46,9 @@
             </div>
         </div>
     </div>
-    <h5 class="border-bottom my-3 py-2">{{ weeklybible.research_set.count }}개의 연구 조사 내용이 있습니다.</h5>
+    <h5 class="border-bottom my-3 py-2">{{ weeklybible.research_set.count }}개의 묵상 및 조사내용이 있습니다.</h5>
     {% for research in weeklybible.research_set.all %}
-    <a name="research_{{ weeklybible.id }}"></a>
+    <a name="research_{{ research.id }}"></a>
     <div class="card bg-light text-dark my-3">
         <div class="card-body border-color:white py-1">
             <div class="card-text">
@@ -65,16 +65,17 @@
                     <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
                          data-toggle="popover" data-placement="right"
                          data-uri="{% url 'neworld:vote_research' research.id %}">
-                        <i class="fas fa-thumbs-up mr-1"></i> {{ research.voter.count }}
+                        <p>{{ research.voter.count }}</p>
+                        <i class="fas fa-thumbs-up mr-1"></i>
                     </div>
-                    <div class="popup-ajax badge badge-warning border mt-1 p-2 px-3">
+                    <div class="my-action-buttons">
                         <a href="#" data-uri="{% url 'neworld:vote_research' research.id %}"
-                            class="fas fa-thumbs-up center mr-1"></a>
+                           class="recommend btn fas fa-thumbs-up center mr-1"></a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-11">  <!-- 답변영역 -->
+        <div class="col-11">  <!-- 연구 조사 내용영역 -->
             <div class="card">
                 <div class="card-body">
                     <div class="card-text">{{ research.content|mark }}</div>
