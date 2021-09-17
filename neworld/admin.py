@@ -6,10 +6,12 @@ class QuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(Question, QuestionAdmin)
 
+
 class ScriptureAdmin(admin.ModelAdmin):
     search_fields = ['real_date']
 
 admin.site.register(Scripture, ScriptureAdmin)
+
 
 class AnswerAdmin(admin.ModelAdmin):
     search_fields = ['content']

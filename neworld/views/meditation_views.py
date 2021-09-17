@@ -1,14 +1,16 @@
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
-
+from django.contrib.auth.decorators import permission_required
 from ..forms import MeditationForm
 from ..models import Scripture, Meditation
 
 
 # 묵상내용 등록
 @login_required(login_url='common:login')
+# @permission_required('views.permission_create', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def meditation_create(request, scripture_id):
     scripture = get_object_or_404(Scripture, pk=scripture_id)
     if request.method == "POST":
@@ -30,6 +32,7 @@ def meditation_create(request, scripture_id):
 
 # Meditation 내용 수정
 @login_required(login_url='common:login')
+# @permission_required('views.permission_modify', login_url=reverse_lazy('neworld:goldmebership_guide'))
 def meditation_modify(request, meditation_id):
     meditation = get_object_or_404(Meditation, pk=meditation_id)
     if request.user != meditation.author:
@@ -51,6 +54,7 @@ def meditation_modify(request, meditation_id):
 
 # Meditation 삭제
 @login_required(login_url='common:login')
+# @permission_required('views.permission_delete', login_url=reverse_lazy('neworld:goldmebership_guide'))
 def meditation_delete(request, meditation_id):
     meditation = get_object_or_404(Meditation, pk=meditation_id)
     if request.user != meditation.author:

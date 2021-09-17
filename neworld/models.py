@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
+from django.shortcuts import reverse
 
 class Question(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_question', null=True)
@@ -8,8 +9,20 @@ class Question(models.Model):
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_question', null=True)
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
     def __str__(self):
         return self.subject
+
+    def get_absolute_url(self):
+        return reverse("neworld:question_list", kwargs={"pk": self.pk})
+
 
 class Answer(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_answer', null=True)
@@ -18,8 +31,21 @@ class Answer(models.Model):
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_answer', null=True)
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
+
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse("neworld:question_detail", kwargs={"pk": self.pk})
+
 
 class Scripture(models.Model):
     scripture = models.CharField(max_length=400)
@@ -28,8 +54,11 @@ class Scripture(models.Model):
     d_week = models.CharField(max_length=50, null=True)
     create_date = models.DateTimeField()
     voter = models.ManyToManyField(User, related_name='voter_scripture', null=True)
+
     def __str__(self):
         return self.real_date
+
+
 
 class Meditation(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_meditation', null=True)
@@ -39,14 +68,27 @@ class Meditation(models.Model):
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_meditation', null=True)
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
     def __str__(self):
         return self.real_date
+
+    def get_absolute_url(self):
+        return reverse("neworld:daily_scripture", kwargs={"pk": self.pk})
+
 
 class Bible(models.Model):
     bible_id = models.CharField(max_length=10)
     bible = models.CharField(max_length=30)
     def __str__(self):
         return self.bible
+
 
 class WeeklyBible(models.Model):
     year = models.CharField(max_length=10)
@@ -56,8 +98,19 @@ class WeeklyBible(models.Model):
     bible_link = models.URLField('Site URL', null=True, blank=True)
     specific_id = models.CharField(max_length=50, null=True, blank=True)
     create_date = models.DateTimeField()
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
     def __str__(self):
         return self.week
+
+    def get_absolute_url(self):
+        return reverse("neworld:weeklybible", kwargs={"pk": self.pk})
 
 class WBsummary(models.Model):
     weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
@@ -69,6 +122,7 @@ class WBsummary(models.Model):
     def __str__(self):
         return self.bible_summary
 
+
 class Research(models.Model):
     weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_research', null=True)
@@ -76,8 +130,20 @@ class Research(models.Model):
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_research', null=True)
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse("neworld:weeklybible_detail", kwargs={"pk": self.pk})
+
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -90,4 +156,3 @@ class Comment(models.Model):
     research = models.ForeignKey(Research, null=True, blank=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.content
-

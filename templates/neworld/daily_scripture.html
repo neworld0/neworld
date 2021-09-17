@@ -11,7 +11,7 @@
     {% endfor %}
     </div>
     {% endif %}
-    <h3 class="border-bottom py-2">{{ scripture.scripture }}</h3>
+    <h5 class="border-bottom py-2"><strong>{{ scripture.scripture }}</strong></h5>
     <div class="row my-3">
 <!--        <div class="col-1">    &lt;!&ndash; 추천영역 &ndash;&gt;-->
 <!--            <div class="card-center">-->
@@ -45,23 +45,21 @@
     {% for meditation in scripture.meditation_set.all %}
     <a name="meditation_{{ meditation.id }}"></a>
     <div class="row my-3">
-        <div class="col-1">    <!-- 추천영역 -->
-            <div class="card-center">
-                <div>
-                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"
-                         data-toggle="popover" data-placement="right"
-                         data-uri="{% url 'neworld:vote_meditation' meditation.id %}">
-                        <p>{{ meditation.voter.count }}</p>
-                        <i class="fas fa-thumbs-up mr-1"></i>
-                    </div>
-                    <div class="my-action-buttons">
-                    <a href="#" data-uri="{% url 'neworld:vote_meditation' meditation.id %}"
-                       class="recommend btn fas fa-thumbs-up center mr-1"></a>
-                    </div>
+        <div class="col-1 p-0" style="float: none; margin: 0 auto;">    <!-- 추천영역 -->
+            <div class="btn-group-vertical btn-group-justified">
+                <div class="popup-ajax badge badge-light border my-2 p-2"
+                     data-toggle="popover" data-placement="right"
+                     data-uri="{% url 'neworld:vote_meditation' meditation.id %}">
+                    <p class="pb-1 mb-1">{{ meditation.voter.count }}</p>
+                    <i class="fas fa-thumbs-up p-1"></i>
+                </div>
+                <div class="my-action-buttons">
+                <a href="#" data-uri="{% url 'neworld:vote_meditation' meditation.id %}"
+                   class="recommend btn fas fa-thumbs-up center border"></a>
                 </div>
             </div>
         </div>
-        <div class="col-11">  <!-- 답변영역 -->
+        <div class="col-11 p-1">  <!-- 답변영역 -->
             <div class="card">
                 <div class="card-body">
                     <div class="card-text">{{ meditation.meditation|mark }}</div>

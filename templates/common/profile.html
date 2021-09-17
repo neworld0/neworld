@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-3">
+    <h2>{{ user.username }}'s Profile</h2>
+
+    <h3>사용자 이름</h3>
+    {{ user.first_name|default:"&dash;" }}
+
+    <h3>별명</h3>
+    {{ user.last_name|default:"&dash;" }}
+
+    <h3>Email</h3>
+    {{ user.email|default:"&dash;" }}
+
+    <div class="col-12 text-right">
+        <a href="{% url 'common:password_change' %}">암호 변경하기</a>
+    </div>
+</div>
+{% endblock %}

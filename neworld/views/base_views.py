@@ -8,8 +8,7 @@ import datetime
 
 logger = logging.getLogger('neworld')
 
-# index 페이지 생성
-# @login_required(login_url='common:login')
+# index 페이지 출력 및 일용할 성구 크롤링
 def index(request):
     logger.info("INFO 레벨로 출력")
 
@@ -68,5 +67,5 @@ def index(request):
                'day_of_week_html': day_of_week,
                'scripture_html': scripture,
                'bodyText_html': bodyText
-     }
+            }
     return render(request, 'neworld/index.html', context)

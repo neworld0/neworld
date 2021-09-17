@@ -63,7 +63,7 @@
         <thead>
         <tr class="text-center thead-light">
             <th>#</th>
-<!--            <th>추천</th>-->
+            <th>추천</th>
             <th class="text-center">주간</th>
             <th style="width:50%">주간 성서읽기 범위</th>
         </tr>
@@ -76,11 +76,11 @@
                     <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
                     {{ weeklybible_list.paginator.count|sub:weeklybible_list.start_index|sub:forloop.counter0|add:1 }}
                 </td>
-<!--                <td>-->
-<!--                {% if weeklybible.voter.count > 0 %}-->
-<!--                <span class="badge badge-warning px-2 py-1">{{ weeklybible.voter.count }}</span>-->
-<!--                {% endif %}-->
-<!--                </td>-->
+                <td>
+                {% if weeklybible.voter.count > 0 %}
+                <span class="badge badge-warning px-2 py-1">{{ weeklybible.voter.count }}</span>
+                {% endif %}
+                </td>
                 <td class="text-center">
                     {{ weeklybible.week }}
                 </td>
@@ -143,7 +143,6 @@
     <input type="hidden" id="page" name="page" value="{{ page }}">
     <input type="hidden" id="so" name="so" value="{{ so }}">
 </form>
-
 {% endblock %}
 {% block script %}
 <script type='text/javascript'>

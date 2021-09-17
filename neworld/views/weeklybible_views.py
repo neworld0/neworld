@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.db.models import Q, Count
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 from neworld.models import WeeklyBible, WBsummary, Bible
 from bs4 import BeautifulSoup
 import requests
@@ -20,8 +23,9 @@ def get_number_of_week():
 cal = get_number_of_week()
 target_year = str(cal[0])
 target_week = str(cal[1])
+target_next_week = str(cal[1]+1)
 
-# 성서읽기 크롤링 함수
+# 다음주 성서읽기 크롤링 함수
 def fetch_weeklybible_latest_data(url, tag):
     result = []
     response = requests.get(url)
@@ -42,7 +46,7 @@ def fetch_weeklybible_latest_data(url, tag):
     specific_id = page_link_parts.path.split('/')[-3]       # list의 인덱싱 : [-3] -> 끝에서 3번째 요소(/202021321/) 선택
     item_obj = {
         'year': target_year,
-        'n_week': target_week,
+        'n_week': target_next_week,
         'week': week,
         'bible_range': bible_range,
         'bible_link': normalized_page_link,
@@ -80,9 +84,9 @@ def add_new_items(crawled_items):
     return items_to_insert_into_db
 
 
-# 이번 주의 WBsummary update 준비
-def wbsummary_update_prep(target_year, target_week):
-    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_week)
+# 다음 주의 WBsummary update 준비
+def wbsummary_update_prep(target_year, target_next_week):
+    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
     br1 = weeklybible.bible_range
     br2 = br1.strip()
     if '요한 1서' in br2:
@@ -200,7 +204,7 @@ def add_wbsummary_new_items(crawled_items, bible_id):
             pass
         else:
             items_to_insert_into_db.append(item)
-    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_week)
+    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
     bible = get_object_or_404(Bible, pk=bible_id)
     for item in items_to_insert_into_db:
         WBsummary(
@@ -215,13 +219,16 @@ def add_wbsummary_new_items(crawled_items, bible_id):
 
 
 # weeklybible 페이지 호출
+@login_required(login_url='common:login')
+# @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def weeklybible(request):
+    # 주간 성서읽기 범위 update 판단
     weeklybible = WeeklyBible.objects.last()
-    if weeklybible.year == target_year and weeklybible.n_week == target_week:
+    if weeklybible.year == target_year and weeklybible.n_week == target_next_week:
         pass
     else:
         # 주간 성서읽기 범위 update
-        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_week
+        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_next_week
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
         add_new_items(wb)
@@ -257,15 +264,15 @@ def weeklybible(request):
                'so': so
                }
 
-    # wbsummary update 여부 판단
+    # wbsummary update 여부 판단 및 크롤링
     wbsummary = WBsummary.objects.last()
-    ws_update = wbsummary_update_prep(target_year, target_week)
+    ws_update = wbsummary_update_prep(target_year, target_next_week)
     if wbsummary is None:
         wp = ws_parameter(ws_update)
         ws = fetch_wbsummary_latest_data(wp[len(wp)-1], wp[0:len(wp)-1])
         add_wbsummary_new_items(ws, ws_update[0])
     else:
-        if int(wbsummary.weeklybible.n_week) >= int(target_week):
+        if int(wbsummary.weeklybible.n_week) >= int(target_next_week):
             pass
         else:
             wp = ws_parameter(ws_update)
@@ -275,6 +282,8 @@ def weeklybible(request):
 
 
 # 주간성서읽기 상세내용 호출
+@login_required(login_url='common:login')
+# @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def weeklybible_detail(request, weeklybible_id):
     weeklybible = get_object_or_404(WeeklyBible, pk=weeklybible_id)
     context = {'weeklybible': weeklybible}
