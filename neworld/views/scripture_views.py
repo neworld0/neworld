@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 import datetime
-
 from ..models import Scripture
 
 
 # 성구 목록 출력
+@login_required(login_url='common:login')
+# @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def scripture(request):
     # 입력 파라미터
     page = request.GET.get('page', '1')  # 페이지
@@ -39,13 +43,10 @@ def scripture(request):
     return render(request, 'neworld/scripture_list.html', context)
 
 
-
-
 # 성구 상세내용 출력
+@login_required(login_url='common:login')
+# @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def daily_scripture(request, scripture_id):
     scripture = get_object_or_404(Scripture, pk=scripture_id)
     context = {'scripture': scripture}
     return render(request, 'neworld/daily_scripture.html', context)
-
-
-

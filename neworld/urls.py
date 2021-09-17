@@ -1,13 +1,16 @@
 from django.urls import path
 
 from .views import base_views, scripture_views, meditation_views, question_views, \
-    answer_views, comment_views, vote_views, weeklybible_views, research_views
+    answer_views, comment_views, vote_views, weeklybible_views, research_views, goldmembership_views
 
 app_name = 'neworld'
 
 urlpatterns = [
     # base_views.py
     path('', base_views.index, name='index'),
+
+    # goldmembership_views.py
+    path('goldmembership_guide/', goldmembership_views.goldmembership_guide, name='goldmembership_guide'),
 
     # scripture_views.py
     path('scripture/',
@@ -88,4 +91,6 @@ urlpatterns = [
          research_views.research_modify, name='research_modify'),
     path('research/delete/<int:research_id>/',
          research_views.research_delete, name='research_delete'),
+
+
 ]

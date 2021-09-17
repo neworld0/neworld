@@ -1,15 +1,17 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
-
+from django.urls import reverse_lazy
 from ..forms import QuestionForm
 from ..models import Question
 
 
 # 게시판 목록 출력
+@login_required(login_url='common:login')
+# @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def question(request):
     # 입력 파라미터
     page = request.GET.get('page', '1')  # 페이지
@@ -38,6 +40,8 @@ def question(request):
 
 
 # Bulletin Board 상세내용 출력
+@login_required(login_url='common:login')
+# @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     context = {'question': question}
@@ -46,6 +50,7 @@ def detail(request, question_id):
 
 # Bulletin Board 질문등록
 @login_required(login_url='common:login')
+# @permission_required('views.permission_create', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def question_create(request):
     if request.method == 'POST':
         form = QuestionForm(request.POST)
@@ -63,6 +68,7 @@ def question_create(request):
 
 # Bulletin Board 질문 수정
 @login_required(login_url='common:login')
+# @permission_required('views.permission_change', login_url=reverse_lazy('blog:goldmembership_guide'))
 def question_modify(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if request.user != question.author:
@@ -83,6 +89,7 @@ def question_modify(request, question_id):
 
 # Bulletin Board 질문 삭제
 @login_required(login_url='common:login')
+# @permission_required('views.permission_delete', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def question_delete(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if request.user != question.author:
@@ -90,6 +97,3 @@ def question_delete(request, question_id):
         return redirect('neworld:detail', question_id=question.id)
     question.delete()
     return redirect('neworld:question')
-
-
-
