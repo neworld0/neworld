@@ -47,6 +47,33 @@
         </div>
     </div>
     <h5 class="border-bottom my-3 py-2">{{ weeklybible.research_set.count }}개의 묵상 및 조사내용이 있습니다.</h5>
+    <div class="card bg-light text-dark my-3">
+        <div class="card-body border-color:white py-1">
+            <div class="card-text">
+                <div class="d-flex justify-content" style="border:none">
+                    <p class="my-1">이번 주 성경 읽기를 통해 <strong><em>여호와 하느님</em></strong>이나 <strong><em>야외 봉사</em></strong>, 또는 그 밖의 점에 관해 어떤 <strong><em>영적 보물</em></strong>을 발견했습니까?</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="{% url 'neworld:research_create' weeklybible.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+            {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+                      name="content" id="content" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="저장" class="btn btn-primary" style="font-weight:bolder">
+    </form>
     {% for research in weeklybible.research_set.all %}
     <a name="research_{{ research.id }}"></a>
     <div class="card bg-light text-dark my-3">
@@ -130,33 +157,6 @@
     </div>
     {% endfor %}
     <a href="{% url 'neworld:weeklybible' %}" class="btn btn-primary" style="font-weight:bolder"><i class="fas fa-list" ></i>  목록으로</a>
-    <div class="card bg-light text-dark my-3">
-        <div class="card-body border-color:white py-1">
-            <div class="card-text">
-                <div class="d-flex justify-content" style="border:none">
-                    <p class="my-1">이번 주 성경 읽기를 통해 <strong><em>여호와 하느님</em></strong>이나 <strong><em>야외 봉사</em></strong>, 또는 그 밖의 점에 관해 어떤 <strong><em>영적 보물</em></strong>을 발견했습니까?</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <form action="{% url 'neworld:research_create' weeklybible.id %}" method="post" class="my-3">
-        {% csrf_token %}
-        {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-        {% for field in form %}
-            {% if field.errors %}
-                <strong>{{ field.label }}</strong>
-                {{ field.errors }}
-            {% endif %}
-        {% endfor %}
-        </div>
-        {% endif %}
-        <div class="form-group">
-            <textarea {% if not user.is_authenticated %}disabled{% endif %}
-                      name="content" id="content" class="form-control" rows="10"></textarea>
-        </div>
-        <input type="submit" value="저장" class="btn btn-primary" style="font-weight:bolder">
-    </form>
 </div>
 {% endblock %}
 {% block script %}

@@ -42,8 +42,26 @@
         </div>
     </div>
     <h5 class="border-bottom my-3 py-2">{{ scripture.meditation_set.count }}개의 일용할 성구 묵상이 있습니다.</h5>
-    {% for meditation in scripture.meditation_set.all %}
     <a name="meditation_{{ meditation.id }}"></a>
+    <form action="{% url 'neworld:meditation_create' scripture.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+            {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+                      name="meditation" id="meditation" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="묵상등록" class="btn btn-primary" style="font-weight:bolder">
+    </form>
+    {% for meditation in scripture.meditation_set.all %}
     <div class="row my-3">
         <div class="col-1 p-0" style="float: none; margin: 0 auto;">    <!-- 추천영역 -->
             <div class="btn-group-vertical btn-group-justified">
@@ -113,27 +131,7 @@
         </div>
     </div>
     {% endfor %}
-
     <a href="{% url 'neworld:scripture' %}" class="btn btn-primary" style="font-weight:bolder"><i class="fas fa-list" ></i>  목록으로</a>
-
-    <form action="{% url 'neworld:meditation_create' scripture.id %}" method="post" class="my-3">
-        {% csrf_token %}
-        {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-        {% for field in form %}
-            {% if field.errors %}
-                <strong>{{ field.label }}</strong>
-                {{ field.errors }}
-            {% endif %}
-        {% endfor %}
-        </div>
-        {% endif %}
-        <div class="form-group">
-            <textarea {% if not user.is_authenticated %}disabled{% endif %}
-                      name="meditation" id="meditation" class="form-control" rows="10"></textarea>
-        </div>
-        <input type="submit" value="묵상등록" class="btn btn-primary" style="font-weight:bolder">
-    </form>
 </div>
 {% endblock %}
 {% block script %}
