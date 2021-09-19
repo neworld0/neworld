@@ -47,13 +47,36 @@ class Answer(models.Model):
         return reverse("neworld:question_detail", kwargs={"pk": self.pk})
 
 
+class WeeklyBible(models.Model):
+    year = models.CharField(max_length=10)
+    n_week = models.CharField(max_length=10)
+    week = models.CharField(max_length=100)
+    bible_range = models.CharField(max_length=100)
+    bible_link = models.URLField('Site URL', null=True, blank=True)
+    specific_id = models.CharField(max_length=50, null=True, blank=True)
+    create_date = models.DateTimeField()
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
+    def __str__(self):
+        return self.week
+
+    def get_absolute_url(self):
+        return reverse("neworld:weeklybible", kwargs={"pk": self.pk})
+
+
 class Scripture(models.Model):
     scripture = models.CharField(max_length=400)
     bodytext = models.TextField()
     real_date = models.CharField(max_length=10)
     d_week = models.CharField(max_length=50, null=True)
     create_date = models.DateTimeField()
-    voter = models.ManyToManyField(User, related_name='voter_scripture', null=True)
+    weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.real_date
@@ -86,31 +109,10 @@ class Meditation(models.Model):
 class Bible(models.Model):
     bible_id = models.CharField(max_length=10)
     bible = models.CharField(max_length=30)
+
     def __str__(self):
         return self.bible
 
-
-class WeeklyBible(models.Model):
-    year = models.CharField(max_length=10)
-    n_week = models.CharField(max_length=10)
-    week = models.CharField(max_length=100)
-    bible_range = models.CharField(max_length=100)
-    bible_link = models.URLField('Site URL', null=True, blank=True)
-    specific_id = models.CharField(max_length=50, null=True, blank=True)
-    create_date = models.DateTimeField()
-
-    class Meta:
-        permissions = [
-            ('can_publish', 'Can Publish Posts'),
-            ('can_change', 'Can Change Posts'),
-            ('can_view', 'Can View Posts'),
-            ('can_delete', 'Can Delete Posts'),
-        ]
-    def __str__(self):
-        return self.week
-
-    def get_absolute_url(self):
-        return reverse("neworld:weeklybible", kwargs={"pk": self.pk})
 
 class WBsummary(models.Model):
     weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
