@@ -76,7 +76,6 @@ class Scripture(models.Model):
     real_date = models.CharField(max_length=10)
     d_week = models.CharField(max_length=50, null=True)
     create_date = models.DateTimeField()
-    weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.real_date
