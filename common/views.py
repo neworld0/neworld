@@ -63,7 +63,7 @@ def internal_server_error(request, *args, **argv):
 
 
 class MyPasswordChangeView(PasswordChangeView):
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('common:profile')
     template_name = 'common/password_change_form.html'
 
     def form_valid(self, form):
