@@ -48,7 +48,28 @@ def index(request):
                                       'div.section > div.pGroup > p.sb')
             yyyy = tmr.year
             mm = tmr.month
-            dd = tmr.day+i
+            month1 = [2, 4, 6, 9, 11]
+            if mm in month1:
+                if mm == 2:
+                    if tmr.day == 29:
+                        dd = tmr.day
+                    elif tmr.day == 28:
+                        dd = tmr.day
+                    else:
+                        if tmr.day + i <= 27:
+                            dd = tmr.day + i
+                else:
+                    if tmr.day == 30:
+                        dd = tmr.day
+                    else:
+                        if tmr.day + i <= 29:
+                            dd = tmr.day + i
+            else:
+                if tmr.day == 31:
+                    dd = tmr.day
+                else:
+                    if tmr.day + i <= 30:
+                        dd = tmr.day + i
             t_week = get_day_of_week(yyyy, mm, dd)
             d_week.append(t_week)
             scrip = scrip1.text
