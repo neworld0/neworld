@@ -7,9 +7,7 @@ import requests
 import datetime
 from neworld.lib import get_number_of_week, date_range, date_range_for_crawling, get_day_of_week, get_week_no
 
-
 logger = logging.getLogger('neworld')
-
 
 # index 페이지 출력 및 일용할 성구 크롤링
 def index(request):
@@ -17,7 +15,6 @@ def index(request):
 
     cal = get_number_of_week()
     this_week = cal[1]
-
     tmr = datetime.date.today() + datetime.timedelta(1)
     t_day = datetime.date.today()
     seventhday = datetime.date.today() + datetime.timedelta(7)
@@ -35,7 +32,7 @@ def index(request):
     d1 = last_real_day.day
     n = datetime.datetime(y1, m1, d1)
     last_n_week = n.isocalendar()
-    if last_n_week[1] >= this_week and d1 > tmr.day:
+    if last_n_week[1] >= this_week and d1 >= tmr.day:
         pass
     else:
         d_week = []
