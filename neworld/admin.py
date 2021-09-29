@@ -1,5 +1,13 @@
 from django.contrib import admin
-from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, Research, Bible, WBsummary
+from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, Research, Bible, WBsummary, PubsIndex
+from common.models import User
+
+
+class UserAdmin(admin.ModelAdmin):
+    search_fields = ['username']
+
+admin.site.register(User, UserAdmin)
+
 
 class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['subject']
@@ -53,3 +61,9 @@ class WBsummaryAdmin(admin.ModelAdmin):
     search_fields = ['bible_summary']
 
 admin.site.register(WBsummary, WBsummaryAdmin)
+
+
+class PubsIndexAdmin(admin.ModelAdmin):
+    search_fields = ['pi_title']
+
+admin.site.register(PubsIndex, PubsIndexAdmin)
