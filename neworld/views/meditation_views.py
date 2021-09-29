@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import permission_required
 from ..forms import MeditationForm
 from ..models import Scripture, Meditation
+import datetime
 
 
 # 묵상내용 등록

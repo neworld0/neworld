@@ -82,6 +82,5 @@ def index(request):
     context = {'today_html': title,
                'day_of_week_html': day_of_week,
                'scripture_html': scripture,
-               'bodyText_html': bodyText
-            }
+               'bodyText_html': bodyText}
     return render(request, 'neworld/index.html', context)
