@@ -41,7 +41,7 @@
                         </div>
                         {% endif %}
                         <div class="badge badge-light p-2 text-left">
-                            <div class="mb-2">{{ question.author.last_name }}{{ question.author.first_name }}</div>
+                            <div class="mb-2">{{ question.author.first_name }}</div>
                             <div>{{ question.create_date }}</div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                         <div class="comment py-2 text-muted">  <!-- 댓글 각각에 comment 스타일 지정 -->
                             <span style="white-space: pre-line;">{{ comment.content }}</span>
                             <span>
-                              - {{ comment.author.last_name }}{{ comment.author.first_name }}, {{ comment.create_date }}
+                              - {{ comment.author.first_name }}, {{ comment.create_date }}
                                {% if comment.modify_date %}
                                 (수정:{{ comment.modify_date }})
                                 {% endif %}

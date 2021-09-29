@@ -124,7 +124,7 @@
                         </div>
                         {% endif %}
                         <div class="badge badge-light p-2 text-left">
-                            <div class="mb-2">{{ research.author.last_name }}{{ research.author.first_name }}</div>
+                            <div class="mb-2">{{ research.author.first_name }}</div>
                             <div>{{ research.create_date }}</div>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                         <div class="comment py-2 text-muted">
                             <span style="white-space: pre-line;">{{ comment.content }}</span>
                             <span>
-                                : <span class="small">{{ comment.author.last_name }}{{ comment.author.first_name }}</span>, {{ comment.create_date }}
+                                : <span class="small">{{ comment.author.first_name }}</span>, {{ comment.create_date }}
                                 {% if comment.modify_date %}
                                 (수정:{{ comment.modify_date }})
                                 {% endif %}

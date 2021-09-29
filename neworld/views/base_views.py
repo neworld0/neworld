@@ -47,30 +47,10 @@ def index(request):
             scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > p.themeScrp')
             body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > div.bodyTxt > '
                                       'div.section > div.pGroup > p.sb')
-            yyyy = tmr.year
-            mm = tmr.month
-            month1 = [2, 4, 6, 9, 11]
-            if mm in month1:
-                if mm == 2:
-                    if tmr.day == 29:
-                        dd = tmr.day
-                    elif tmr.day == 28:
-                        dd = tmr.day
-                    else:
-                        if tmr.day + i <= 27:
-                            dd = tmr.day + i
-                else:
-                    if tmr.day == 30:
-                        dd = tmr.day
-                    else:
-                        if tmr.day + i <= 29:
-                            dd = tmr.day + i
-            else:
-                if tmr.day == 31:
-                    dd = tmr.day
-                else:
-                    if tmr.day + i <= 30:
-                        dd = tmr.day + i
+            target_day = datetime.date.today() + datetime.timedelta(1+i)
+            yyyy = target_day.year
+            mm = target_day.month
+            dd = target_day.day
             t_week = get_day_of_week(yyyy, mm, dd)
             d_week.append(t_week)
             scrip = scrip1.text
