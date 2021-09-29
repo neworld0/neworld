@@ -23,59 +23,60 @@ def index(request):
     Third_day = str(thirdday.year) + '-' + str(thirdday.month).zfill(2) + '-' + str(thirdday.day).zfill(2)
     Seventh_day = str(seventhday.year) + '-' + str(seventhday.month).zfill(2) + '-' + str(seventhday.day).zfill(2)
     RealDay = str(t_day.year) + '-' + str(t_day.month).zfill(2) + '-' + str(t_day.day).zfill(2)
-    #
-    # # 1주일 일용할 성구 크롤링
-    # date_range_crawling = date_range_for_crawling(Tomorrow, Third_day)
-    # date_range_RealDay = date_range(Tomorrow, Third_day)
-    # last_real_date = Scripture.objects.last()
-    # last_real_day = datetime.datetime.strptime(last_real_date.real_date, "%Y-%m-%d")
-    # y1 = last_real_day.year
-    # m1 = last_real_day.month
-    # d1 = last_real_day.day
-    # n = datetime.datetime(y1, m1, d1)
-    # last_n_week = n.isocalendar()
-    # if last_n_week[1] >= this_week and d1 >= tmr.day:
-    #     pass
-    # else:
-    #     d_week = []
-    #     for i in range(len(date_range_crawling)):
-    #         url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + date_range_crawling[i]
-    #         r = requests.get(url)
-    #         parser = BeautifulSoup(r.text, 'html.parser')
-    #         scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > p.themeScrp')
-    #         body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > div.bodyTxt > '
-    #                                   'div.section > div.pGroup > p.sb')
-    #         yyyy = tmr.year
-    #         mm = tmr.month
-    #         month1 = [2, 4, 6, 9, 11]
-    #         if mm in month1:
-    #             if mm == 2:
-    #                 if tmr.day == 29:
-    #                     dd = tmr.day
-    #                 elif tmr.day == 28:
-    #                     dd = tmr.day
-    #                 else:
-    #                     if tmr.day + i <= 27:
-    #                         dd = tmr.day + i
-    #             else:
-    #                 if tmr.day == 30:
-    #                     dd = tmr.day
-    #                 else:
-    #                     if tmr.day + i <= 29:
-    #                         dd = tmr.day + i
-    #         else:
-    #             if tmr.day == 31:
-    #                 dd = tmr.day
-    #             else:
-    #                 if tmr.day + i <= 30:
-    #                     dd = tmr.day + i
-    #         t_week = get_day_of_week(yyyy, mm, dd)
-    #         d_week.append(t_week)
-    #         scrip = scrip1.text
-    #         body = body1.text
-    #         scrt = Scripture(scripture=scrip, bodytext=body, real_date=date_range_RealDay[i], d_week=d_week[i], create_date=timezone.now())
-    #         scrt.save()
 
+    # 3일 일용할 성구 크롤링
+    date_range_crawling = date_range_for_crawling(Tomorrow, Third_day)
+    date_range_RealDay = date_range(Tomorrow, Third_day)
+    last_real_date = Scripture.objects.last()
+    last_real_day = datetime.datetime.strptime(last_real_date.real_date, "%Y-%m-%d")
+    tmr_day = datetime.datetime.strptime(Tomorrow, "%Y-%m-%d")
+    y1 = last_real_day.year
+    m1 = last_real_day.month
+    d1 = last_real_day.day
+    n = datetime.datetime(y1, m1, d1)
+    last_n_week = n.isocalendar()
+    # if last_n_week[1] >= this_week and d1 >= tmr.day:
+    if last_real_day >= tmr_day:
+        pass
+    else:
+        d_week = []
+        for i in range(len(date_range_crawling)):
+            url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + date_range_crawling[i]
+            r = requests.get(url)
+            parser = BeautifulSoup(r.text, 'html.parser')
+            scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > p.themeScrp')
+            body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > div.bodyTxt > '
+                                      'div.section > div.pGroup > p.sb')
+            yyyy = tmr.year
+            mm = tmr.month
+            month1 = [2, 4, 6, 9, 11]
+            if mm in month1:
+                if mm == 2:
+                    if tmr.day == 29:
+                        dd = tmr.day
+                    elif tmr.day == 28:
+                        dd = tmr.day
+                    else:
+                        if tmr.day + i <= 27:
+                            dd = tmr.day + i
+                else:
+                    if tmr.day == 30:
+                        dd = tmr.day
+                    else:
+                        if tmr.day + i <= 29:
+                            dd = tmr.day + i
+            else:
+                if tmr.day == 31:
+                    dd = tmr.day
+                else:
+                    if tmr.day + i <= 30:
+                        dd = tmr.day + i
+            t_week = get_day_of_week(yyyy, mm, dd)
+            d_week.append(t_week)
+            scrip = scrip1.text
+            body = body1.text
+            scrt = Scripture(scripture=scrip, bodytext=body, real_date=date_range_RealDay[i], d_week=d_week[i], create_date=timezone.now())
+            scrt.save()
     scripture1 = Scripture.objects.get(real_date=RealDay)
     title = scripture1.real_date
     day_of_week = scripture1.d_week
