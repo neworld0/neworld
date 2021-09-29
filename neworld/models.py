@@ -129,7 +129,8 @@ class WBsummary(models.Model):
 class PubsIndex(models.Model):
     weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
     bible = models.ForeignKey(Bible, on_delete=models.CASCADE, null=True)
-    chapter = models.ForeignKey(WBsummary, on_delete=models.CASCADE, null=True)
+    chapter = models.CharField(max_length=10)
+    index_verse = models.CharField(max_length=50)
     pi_title = models.CharField(max_length=50)
     pi_link = models.URLField('Publications Index URL', null=True, blank=True)
     specific_id = models.CharField(max_length=50, null=True, blank=True)
