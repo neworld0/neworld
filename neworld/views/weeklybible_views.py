@@ -258,7 +258,7 @@ def pi_update_prep(target_year, target_next_week):
 # Publications Index crawling 파라미터 값 생성
 def pi_parameter(pi_update):
     result = []
-    tag = '#studyDiscover > div > div.group.index.collapsible > ul > li > span'
+    tag = '#studyDiscover > div.section'
     result.append(tag)
     for i in range(pi_update[1] + 1):
         url_current = 'https://wol.jw.org/ko/wol/b/r8/lp-ko/nwtsty/' + str(pi_update[0]) + '/' + str(pi_update[2]+i)
@@ -266,44 +266,48 @@ def pi_parameter(pi_update):
     return result
 
 
-def fetch_pilink_latest_data(tag1, url1):
+def fetch_pilink_latest_data(tag, url1, chapter):
     result = []
     web_page_link_root = 'https://wol.jw.org'
+    i = 0
+    tag_index = 'div.group.index.collapsible > ul > li.item.ref-dx > span'
+    tag_title = 'h3 > span'
     for target in url1:
         response = requests.get(target)
         html = response.text
         soup = BeautifulSoup(html, 'html.parser')
-        list_item = soup.select(tag1)
-        for item in list_item:
-            p_list = item.select('p')
-            # print('p_list: ', p_list)
-            for p_tag in p_list:
-                # print('p_tag: ', p_tag)
-                if p_tag.text == '':
-                    pass
-                else:
-                    pi_title = p_tag.text
-                    # print('pi_title: ', pi_title)
-                    a_list = p_tag.select('a')
-                    # print('a_list: ', a_list)
-                    for a_tag in a_list:
-                        href = a_tag['href']
-                        pubs_link_raw1 = web_page_link_root + href
-                        page_link_parts = urlparse(pubs_link_raw1)
-                        normalized_page_link = page_link_parts.scheme + '://' + page_link_parts.hostname + page_link_parts.path
-                        # print('normalized_page_link: ', normalized_page_link)
-                        # specific id
-                        specific_id = page_link_parts.path.split('/')[-2:]       # list_item의 인덱싱 : [-1] -> 마지막 요소(/1981845#h=20:306-25:0) 선택
-                        # print(specific_id)
-                        item_obj = {
-                            'pi_title': pi_title,
-                            'pi_link': normalized_page_link,
-                            'specific_id': specific_id,
-                            'create_date': timezone.now()
-                        }
-                        # print('item_obj: ', item_obj)
-                        result.append(item_obj)
-    # print('result: ', result)
+        item_list = soup.select(tag)
+        for item in item_list:
+            index_verse_find = item.select(tag_index)
+            if index_verse_find:
+                verse = item.select(tag_title)
+                index_verse_str = verse[0]
+                index_verse = index_verse_str.text
+                for link in index_verse_find:
+                    p_list = link.select('p')
+                    for p_tag in p_list:
+                        if p_tag.text == '':
+                            pass
+                        else:
+                            a_list = p_tag.select('a')
+                            for a_tag in a_list:
+                                pi_title = a_tag.text
+                                href = a_tag['href']
+                                pubs_link_raw1 = web_page_link_root + href
+                                page_link_parts = urlparse(pubs_link_raw1)
+                                normalized_page_link = page_link_parts.scheme + '://' + page_link_parts.hostname + page_link_parts.path
+                                specific_id = page_link_parts.path.split('/')[-3:]
+                                item_obj = {
+                                    'chapter': str(int(chapter) + i),
+                                    'index_verse': index_verse,
+                                    'pi_title': pi_title,
+                                    'pi_link': normalized_page_link,
+                                    'specific_id': specific_id,
+                                    'create_date': timezone.now()
+                                }
+                                result.append(item_obj)
+        i = i + 1
+    result.reverse()
     return result
 
 
@@ -311,7 +315,7 @@ def fetch_pilink_latest_data(tag1, url1):
 def add_pilink_new_items(crawled_items, bible_id, chapter):
     try:
         last_inserted_items = PubsIndex.objects.last()
-    except PubsIndex.DoesNotExit:
+    except PubsIndex.DoesNotExist:
         # if last_inserted_items is None:
         last_inserted_specific_id = ""
     else:
@@ -334,7 +338,8 @@ def add_pilink_new_items(crawled_items, bible_id, chapter):
             PubsIndex(
                 weeklybible=weeklybible,
                 bible=bible,
-                chapter=wbsummary,
+                chapter=item['chapter'],
+                index_verse=item['index_verse'],
                 pi_title=item['pi_title'],
                 pi_link=item['pi_link'],
                 specific_id=item['specific_id'],
@@ -350,7 +355,7 @@ def weeklybible(request):
     # 주간 성서읽기 범위 update 판단
     try:
         weeklybible = WeeklyBible.objects.last()
-    except WeeklyBible.DoesNotExit:
+    except WeeklyBible.DoesNotExist:
         url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_next_week
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
@@ -402,7 +407,7 @@ def weeklybible(request):
     pi_update = pi_update_prep(target_year, target_next_week)
     try:
         wbsummary = WBsummary.objects.last()
-    except WBsummary.DoesNotExit:
+    except WBsummary.DoesNotExist:
         wp = ws_parameter(ws_update)
         ws = fetch_wbsummary_latest_data(wp[len(wp)-1], wp[0:len(wp)-1])
         add_wbsummary_new_items(ws, ws_update[0])
@@ -415,7 +420,7 @@ def weeklybible(request):
         ws = fetch_wbsummary_latest_data(wp[len(wp)-1], wp[0:len(wp)-1])
         add_wbsummary_new_items(ws, ws_update[0])
         pi = pi_parameter(pi_update)
-        ps = fetch_pilink_latest_data(pi[0], pi[1:])
+        ps = fetch_pilink_latest_data(pi[0], pi[1:], pi_update[2])
         add_pilink_new_items(ps, pi_update[0], pi_update[2])
     return render(request, 'neworld/weeklybible.html', context)
 

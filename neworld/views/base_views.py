@@ -30,11 +30,11 @@ def index(request):
     last_real_date = Scripture.objects.last()
     last_real_day = datetime.datetime.strptime(last_real_date.real_date, "%Y-%m-%d")
     tmr_day = datetime.datetime.strptime(Tomorrow, "%Y-%m-%d")
-    y1 = last_real_day.year
-    m1 = last_real_day.month
-    d1 = last_real_day.day
-    n = datetime.datetime(y1, m1, d1)
-    last_n_week = n.isocalendar()
+    # y1 = last_real_day.year
+    # m1 = last_real_day.month
+    # d1 = last_real_day.day
+    # n = datetime.datetime(y1, m1, d1)
+    # last_n_week = n.isocalendar()
     # if last_n_week[1] >= this_week and d1 >= tmr.day:
     if last_real_day >= tmr_day:
         pass
