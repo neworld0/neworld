@@ -38,15 +38,12 @@ INSTALLED_APPS = [
     'common.apps.CommonConfig',
     'neworld.apps.NeworldConfig',
     'django.contrib.admin',
-    # 'django.contrib.admin.apps.SimpleAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djcelery',
     'six',
-    'django.db.models',
 ]
 
 MIDDLEWARE = [
