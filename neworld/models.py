@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
-# from common.models import User
+
 
 class Question(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_question', null=True)
@@ -107,7 +107,7 @@ class Meditation(models.Model):
 
 class Bible(models.Model):
     bible_id = models.CharField(max_length=10)
-    bible = models.CharField(max_length=30)
+    bible = models.CharField(max_length=30, null=True)
     chapter = models.IntegerField(null=True)
     verse = models.IntegerField(null=True)
 

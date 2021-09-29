@@ -318,6 +318,7 @@ def add_pilink_new_items(crawled_items, bible_id, chapter):
     except PubsIndex.DoesNotExist:
         # if last_inserted_items is None:
         last_inserted_specific_id = ""
+        PubsIndex.create()
     else:
         last_inserted_specific_id = getattr(last_inserted_items, 'specific_id')
     items_to_insert_into_db = []
