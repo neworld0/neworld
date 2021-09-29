@@ -5,6 +5,9 @@
         <div class="col-4">
             <h4>로그인</h4>
         </div>
+            <div class="col-4">
+                <a href="{% url 'common:request_login_via_url' %}"><strong>이메일로 로그인</strong></a>
+            </div>
         <div class="col-4 text-right">
             <span>또는 <a href="{% url 'common:signup' %}"><strong>계정 생성</strong></a></span>
         </div>
@@ -14,7 +17,7 @@
         <input type="hidden" name="next" value="{{ next }}">  <!-- 로그인 성공후 이동되는 URL -->
         {% include "form_errors.html" %}
         <div class="form-group">
-            <label for="username">사용자 ID</label>
+            <label for="username">사용자ID(이메일 형식)</label>
             <input type="text" class="form-control" name="username" id="username"
                    value="{{ form.username.value|default_if_none:'' }}">
         </div>

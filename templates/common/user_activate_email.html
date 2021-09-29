@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% autoescape off %}
+    안녕하세요
 
-</body>
-</html>
+    아래 링크를 클릭하면 회원가입 인증이 완료됩니다.
+
+    회원가입 링크 : http://{{ domain }}{% url 'common:activate' uid64=uid token=token %}
+
+{% endautoescape %}

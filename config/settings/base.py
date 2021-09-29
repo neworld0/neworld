@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import neworld
 
@@ -36,11 +38,15 @@ INSTALLED_APPS = [
     'common.apps.CommonConfig',
     'neworld.apps.NeworldConfig',
     'django.contrib.admin',
+    # 'django.contrib.admin.apps.SimpleAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djcelery',
+    'six',
+    'django.db.models',
 ]
 
 MIDDLEWARE = [
@@ -197,3 +203,64 @@ LOGGING = {
         },
     }
 }
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# EMAIL_BACKEND = 'django_ses.SESBackend'
+
+'''
+# These are optional -- if they're set as environment variables they won't
+# need to be set here as well
+AWS_ACCESS_KEY_ID = 'ubuntu'
+AWS_SECRET_ACCESS_KEY = '-----BEGIN RSA PRIVATE KEY-----\
+MIIEpAIBAAKCAQEAyFkcgO5OGgXmWnbblW93pCHrFLIdnbXgVIiKkmYNypRjYXXq\
+s7OxvS745af8fiBktoOORWZNsxDzYj2LC35IZauJlsyvzBIY7yLEKbzzZMTJj5jA\
+fdO1YlBJizSietOE3osBPyz2GIciND1c4QKGwomTNiI2hOJ7XUiSjgHIDUtValLN\
+zSQ5nRIiE4vxU3r7IGeL4L6199vXK5I2CgSkCIJsv3wT/rIoKANwDh1mw3U8+Y6e\
+Y1TdvbniDXjr2gu5ez1XQLICWCFv5kj+UMjs+5QXNOlMectatFGL/EM23sOX9g4B\
+2WWRIhIbDDFGERBHAyv5P8jCGpQdmqx/DmcE8wIDAQABAoIBAQCUppmhiC9m243I\
+/Xt7axNIMuprlqSmybXCwvSeHx6IeoUqYQVdhCySg/Gk5HlRU9OmIAJFt9xaym7r\
+K2Kpim9JEHer7f9Z2OurMw59MXceA2zSILJiKdzhL1UB9nG/1IU3YcfxCfkmxc05\
+GXZ6dRdr7AvQFJ6DBlAmLJygxO2b/kG/VCBG2S82VI5Np6/fC12r8qLHezB6PSip\
+mb47AAuDVXKqZ0iwXkSrB0Q5T9e6QCwwWd2IzVCy68m+yCHUOdav3ggTD6UDjg40\
+Qb35CFxfGgjom3Bj03q4zbZ3NV+7AvkjxCtIXtI+vm5gIzAl3d5WKRQhbq8cuS+5\
+uj8mbOghAoGBAPib67gJne8tSj0o7aGKA6Wbd+KIMgpzYKtsSarL2SMW98925Uzd\
+Wg5PDhjEMB6Zp2t2Q+BgoX8mBHyYgkNTiKazrXzw3AU+lnSWxKf4Zn1Z5TVkWF9Q\
+t9MnyIm2xgSMsKRG4mAOCLCA1por+oc3ShcLitU/6EuOmd5AHhM4FunpAoGBAM5N\
+5IXwNBPKuVmPOUZJIMIMgqsdPOOsa72bMnmtDZOa08W03M2DSypceGHzs6OGpEnR\
+g6IFIONK78HJJXKPhuFTIpnALMrOKF12qlNyEwmSzZM4ZOiS0r1SIxwVpQDJ3Nnv\
+pTATGUPpzsLOv3pk0xsWY4V3jI/3vmrYfMpduFJ7AoGAKMCucDmrWQSskb/+zCcq\
+l+AXU9wNj+b/5rnWjZfi3TyrnKeZyPLUC1psLiUi2jFH33bAg6xzbLtXqvD5EX5E\
+/Uag3sVA2985nJ0GWZ5/dnbg+tKbJey+ZW+1ENYUObSyVAuGmkZSqFRGWXlyFO48\
+R/DNbk2Oj6wtjuAlzfK41tkCgYA10D2m7mQ3MW8tvF1dRyADXg4LooHKhaRI/h2p\
+fYmIEh/hd28NMI0/zIUeT9pw8mMSWlNyxNGyWE64Bsb83hF53xysbGOCt0nyL0z4\
+nU339lInb9NqkznjZnSAE+lJjl5MfuVg5+p0O53SVOm/fGNQsoNdQjTpLN9/sV7D\
+zrSQ1wKBgQDIbP5+dyWQj1rOVrLXU+mGaZp1svXGmi0/kFqfi+xs5aoZkgEn1WpM\
+a0RMqmKugwdY78YLKYwLRt/cWaYzRX1JbH56it1Y2AnBo5AfN9VKEJcAu6Zfw//J\
+Y6cbqb32hEQbJAOtsX/2n0sv9iTStF/QXNhtqBNF6TPKU+4yNd1WXw==\
+-----END RSA PRIVATE KEY-----'
+
+# Additionally, if you are not using the default AWS region of us-east-1,
+# you need to specify a region, like so:
+AWS_SES_REGION_NAME = 'ap-northeast-2'
+AWS_SES_REGION_ENDPOINT = 'email.ap-northeast-2.amazonaws.com'
+'''
+
+# CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+
+
+# EMAIL_HOST = 'smtp.gmail.com'
+# # 메일을 호스트하는 서버
+# EMAIL_PORT = '587'
+# # gmail과의 통신하는 포트
+# EMAIL_HOST_USER = 'neworld0@gmail.com'
+# # 발신할 이메일
+# EMAIL_HOST_PASSWORD = '2tjdudEgjs!'
+# # 발신할 메일의 비밀번호
+# EMAIL_USE_TLS = True
+# # TLS 보안 방법
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+
+
+# AUTH_USER_MODEL = 'common.User'

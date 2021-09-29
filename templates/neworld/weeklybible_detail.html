@@ -29,12 +29,31 @@
 <!--            </div>-->
 <!--        </div>-->
         <div class="col-12"> <!-- weeklybible 영역 -->
-            <div class="card">
+            <div class="card my-1">
                 <div class="card-body">
+                    <h6><strong>성서읽기 개요</strong></h6>
                     {% for wbsummary in weeklybible.wbsummary_set.all %}
                     <div class="m-1 p-1" style="white-space:normal">
-                        <p class="m-1 p-1" style="white-space:pre-line"><strong>{{ wbsummary.chapter }}</strong> <strong> 장 </strong></p>
+                        <p class="m-1 p-1" style="white-space:pre-line"><strong>{{ wbsummary.chapter }} 장</strong></p>
                         <p class="m-1 p-1" style="white-space:pre-line">{{ wbsummary.bible_summary }}</p>
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-end">
+                        <div class="badge badge-light p-2">
+                            {{ weeklybible.week }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12"> <!-- Publications Index 영역 -->
+            <div class="card my-1">
+                <div class="card-body">
+                    <h6><strong>출판물 색인</strong></h6>
+                    <p class="m-1 p-1" style="white-space:pre-line"><strong>{{ weeklybible.pubsindex_set.chapter }}</strong> <strong> 장 </strong></p>
+                    {% for pubsindex in weeklybible.pubsindex_set.all %}
+                    <div class="m-1 p-1" style="white-space:normal">
+                        <p class="m-1 p-1" style="white-space:pre-line"><a href="{{ pubsindex.pi_link }}" target="_blank">{{ pubsindex.pi_title }}</a></p>
                     </div>
                     {% endfor %}
                     <div class="d-flex justify-content-end">
@@ -105,7 +124,7 @@
                         </div>
                         {% endif %}
                         <div class="badge badge-light p-2 text-left">
-                            <div class="mb-2">{{ research.author.first_name }}</div>
+                            <div class="mb-2">{{ research.author.last_name }}{{ research.author.first_name }}</div>
                             <div>{{ research.create_date }}</div>
                         </div>
                     </div>
@@ -124,7 +143,7 @@
                         <div class="comment py-2 text-muted">
                             <span style="white-space: pre-line;">{{ comment.content }}</span>
                             <span>
-                                : <span class="small">{{ comment.author.first_name }}</span>, {{ comment.create_date }}
+                                : <span class="small">{{ comment.author.last_name }}{{ comment.author.first_name }}</span>, {{ comment.create_date }}
                                 {% if comment.modify_date %}
                                 (수정:{{ comment.modify_date }})
                                 {% endif %}
