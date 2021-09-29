@@ -13,16 +13,16 @@ logger = logging.getLogger('neworld')
 def index(request):
     logger.info("INFO 레벨로 출력")
 
-    # cal = get_number_of_week()
-    # this_week = cal[1]
-    # tmr = datetime.date.today() + datetime.timedelta(1)
-    # t_day = datetime.date.today()
-    # thirdday = datetime.date.today() + datetime.timedelta(3)
-    # seventhday = datetime.date.today() + datetime.timedelta(7)
-    # Tomorrow = str(tmr.year) + '-' + str(tmr.month).zfill(2) + '-' + str(tmr.day).zfill(2)
-    # Third_day = str(thirdday.year) + '-' + str(thirdday.month).zfill(2) + '-' + str(thirdday.day).zfill(2)
-    # Seventh_day = str(seventhday.year) + '-' + str(seventhday.month).zfill(2) + '-' + str(seventhday.day).zfill(2)
-    # RealDay = str(t_day.year) + '-' + str(t_day.month).zfill(2) + '-' + str(t_day.day).zfill(2)
+    cal = get_number_of_week()
+    this_week = cal[1]
+    tmr = datetime.date.today() + datetime.timedelta(1)
+    t_day = datetime.date.today()
+    thirdday = datetime.date.today() + datetime.timedelta(3)
+    seventhday = datetime.date.today() + datetime.timedelta(7)
+    Tomorrow = str(tmr.year) + '-' + str(tmr.month).zfill(2) + '-' + str(tmr.day).zfill(2)
+    Third_day = str(thirdday.year) + '-' + str(thirdday.month).zfill(2) + '-' + str(thirdday.day).zfill(2)
+    Seventh_day = str(seventhday.year) + '-' + str(seventhday.month).zfill(2) + '-' + str(seventhday.day).zfill(2)
+    RealDay = str(t_day.year) + '-' + str(t_day.month).zfill(2) + '-' + str(t_day.day).zfill(2)
     #
     # # 1주일 일용할 성구 크롤링
     # date_range_crawling = date_range_for_crawling(Tomorrow, Third_day)
