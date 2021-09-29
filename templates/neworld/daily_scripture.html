@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load neworld_filter %}
+
 {% block content %}
 <div class="container my-3">
     <!-- 사용자오류 표시 -->
@@ -84,12 +85,12 @@
                     <div class="d-flex justify-content-end">
                         {% if meditation.modify_date %}
                         <div class="badge badge-light p-2 text-left mx-3">
-                            <div class="mb-2">modified at</div>
                             <div>{{ meditation.modify_date }}</div>
+                            <div class="mt-2"> 수정됨</div>
                         </div>
                         {% endif %}
                         <div class="badge badge-light p-2 text-left">
-                            <div class="mb-2">{{ meditation.author.first_name }}</div>
+                            <div class="mb-2">{{ meditation.author.last_name }}{{ meditation.author.first_name }}</div>
                             <div>{{ meditation.create_date }}</div>
                         </div>
                     </div>
@@ -108,7 +109,7 @@
                         <div class="comment py-2 text-muted">
                             <span style="white-space: pre-line;">{{ comment.content }}</span>
                             <span>
-                                : <span class="small">{{ comment.author.first_name }}</span>, {{ comment.create_date }}
+                                : <span class="small">{{ comment.author.last_name }}{{ comment.author.first_name }}</span>, {{ comment.create_date }}
                                 {% if comment.modify_date %}
                                 (수정:{{ comment.modify_date }})
                                 {% endif %}
