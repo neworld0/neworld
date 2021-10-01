@@ -46,6 +46,23 @@
                 </div>
             </div>
         </div>
+        <div class="col-12"> <!-- Publications Index 영역 -->
+            <div class="card my-1">
+                <div class="card-body">
+                    <h6><strong>출판물 색인</strong></h6>
+                    {% for pubsindex in weeklybible.pubsindex_set.all %}
+                    <div class="m-1 p-1" style="white-space:normal">
+                        ({{ pubsindex.index_verse }}) <a href="{{ pubsindex.pi_link }}" target="_blank">{{ pubsindex.pi_title }}</a>
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-end">
+                        <div class="badge badge-light p-2">
+                            {{ weeklybible.week }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <h5 class="border-bottom my-3 py-2">{{ weeklybible.research_set.count }}개의 묵상 및 조사내용이 있습니다.</h5>
     <div class="card bg-light text-dark my-3">

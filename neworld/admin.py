@@ -1,5 +1,5 @@
 from django.contrib import admin
-from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, Research, Bible, WBsummary
+from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, Research, Bible, WBsummary, PubsIndex
 
 
 # class UserAdmin(admin.ModelAdmin):
@@ -62,7 +62,7 @@ class WBsummaryAdmin(admin.ModelAdmin):
 admin.site.register(WBsummary, WBsummaryAdmin)
 
 
-# class PubsIndexAdmin(admin.ModelAdmin):
-#     search_fields = ['pi_title']
-#
-# admin.site.register(PubsIndex, PubsIndexAdmin)
+class PubsIndexAdmin(admin.ModelAdmin):
+    search_fields = ['pi_title']
+
+admin.site.register(PubsIndex, PubsIndexAdmin)
