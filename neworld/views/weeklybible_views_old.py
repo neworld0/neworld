@@ -5,7 +5,7 @@ from django.db.models import Q, Count
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
-from neworld.models import WeeklyBible, WBsummary, Bible
+from neworld.models import WeeklyBible, WBsummary, Bible, PubsIndex
 from bs4 import BeautifulSoup
 import requests
 import datetime
@@ -223,6 +223,132 @@ def add_wbsummary_new_items(crawled_items, bible_id):
     return items_to_insert_into_db
 
 
+# 다음 주의 Publications Index update 준비
+def pi_update_prep(target_year, target_next_week):
+    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+    br1 = weeklybible.bible_range
+    br2 = br1.strip()
+    if '요한 1서' in br2:
+        br5 = '요한 1서'
+    elif '요한 2서' in br2:
+        br5 = '요한 2서'
+    elif '요한 3서' in br2:
+        br5 = '요한 3서'
+    else:
+        br3 = re.findall(r'\D+', br2)
+        br4 = br3[0]
+        br5 = br4.strip()
+    br6 = Bible.objects.get(bible=br5)
+    br = br6.bible_id
+    bible = br6.bible
+
+    bs1 = weeklybible.bible_range
+    bs2 = bs1.strip()
+    bs3 = re.findall(r'\d+', bs2)
+    if len(bs3) > 2:
+        bs4 = bs3.pop(0)
+    else:
+        bs4 = bs3
+    b = int(bs4[0])
+    c = int(bs4[1])
+    bs = c - b
+    result = [br, bs, b, c, bible]
+    return result
+
+# Publications Index crawling 파라미터 값 생성
+def pi_parameter(pi_update):
+    result = []
+    tag = '#studyDiscover > div.section'
+    result.append(tag)
+    for i in range(pi_update[1] + 1):
+        url_current = 'https://wol.jw.org/ko/wol/b/r8/lp-ko/nwtsty/' + str(pi_update[0]) + '/' + str(pi_update[2]+i)
+        result.append(url_current)
+    return result
+
+
+def fetch_pilink_latest_data(tag, url1, chapter):
+    result = []
+    web_page_link_root = 'https://wol.jw.org'
+    i = 0
+    tag_index = 'div.group.index.collapsible > ul > li.item.ref-dx > span'
+    tag_title = 'h3 > span'
+    for target in url1:
+        response = requests.get(target)
+        html = response.text
+        soup = BeautifulSoup(html, 'html.parser')
+        item_list = soup.select(tag)
+        for item in item_list:
+            index_verse_find = item.select(tag_index)
+            if index_verse_find:
+                verse = item.select(tag_title)
+                index_verse_str = verse[0]
+                index_verse = index_verse_str.text
+                for link in index_verse_find:
+                    p_list = link.select('p')
+                    for p_tag in p_list:
+                        if p_tag.text == '':
+                            pass
+                        else:
+                            a_list = p_tag.select('a')
+                            for a_tag in a_list:
+                                pi_title = a_tag.text
+                                href = a_tag['href']
+                                pubs_link_raw1 = web_page_link_root + href
+                                page_link_parts = urlparse(pubs_link_raw1)
+                                normalized_page_link = page_link_parts.scheme + '://' + page_link_parts.hostname + page_link_parts.path
+                                specific_id = page_link_parts.path.split('/')[-3:]
+                                item_obj = {
+                                    'chapter': str(int(chapter) + i),
+                                    'index_verse': index_verse,
+                                    'pi_title': pi_title,
+                                    'pi_link': normalized_page_link,
+                                    'specific_id': specific_id,
+                                    'create_date': timezone.now()
+                                }
+                                result.append(item_obj)
+        i = i + 1
+    result.reverse()
+    return result
+
+
+# 크롤링 데이터 DB 저장 함수
+def add_pilink_new_items(crawled_items, bible_id, chapter):
+    try:
+        last_inserted_items = PubsIndex.objects.last()
+    except PubsIndex.DoesNotExist:
+        # if last_inserted_items is None:
+        last_inserted_specific_id = ""
+        PubsIndex.create()
+    else:
+        last_inserted_specific_id = getattr(last_inserted_items, 'specific_id')
+    items_to_insert_into_db = []
+    for item in crawled_items:
+        if item['specific_id'] == last_inserted_specific_id:
+            break
+        items_to_insert_into_db.append(item)
+    items_to_insert_into_db.reverse()
+
+    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+    bible = get_object_or_404(Bible, pk=bible_id)
+    wbsummary = WBsummary.objects.get(bible=bible_id, chapter=chapter)
+
+    if last_inserted_items.chapter == wbsummary.chapter:
+        pass
+    else:
+        for item in items_to_insert_into_db:
+            PubsIndex(
+                weeklybible=weeklybible,
+                bible=bible,
+                chapter=item['chapter'],
+                index_verse=item['index_verse'],
+                pi_title=item['pi_title'],
+                pi_link=item['pi_link'],
+                specific_id=item['specific_id'],
+                create_date=item['create_date']
+            ).save()
+    return items_to_insert_into_db
+
+
 # weeklybible 페이지 호출
 @login_required(login_url='common:login')
 # @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
@@ -279,6 +405,7 @@ def weeklybible(request):
 
     # wbsummary update 여부 판단 및 크롤링
     ws_update = wbsummary_update_prep(target_year, target_next_week)
+    pi_update = pi_update_prep(target_year, target_next_week)
     try:
         wbsummary = WBsummary.objects.last()
     except WBsummary.DoesNotExist:
@@ -293,6 +420,9 @@ def weeklybible(request):
         wp = ws_parameter(ws_update)
         ws = fetch_wbsummary_latest_data(wp[len(wp)-1], wp[0:len(wp)-1])
         add_wbsummary_new_items(ws, ws_update[0])
+        pi = pi_parameter(pi_update)
+        ps = fetch_pilink_latest_data(pi[0], pi[1:], pi_update[2])
+        add_pilink_new_items(ps, pi_update[0], pi_update[2])
     return render(request, 'neworld/weeklybible.html', context)
 
 
