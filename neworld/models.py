@@ -125,18 +125,18 @@ class WBsummary(models.Model):
         return self.chapter
 
 
-# class PubsIndex(models.Model):
-#     weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
-#     bible = models.ForeignKey(Bible, on_delete=models.CASCADE, null=True)
-#     chapter = models.CharField(max_length=10)
-#     index_verse = models.CharField(max_length=50)
-#     pi_title = models.CharField(max_length=50)
-#     pi_link = models.URLField('Publications Index URL', null=True, blank=True)
-#     specific_id = models.CharField(max_length=50, null=True, blank=True)
-#     create_date = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return self.pi_title
+class PubsIndex(models.Model):
+    weeklybible = models.ForeignKey(WeeklyBible, on_delete=models.CASCADE, null=True)
+    bible = models.ForeignKey(Bible, on_delete=models.CASCADE, null=True)
+    chapter = models.CharField(max_length=10)
+    index_verse = models.CharField(max_length=50)
+    pi_title = models.CharField(max_length=50)
+    pi_link = models.URLField('Publications Index URL', null=True, blank=True)
+    specific_id = models.CharField(max_length=50, null=True, blank=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.pi_title
 
 
 class Research(models.Model):
