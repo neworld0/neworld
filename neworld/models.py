@@ -108,8 +108,8 @@ class Meditation(models.Model):
 class Bible(models.Model):
     bible_id = models.CharField(max_length=10)
     bible = models.CharField(max_length=30, null=True)
-    # chapter = models.CharField(max_length=10, null=True)
-    # verse = models.IntegerField(max_length=10, null=True)
+    chapter = models.CharField(max_length=10, null=True)
+    verse = models.IntegerField(max_length=10, null=True)
 
     def __str__(self):
         return self.bible
