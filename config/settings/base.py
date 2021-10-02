@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import neworld
+# import neworld
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -29,7 +29,7 @@ SECRET_KEY = 'm(1kae9!%=wcde_xsgpr+walb^zsa(*fs-mx6-09twf*_)l539'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.37.168.232']
+ALLOWED_HOSTS = ['3.37.207.152']
 
 
 # Application definition
