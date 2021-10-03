@@ -125,10 +125,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    # BASE_DIR / 'static',
-    '/projects/mysite/static/img/',
-]
 
 # 로그인 성공후 이동하는 URL
 LOGIN_REDIRECT_URL = '/'

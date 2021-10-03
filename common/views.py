@@ -50,7 +50,7 @@ def signup(request):
 class SignupView(CreateView):
     model = User
     form_class = UserForm
-    template_name = 'common/signup_test.html'
+    template_name = 'common/signup.html'
 
     def get_success_url(self):
         next_url = self.request.GET.get('next') or 'profile'
