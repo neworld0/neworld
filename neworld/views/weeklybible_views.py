@@ -23,8 +23,8 @@ def get_number_of_week():
 cal = get_number_of_week()
 target_year = str(cal[0])
 target_week = str(cal[1])
-# target_next_week = str(cal[1]+1)
-target_next_week = str(cal[1])
+target_next_week = str(cal[1]+1)
+# target_next_week = str(cal[1])
 
 
 # 다음주 성서읽기 크롤링 함수
@@ -363,7 +363,7 @@ def weeklybible(request):
         add_new_items(wb)
         weeklybible = WeeklyBible.objects.last()
 
-    if weeklybible.year == target_year and weeklybible.n_week > target_next_week:
+    if weeklybible.year == target_year and weeklybible.n_week >= target_next_week:
         pass
     else:
         # 주간 성서읽기 범위 update
@@ -414,7 +414,7 @@ def weeklybible(request):
         add_wbsummary_new_items(ws, ws_update[0])
         wbsummary = WBsummary.objects.last()
 
-    if int(wbsummary.weeklybible.n_week) > int(target_next_week):
+    if int(wbsummary.weeklybible.n_week) >= int(target_next_week):
         pass
     else:
         wp = ws_parameter(ws_update)
