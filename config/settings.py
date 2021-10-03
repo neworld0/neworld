@@ -29,7 +29,7 @@ SECRET_KEY = 'm(1kae9!%=wcde_xsgpr+walb^zsa(*fs-mx6-09twf*_)l539'
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-ALLOWED_HOSTS = ['3.37.168.232', '321son.neworld.kr']
+ALLOWED_HOSTS = ['3.37.207.152', '321son.neworld.kr']
 STATIC_ROOT = BASE_DIR / 'static/'
 STATICFILES_DIRS = []
 DEBUG = False
