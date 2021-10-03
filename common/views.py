@@ -43,7 +43,7 @@ def signup(request):
             return redirect(next_url)
     else:
         form = UserForm()
-    return render(request, 'common/signup_test.html', {'form': form})
+    return render(request, 'common/signup.html', {'form': form})
 
 
 
