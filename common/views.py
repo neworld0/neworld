@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, resolve_url, HttpResponse
 from django.views.generic import CreateView
 
 from common.forms import UserForm
-from config.settings import base
+# from config.settings import base
+from config import settings
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
