@@ -17,7 +17,6 @@ def scripture(request):
     kw = request.GET.get('kw', '')  # 검색어
     so = request.GET.get('so', 'recent')  # 정렬기준
     d_today = str(datetime.date.today())
-    print(d_today)
 
     # 정렬
     if so == 'recommend':
