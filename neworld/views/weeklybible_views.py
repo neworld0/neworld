@@ -47,7 +47,7 @@ def fetch_weeklybible_latest_data(url, tag):
     specific_id = page_link_parts.path.split('/')[-3]       # list의 인덱싱 : [-3] -> 끝에서 3번째 요소(/202021321/) 선택
     item_obj = {
         'year': target_year,
-        'n_week': target_next_week,
+        'n_week': target_week,
         'week': week,
         'bible_range': bible_range,
         'bible_link': normalized_page_link,
@@ -86,8 +86,8 @@ def add_new_items(crawled_items):
 
 
 # 다음 주의 WBsummary update 준비
-def wbsummary_update_prep(target_year, target_next_week):
-    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+def wbsummary_update_prep(target_year, target_week):
+    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_week)
     br1 = weeklybible.bible_range
     br2 = br1.strip()
     if '요한 1서' in br2:
@@ -208,7 +208,7 @@ def add_wbsummary_new_items(crawled_items, bible_id):
         else:
             items_to_insert_into_db.append(item)
 
-    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_week)
     bible = get_object_or_404(Bible, pk=bible_id)
     for item in items_to_insert_into_db:
         WBsummary(
@@ -233,17 +233,17 @@ def weeklybible(request):
     try:
         weeklybible = WeeklyBible.objects.last()
     except WeeklyBible.DoesNotExist:
-        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_next_week
+        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_week
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
         add_new_items(wb)
         weeklybible = WeeklyBible.objects.last()
 
-    if weeklybible.year == target_year and weeklybible.n_week >= target_next_week:
+    if weeklybible.year == target_year and weeklybible.n_week > target_week:
         pass
     else:
         # 주간 성서읽기 범위 update
-        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_next_week
+        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_week
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
         add_new_items(wb)
@@ -286,8 +286,8 @@ def weeklybible(request):
 # @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def weeklybible_detail(request, weeklybible_id):
     # 다음 주의 Publications Index update 준비
-    def pi_update_prep(target_year, target_next_week):
-        weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+    def pi_update_prep(target_year, target_week):
+        weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_week)
         br1 = weeklybible.bible_range
         br2 = br1.strip()
         if '요한 1서' in br2:
@@ -389,7 +389,7 @@ def weeklybible_detail(request, weeklybible_id):
             items_to_insert_into_db.append(item)
         items_to_insert_into_db.reverse()
 
-        weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+        weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_week)
         bible = get_object_or_404(Bible, pk=bible_id)
         wbsummary = WBsummary.objects.get(bible=bible_id, chapter=chapter)
 
@@ -410,8 +410,8 @@ def weeklybible_detail(request, weeklybible_id):
         return items_to_insert_into_db
 
     # wbsummary  및 pubsindex update 여부 판단 및 크롤링
-    ws_update = wbsummary_update_prep(target_year, target_next_week)
-    pi_update = pi_update_prep(target_year, target_next_week)
+    ws_update = wbsummary_update_prep(target_year, target_week)
+    pi_update = pi_update_prep(target_year, target_week)
     try:
         wbsummary = WBsummary.objects.last()
     except WBsummary.DoesNotExist:
@@ -420,7 +420,7 @@ def weeklybible_detail(request, weeklybible_id):
         add_wbsummary_new_items(ws, ws_update[0])
         wbsummary = WBsummary.objects.last()
 
-    if int(wbsummary.weeklybible.n_week) >= int(target_next_week):
+    if int(wbsummary.weeklybible.n_week) >= int(target_week):
         pass
     else:
         wp = ws_parameter(ws_update)
