@@ -24,7 +24,6 @@ cal = get_number_of_week()
 target_year = str(cal[0])
 target_week = str(cal[1])
 target_next_week = str(cal[1]+1)
-# target_next_week = str(cal[1])
 
 
 # 다음주 성서읽기 크롤링 함수
