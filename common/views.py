@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 # from django.contrib.auth.hashers import check_password
 # from django.contrib.auth import get_user_model
 # from django.contrib import auth
-# from common.models import Profile
+from common.models import Profile
 #
 # from django.contrib.sites.shortcuts import get_current_site
 # from django.template.loader import render_to_string
@@ -28,6 +28,10 @@ from django.contrib.auth.models import User
 # from django.contrib.auth.tokens import default_token_generator
 # from django.http import Http404
 
+@login_required(login_url='common:login')
+def profile(request):
+    return render(request, 'common/profile.html')
+
 
 # 계정 생성
 def signup(request):
@@ -39,29 +43,29 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user_id, password=raw_password)   # 사용자 인증
             login(request, user)  # 로그인
-            next_url = request.GET.get('next') or 'profile'
-            return redirect(next_url)
+            # next_url = request.GET.get('next') or 'profile'
+            return redirect('index')
     else:
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
 
 
 
-class SignupView(CreateView):
-    model = User
-    form_class = UserForm
-    template_name = 'common/signup.html'
-
-    def get_success_url(self):
-        next_url = self.request.GET.get('next') or 'profile'
-        return resolve_url(next_url)
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect(self.get_success_url())
-
-signup = SignupView.as_view()
+# class SignupView(CreateView):
+#     model = User
+#     form_class = UserForm
+#     template_name = 'common/signup.html'
+#
+#     def get_success_url(self):
+#         next_url = self.request.GET.get('next') or 'profile'
+#         return resolve_url(next_url)
+#
+#     def form_valid(self, form):
+#         user = form.save()
+#         login(self.request, user)
+#         return redirect(self.get_success_url())
+#
+# signup = SignupView.as_view()
 
 
 # class RequestLoginViaUrlView(PasswordResetView):
@@ -144,9 +148,7 @@ signup = SignupView.as_view()
 
 
 
-@login_required(login_url='common:login')
-def profile(request):
-    return render(request, 'common/profile.html')
+
 
 
 def page_not_found(request, exception):

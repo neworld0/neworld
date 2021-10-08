@@ -256,4 +256,4 @@ AWS_SES_REGION_ENDPOINT = 'email.ap-northeast-2.amazonaws.com'
 # # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
 
 
-# AUTH_USER_MODEL = 'common.User'
+
