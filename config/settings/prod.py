@@ -12,7 +12,7 @@ STATICFILES_DIRS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbcamp',
+        'NAME': 'neworld',
         'USER': 'dbmaster',
         'PASSWORD': 'WTmZdaBclaNrvZVLcfol',
         'HOST': 'databasecamp.cjo3f5o7oksd.ap-northeast-2.rds.amazonaws.com',
