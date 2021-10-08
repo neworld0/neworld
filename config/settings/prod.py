@@ -14,8 +14,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dbcamp',
         'USER': 'dbmaster',
-        'PASSWORD': 'RM9qBQCVzeBgNNxDIUJQ',
-        'HOST': 'database-1.cjo3f5o7oksd.ap-northeast-2.rds.amazonaws.com',
+        'PASSWORD': 'WTmZdaBclaNrvZVLcfol',
+        'HOST': 'databasecamp.cjo3f5o7oksd.ap-northeast-2.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
