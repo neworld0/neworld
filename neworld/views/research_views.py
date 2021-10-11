@@ -2,15 +2,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
-
+from django.contrib.auth.models import User
 from ..forms import ResearchForm
 from ..models import WeeklyBible, Research
 
 
-# 묵상내용 등록
+# 조사내용 등록
 @login_required(login_url='common:login')
 def research_create(request, weeklybible_id):
     weeklybible = get_object_or_404(WeeklyBible, pk=weeklybible_id)
+    user = get_object_or_404(User, pk=request.user.id)
+    groups = user.groups.all()
     if request.method == "POST":
         form = ResearchForm(request.POST)
         if form.is_valid():
@@ -18,6 +20,8 @@ def research_create(request, weeklybible_id):
             research.author = request.user  # author 속성에 로그인 계정 저장
             research.create_date = timezone.now()
             research.weeklybible = weeklybible
+            for group in groups:
+                research.group = group
             research.save()
             return redirect('{}#research_{}'.format(
                 resolve_url('neworld:weeklybible_detail', weeklybible_id=weeklybible.id), research.id))

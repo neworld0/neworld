@@ -13,8 +13,10 @@
         <div class="card my-3 p-3">
             <h4>이메일: {{ user.email|default:"&dash;" }} </h4>
         </div>
+        <div class="card my-3 p-3">
+            <h4>그룹: {% for group in groups %} [ {{ group|default:"&dash;" }} ] {% endfor %}</h4>
+        </div>
     </div>
-
     <div class="col-12 text-right">
         <a href="{% url 'common:password_change' %}">암호 변경하기</a>
     </div>

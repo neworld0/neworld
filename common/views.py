@@ -1,49 +1,54 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import PasswordChangeView, PasswordResetConfirmView, PasswordResetView
-from django.shortcuts import render, redirect, resolve_url, HttpResponse
+from django.shortcuts import render, redirect, resolve_url, HttpResponse, get_object_or_404
 from django.views.generic import CreateView
-
-from common.forms import UserForm
-from config.settings import base
+from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-# from common.models import User
 # from django.contrib.auth.hashers import check_password
 # from django.contrib.auth import get_user_model
 # from django.contrib import auth
-from common.models import Profile
-#
 # from django.contrib.sites.shortcuts import get_current_site
 # from django.template.loader import render_to_string
 # from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 # from django.utils.encoding import force_bytes
 # from django.core.mail import EmailMessage
-# from common.tokens import account_activation_token
 # from django.utils.encoding import force_bytes, force_text
 # from django.utils import timezone
-#
 # from django.core.exceptions import ValidationError
 # from django.contrib.auth.tokens import default_token_generator
 # from django.http import Http404
 
+from common.forms import UserForm
+from config.settings import base
+from common.models import Profile
+from common.decorators import unauthenticated_user, allowed_users, son123_only
+# from common.tokens import account_activation_token
+
+
 @login_required(login_url='common:login')
-def profile(request):
-    return render(request, 'common/profile.html')
+def profile(request, user_id):
+    user = User.objects.get(id=user_id)
+    groups = user.groups.all()
+    context = {'groups': groups}
+    return render(request, 'common/profile.html', context)
 
 
 # 계정 생성
+# @unauthenticated_user
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            user_id = form.cleaned_data.get('username')
+            username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user_id, password=raw_password)   # 사용자 인증
+            user = authenticate(username=username, password=raw_password)   # 사용자 인증
+            # group = Group.objects.get(name='321son')
+            # user.groups.add(group)
+            # messages.success(request, 'Account was created for ' + username)
             login(request, user)  # 로그인
-            # next_url = request.GET.get('next') or 'profile'
             return redirect('index')
     else:
         form = UserForm()

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.shortcuts import reverse
 
 
@@ -10,6 +10,7 @@ class Question(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_question', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
         permissions = [
@@ -32,6 +33,7 @@ class Answer(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_answer', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
         permissions = [
@@ -90,6 +92,7 @@ class Meditation(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_meditation', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
         permissions = [
@@ -146,6 +149,7 @@ class Research(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_research', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
         permissions = [
@@ -170,5 +174,7 @@ class Comment(models.Model):
     answer = models.ForeignKey(Answer, null=True, blank=True, on_delete=models.CASCADE)
     meditation = models.ForeignKey(Meditation, null=True, blank=True, on_delete=models.CASCADE)
     research = models.ForeignKey(Research, null=True, blank=True, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
+
     def __str__(self):
         return self.content
