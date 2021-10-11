@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.db.models import Q, Count
+from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
@@ -431,5 +432,11 @@ def weeklybible_detail(request, weeklybible_id):
         add_pilink_new_items(ps, pi_update[0], pi_update[2])
 
     weeklybible = get_object_or_404(WeeklyBible, pk=weeklybible_id)
-    context = {'weeklybible': weeklybible}
+    user = User.objects.get(username=request.user)
+    groups = user.groups.all()
+    group = []
+    for g in groups:
+        gr = g.id
+        group.append(gr)
+    context = {'weeklybible': weeklybible, 'group_list': group}
     return render(request, 'neworld/weeklybible_detail.html', context)

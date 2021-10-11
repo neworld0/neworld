@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from ..forms import MeditationForm
 from ..models import Scripture, Meditation
@@ -14,6 +15,8 @@ import datetime
 # @permission_required('views.permission_create', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def meditation_create(request, scripture_id):
     scripture = get_object_or_404(Scripture, pk=scripture_id)
+    user = get_object_or_404(User, pk=request.user.id)
+    groups = user.groups.all()
     if request.method == "POST":
         form = MeditationForm(request.POST)
         if form.is_valid():
@@ -22,6 +25,8 @@ def meditation_create(request, scripture_id):
             meditation.create_date = timezone.now()
             meditation.real_date = scripture
             meditation.scripture = scripture
+            for group in groups:
+                meditation.group = group
             meditation.save()
             return redirect('{}#meditation_{}'.format(
                 resolve_url('neworld:daily_scripture', scripture_id=scripture.id), meditation.id))

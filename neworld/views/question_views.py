@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 from ..forms import QuestionForm
 from ..models import Question
 
@@ -44,7 +45,13 @@ def question(request):
 # @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    context = {'question': question}
+    user = User.objects.get(username=request.user)
+    groups = user.groups.all()
+    group = []
+    for g in groups:
+        gr = g.id
+        group.append(gr)
+    context = {'question': question, 'group_list': group}
     return render(request, 'neworld/question_detail.html', context)
 
 
@@ -52,12 +59,16 @@ def detail(request, question_id):
 @login_required(login_url='common:login')
 # @permission_required('views.permission_create', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def question_create(request):
+    user = get_object_or_404(User, pk=request.user.id)
+    groups = user.groups.all()
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
             question.author = request.user  # author 속성에 로그인 계정 저장
             question.create_date = timezone.now()
+            for group in groups:
+                question.group = group
             question.save()
             return redirect('neworld:question')
     else:

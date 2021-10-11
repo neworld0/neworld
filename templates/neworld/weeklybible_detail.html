@@ -93,6 +93,7 @@
         <input type="submit" value="저장" class="btn btn-primary" style="font-weight:bolder">
     </form>
     {% for research in weeklybible.research_set.all %}
+    {% if research.group.id in group_list %}
     <a name="research_{{ research.id }}"></a>
     <div class="row my-3">
         <div class="col-1">    <!-- 추천영역 -->
@@ -164,6 +165,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
     <a href="{% url 'neworld:weeklybible' %}" class="btn btn-primary" style="font-weight:bolder"><i class="fas fa-list" ></i>  목록으로</a>
 </div>

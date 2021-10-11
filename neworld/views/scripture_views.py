@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 import datetime
-from ..models import Scripture
+from ..models import Scripture, Meditation
+from django.contrib.auth.models import User
+from common.decorators import allowed_users, son123_only
 
 
 # 성구 목록 출력
@@ -44,8 +46,15 @@ def scripture(request):
 
 # 성구 상세내용 출력
 @login_required(login_url='common:login')
+# @allowed_users(allowed_roles=['321son'])
 # @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def daily_scripture(request, scripture_id):
     scripture = get_object_or_404(Scripture, pk=scripture_id)
-    context = {'scripture': scripture}
+    user = User.objects.get(username=request.user)
+    groups = user.groups.all()
+    group = []
+    for g in groups:
+        gr = g.id
+        group.append(gr)
+    context = {'scripture': scripture, 'group_list': group}
     return render(request, 'neworld/daily_scripture.html', context)
