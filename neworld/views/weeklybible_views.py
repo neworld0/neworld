@@ -86,145 +86,6 @@ def add_new_items(crawled_items):
     return items_to_insert_into_db
 
 
-# 다음 주의 WBsummary update 준비
-def wbsummary_update_prep(target_year, target_next_week):
-    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
-    br1 = weeklybible.bible_range
-    br2 = br1.strip()
-    if '요한 1서' in br2:
-        br5 = '요한 1서'
-    elif '요한 2서' in br2:
-        br5 = '요한 2서'
-    elif '요한 3서' in br2:
-        br5 = '요한 3서'
-    else:
-        br3 = re.findall(r'\D+', br2)
-        br4 = br3[0]
-        br5 = br4.strip()
-    br6 = Bible.objects.get(bible=br5)
-    br = br6.bible_id
-    bible = br6.bible
-
-    bs1 = weeklybible.bible_range
-    bs2 = bs1.strip()
-    bs3 = re.findall(r'\d+', bs2)
-    if len(bs3) > 2:
-        bs4 = bs3.pop(0)
-    else:
-        bs4 = bs3
-    b = int(bs4[0])
-    c = int(bs4[1])
-    bs = c - b
-    result = [br, bs, b, c, bible]
-    return result
-
-# Outline crawling 파라미터 값 생성
-def ws_parameter(ws_update):
-    result = []
-    url_current = 'https://wol.jw.org/ko/wol/bibledocument/r8/lp-ko/nwtsty/' + ws_update[0] + '/outline'
-    for i in range(ws_update[1] + 1):
-        tag = '#article > ul > li:nth-child(' + str(ws_update[2] + i) + ')'
-        result.append(tag)
-    result.append(url_current)
-    return result
-
-
-def fetch_wbsummary_latest_data(url, tag):
-    result = []
-    response = requests.get(url)
-    html = response.text
-    soup = BeautifulSoup(html, 'html.parser')
-    web_page_link_root = 'https://wol.jw.org'
-    for item in tag:
-        list_item = soup.select_one(item)
-        chapter1 = list_item.find('p').text
-        chapter = chapter1.strip()
-        bible_summary1 = list_item.find('ul').text
-        bible_summary2 = bible_summary1.strip()
-        bible_summary3 = bible_summary2.split(')')
-        count = len(bible_summary3)
-        for i in range(count-1):
-            a = bible_summary3[i]
-            a1 = re.findall(r'\d+', a)
-            if len(a1) < 1:
-                a2 = 0
-            else:
-                a2 = int(a1[len(a1) - 1])
-            b = bible_summary3[i + 1]
-            b1 = re.findall(r'\d+', b)
-            if len(b1) < 1:
-                b2 = 0
-            else:
-                b2 = int(b1[len(b1) - 1])
-            if a2 > b2:
-                b3 = '- ' + b
-                del bible_summary3[i+1]
-                bible_summary3.insert(i + 1, b3)
-            elif a2 == b2:
-                del b
-            else:
-                del a
-        bible_summary3.pop()
-        bible_summary4 = []
-        for i in range(count-1):
-            bible_summary4.append(bible_summary3[i]+')')
-        count1 = len(bible_summary4)
-        for i in range(count1-1):
-            a = bible_summary4[i]
-            a1 = re.findall(r'\d+', a)
-            a2 = int(a1[len(a1)-1])
-            b = bible_summary4[i+1]
-            b1 = re.findall(r'\d+', b)
-            b2 = int(b1[len(b1)-1])
-            if a2 == b2:
-                del b
-        bible_summary = '\n'.join(bible_summary4)
-        page_link_raw = web_page_link_root + list_item.find('p').find('a')['href']
-        page_link_parts = urlparse(page_link_raw)
-        # specific id
-        specific_id = page_link_parts.path.split('/')[-2:]       # list의 인덱싱 : [-2:] -> 끝에서 2번째~마지막 요소(/5/33) 선택
-        item_obj = {
-            'chapter': chapter,
-            'bible_summary': bible_summary,
-            'specific_id': specific_id,
-            'create_date': timezone.now()
-        }
-        result.append(item_obj)
-    return result
-
-
-# 크롤링 데이터 DB 저장 함수
-def add_wbsummary_new_items(crawled_items, bible_id):
-    last_inserted_items = WBsummary.objects.last()
-    if last_inserted_items is None:
-        last_inserted_specific_id = ""
-    else:
-        last_inserted_specific_id = getattr(last_inserted_items, 'specific_id')
-    items_to_insert_into_db = []
-    for item in crawled_items:
-        a = last_inserted_specific_id
-        b = re.findall(r'\d+', a)
-        if item['specific_id'][0] == b[0] and int(item['specific_id'][1]) <= int(b[1]):
-            pass
-        else:
-            items_to_insert_into_db.append(item)
-
-    weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
-    bible = get_object_or_404(Bible, pk=bible_id)
-    for item in items_to_insert_into_db:
-        WBsummary(
-            weeklybible=weeklybible,
-            bible=bible,
-            chapter=item['chapter'],
-            bible_summary=item['bible_summary'],
-            specific_id=item['specific_id'],
-            create_date=item['create_date']
-        ).save()
-    return items_to_insert_into_db
-
-
-
-
 
 # weeklybible 페이지 호출
 @login_required(login_url='common:login')
@@ -286,6 +147,142 @@ def weeklybible(request):
 @login_required(login_url='common:login')
 # @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
 def weeklybible_detail(request, weeklybible_id):
+    # 다음 주의 WBsummary update 준비
+    def wbsummary_update_prep(target_year, target_next_week):
+        weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+        br1 = weeklybible.bible_range
+        br2 = br1.strip()
+        if '요한 1서' in br2:
+            br5 = '요한 1서'
+        elif '요한 2서' in br2:
+            br5 = '요한 2서'
+        elif '요한 3서' in br2:
+            br5 = '요한 3서'
+        else:
+            br3 = re.findall(r'\D+', br2)
+            br4 = br3[0]
+            br5 = br4.strip()
+        br6 = Bible.objects.get(bible=br5)
+        br = br6.bible_id
+        bible = br6.bible
+
+        bs1 = weeklybible.bible_range
+        bs2 = bs1.strip()
+        bs3 = re.findall(r'\d+', bs2)
+        if len(bs3) > 2:
+            bs4 = bs3.pop(0)
+        else:
+            bs4 = bs3
+        b = int(bs4[0])
+        c = int(bs4[1])
+        bs = c - b
+        result = [br, bs, b, c, bible]
+        return result
+
+    # Outline crawling 파라미터 값 생성
+    def ws_parameter(ws_update):
+        result = []
+        url_current = 'https://wol.jw.org/ko/wol/bibledocument/r8/lp-ko/nwtsty/' + ws_update[0] + '/outline'
+        for i in range(ws_update[1] + 1):
+            tag = '#article > div.scalableui > ul > li:nth-child(' + str(ws_update[2] + i) + ')'
+            result.append(tag)
+        result.append(url_current)
+        return result
+
+
+    def fetch_wbsummary_latest_data(tag, url):
+        result = []
+        response = requests.get(url)
+        html = response.text
+        soup = BeautifulSoup(html, 'html.parser')
+        web_page_link_root = 'https://wol.jw.org'
+        for item in tag:
+            list_item = soup.select_one(item)
+            chapter1 = list_item.find('p').text
+            chapter = chapter1.strip()
+            bible_summary1 = list_item.find('ul').text
+            bible_summary2 = bible_summary1.strip()
+            bible_summary3 = bible_summary2.split(')')
+            count = len(bible_summary3)
+            for i in range(count - 1):
+                a = bible_summary3[i]
+                a1 = re.findall(r'\d+', a)
+                if len(a1) < 1:
+                    a2 = 0
+                else:
+                    a2 = int(a1[len(a1) - 1])
+                b = bible_summary3[i + 1]
+                b1 = re.findall(r'\d+', b)
+                if len(b1) < 1:
+                    b2 = 0
+                else:
+                    b2 = int(b1[len(b1) - 1])
+                if a2 > b2:
+                    b3 = '- ' + b
+                    del bible_summary3[i + 1]
+                    bible_summary3.insert(i + 1, b3)
+                elif a2 == b2:
+                    del b
+                else:
+                    del a
+            bible_summary3.pop()
+            bible_summary4 = []
+            for i in range(count - 1):
+                bible_summary4.append(bible_summary3[i] + ')')
+            count1 = len(bible_summary4)
+            for i in range(count1 - 1):
+                a = bible_summary4[i]
+                a1 = re.findall(r'\d+', a)
+                a2 = int(a1[len(a1) - 1])
+                b = bible_summary4[i + 1]
+                b1 = re.findall(r'\d+', b)
+                b2 = int(b1[len(b1) - 1])
+                if a2 == b2:
+                    del b
+            bible_summary5 = '\n'.join(bible_summary4)
+            bible_summary = bible_summary5.replace('\n\n', '')
+            page_link_raw = web_page_link_root + list_item.find('p').find('a')['href']
+            page_link_parts = urlparse(page_link_raw)
+            # specific id
+            specific_id = page_link_parts.path.split('/')[-2:]  # list의 인덱싱 : [-2:] -> 끝에서 2번째~마지막 요소(/5/33) 선택
+            item_obj = {
+                'chapter': chapter,
+                'bible_summary': bible_summary,
+                'specific_id': specific_id,
+                'create_date': timezone.now()
+            }
+            result.append(item_obj)
+        return result
+
+    # 크롤링 데이터 DB 저장 함수
+    def add_wbsummary_new_items(crawled_items, bible_id):
+        last_inserted_items = WBsummary.objects.last()
+        if last_inserted_items is None:
+            last_inserted_specific_id = ""
+        else:
+            last_inserted_specific_id = getattr(last_inserted_items, 'specific_id')
+        items_to_insert_into_db = []
+        for item in crawled_items:
+            a = last_inserted_specific_id
+            b = re.findall(r'\d+', a)
+            if item['specific_id'][0] == b[0] and int(item['specific_id'][1]) <= int(b[1]):
+                pass
+            else:
+                items_to_insert_into_db.append(item)
+
+        weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
+        bible = get_object_or_404(Bible, pk=bible_id)
+        for item in items_to_insert_into_db:
+            WBsummary(
+                weeklybible=weeklybible,
+                bible=bible,
+                chapter=item['chapter'],
+                bible_summary=item['bible_summary'],
+                specific_id=item['specific_id'],
+                create_date=item['create_date']
+            ).save()
+        return items_to_insert_into_db
+
     # 다음 주의 Publications Index update 준비
     def pi_update_prep(target_year, target_next_week):
         weeklybible = WeeklyBible.objects.get(year=target_year, n_week=target_next_week)
@@ -324,18 +321,18 @@ def weeklybible_detail(request, weeklybible_id):
         tag = '#studyDiscover > div.section'
         result.append(tag)
         for i in range(pi_update[1] + 1):
-            url_current = 'https://wol.jw.org/ko/wol/b/r8/lp-ko/nwtsty/' + str(pi_update[0]) + '/' + str(
+            url_current = 'https://wol.jw.org/ko/wol/b/r8/lp-ko/nwtsty/' + pi_update[0] + '/' + str(
                 pi_update[2] + i)
             result.append(url_current)
         return result
 
-    def fetch_pilink_latest_data(tag, url1, chapter):
+    def fetch_pilink_latest_data(tag, url, chapter):
         result = []
         web_page_link_root = 'https://wol.jw.org'
         i = 0
         tag_index = 'div.group.index.collapsible > ul > li.item.ref-dx > span'
         tag_title = 'h3 > span'
-        for target in url1:
+        for target in url:
             response = requests.get(target)
             html = response.text
             soup = BeautifulSoup(html, 'html.parser')
@@ -410,6 +407,7 @@ def weeklybible_detail(request, weeklybible_id):
                 ).save()
         return items_to_insert_into_db
 
+
     # wbsummary  및 pubsindex update 여부 판단 및 크롤링
     ws_update = wbsummary_update_prep(target_year, target_next_week)
     pi_update = pi_update_prep(target_year, target_next_week)
@@ -417,7 +415,7 @@ def weeklybible_detail(request, weeklybible_id):
         wbsummary = WBsummary.objects.last()
     except WBsummary.DoesNotExist:
         wp = ws_parameter(ws_update)
-        ws = fetch_wbsummary_latest_data(wp[len(wp)-1], wp[0:len(wp)-1])
+        ws = fetch_wbsummary_latest_data(wp[0:(len(wp)-1)], wp[-1])     # (tag, url)
         add_wbsummary_new_items(ws, ws_update[0])
         wbsummary = WBsummary.objects.last()
 
@@ -425,7 +423,7 @@ def weeklybible_detail(request, weeklybible_id):
         pass
     else:
         wp = ws_parameter(ws_update)
-        ws = fetch_wbsummary_latest_data(wp[len(wp)-1], wp[0:len(wp)-1])
+        ws = fetch_wbsummary_latest_data(wp[0:(len(wp)-1)], wp[-1])     # (tag, url)
         add_wbsummary_new_items(ws, ws_update[0])
         pi = pi_parameter(pi_update)
         ps = fetch_pilink_latest_data(pi[0], pi[1:], pi_update[2])
