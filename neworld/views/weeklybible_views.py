@@ -244,7 +244,7 @@ def weeklybible_detail(request, weeklybible_id):
             page_link_raw = web_page_link_root + list_item.find('p').find('a')['href']
             page_link_parts = urlparse(page_link_raw)
             # specific id
-            specific_id = page_link_parts.path.split('/')[-2:]  # list의 인덱싱 : [-2:] -> 끝에서 2번째~마지막 요소(/5/33) 선택
+            specific_id = page_link_parts.path.split('/')[-3:]  # list의 인덱싱 : [-2:] -> 끝에서 2번째~마지막 요소(/5/33) 선택
             item_obj = {
                 'chapter': chapter,
                 'bible_summary': bible_summary,
