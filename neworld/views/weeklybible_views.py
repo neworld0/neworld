@@ -121,7 +121,7 @@ def weeklybible(request):
     elif so == 'popular':
         weeklybible_list = WeeklyBible.objects.annotate(num_meditation=Count('content')).order_by('-num_content', '-create_date')
     else:  # recent
-        weeklybible_list = WeeklyBible.objects.order_by('-n_week')
+        weeklybible_list = WeeklyBible.objects.order_by('-year', '-n_week')
 
     # 검색
     if kw:
