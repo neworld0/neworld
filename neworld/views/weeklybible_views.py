@@ -18,8 +18,8 @@ from urllib.parse import urlparse
 def get_number_of_week():
     today = datetime.datetime.today()
     last_monday = today - datetime.timedelta(days=today.weekday())
-    cal = last_monday.isocalendar()
-    return cal
+    cal1 = last_monday.isocalendar()
+    return cal1
 
 cal = get_number_of_week()
 target_year = str(cal[0])
@@ -95,13 +95,13 @@ def weeklybible(request):
     try:
         weeklybible = WeeklyBible.objects.last()
     except WeeklyBible.DoesNotExist:
-        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_next_week
+        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_week
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
         add_new_items(wb)
         weeklybible = WeeklyBible.objects.last()
 
-    if weeklybible.year == target_year and weeklybible.n_week >= target_next_week:
+    if weeklybible.year == target_year and weeklybible.n_week > target_week:
         pass
     else:
         # 주간 성서읽기 범위 update
@@ -408,7 +408,7 @@ def weeklybible_detail(request, weeklybible_id):
         return items_to_insert_into_db
 
 
-    # wbsummary  및 pubsindex update 여부 판단 및 크롤링
+    # wbsummary 및 pubsindex update 여부 판단 및 크롤링
     ws_update = wbsummary_update_prep(target_year, target_next_week)
     pi_update = pi_update_prep(target_year, target_next_week)
     try:
