@@ -25,8 +25,10 @@ def index(request):
     RealDay = str(t_day.year) + '-' + str(t_day.month).zfill(2) + '-' + str(t_day.day).zfill(2)
 
     # 3일 일용할 성구 크롤링
-    date_range_crawling = date_range_for_crawling(Tomorrow, Third_day)
-    date_range_RealDay = date_range(Tomorrow, Third_day)
+#    date_range_crawling = date_range_for_crawling(Tomorrow, Third_day)
+    date_range_crawling = date_range_for_crawling(Tomorrow, Seventh_day)
+#    date_range_RealDay = date_range(Tomorrow, Third_day)
+    date_range_RealDay = date_range(Tomorrow, Seventh_day)
     last_real_date = Scripture.objects.last()
     last_real_day = datetime.datetime.strptime(last_real_date.real_date, "%Y-%m-%d")
     tmr_day = datetime.datetime.strptime(Tomorrow, "%Y-%m-%d")

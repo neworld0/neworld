@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
-from ..models import Question, Answer, Scripture, Meditation, WeeklyBible, Research
+from ..models import Question, Answer, Scripture, Meditation, WeeklyBible, Research, Customer, Activity
 
 
 # 질문 추천 등록
@@ -70,3 +70,25 @@ def vote_research(request, research_id):
     else:
         research.voter.add(request.user)
     return redirect('neworld:weeklybible_detail', weeklybible_id=research.weeklybible.id)
+
+
+# 고객 추천 등록
+@login_required(login_url='common:login')
+def vote_customer(request, customer_id):
+    customer = get_object_or_404(Customer, pk=customer_id)
+    if request.user == customer.author:
+        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
+    else:
+        customer.voter.add(request.user)
+    return redirect('neworld:customer_detail', customer_id=customer.id)
+
+
+# 활동 추천 등록
+@login_required(login_url='common:login')
+def vote_activity(request, activity_id):
+    activity = get_object_or_404(Activity, pk=activity_id)
+    if request.user == activity.author:
+        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
+    else:
+        activity.voter.add(request.user)
+    return redirect('neworld:customer_detail', customer_id=activity.customer.id)

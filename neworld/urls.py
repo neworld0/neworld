@@ -1,7 +1,8 @@
 from django.urls import path
 
 from .views import base_views, scripture_views, meditation_views, question_views, \
-    answer_views, comment_views, vote_views, weeklybible_views, research_views, goldmembership_views
+    answer_views, comment_views, vote_views, weeklybible_views, research_views, \
+    goldmembership_views, customer_views, activity_views
 
 app_name = 'neworld'
 
@@ -52,6 +53,18 @@ urlpatterns = [
          comment_views.comment_modify_question, name='comment_modify_question'),
     path('comment/delete/question/<int:comment_id>/',
          comment_views.comment_delete_question, name='comment_delete_question'),
+    path('comment/create/customer/<int:customer_id>/',
+         comment_views.comment_create_customer, name='comment_create_customer'),
+    path('comment/modify/customer/<int:comment_id>/',
+         comment_views.comment_modify_customer, name='comment_modify_customer'),
+    path('comment/delete/customer/<int:comment_id>/',
+         comment_views.comment_delete_customer, name='comment_delete_customer'),
+    path('comment/create/activity/<int:activity_id>/',
+         comment_views.comment_create_activity, name='comment_create_activity'),
+    path('comment/modify/activity/<int:comment_id>/',
+         comment_views.comment_modify_activity, name='comment_modify_activity'),
+    path('comment/delete/activity/<int:comment_id>/',
+         comment_views.comment_delete_activity, name='comment_delete_activity'),
     path('comment/create/answer/<int:answer_id>/',
          comment_views.comment_create_answer, name='comment_create_answer'),
     path('comment/modify/answer/<int:comment_id>/',
@@ -78,6 +91,8 @@ urlpatterns = [
     path('vote/meditation/<int:meditation_id>/', vote_views.vote_meditation, name='vote_meditation'),
     path('vote/weeklybible/<int:weeklybible_id>/', vote_views.vote_weeklybible, name='vote_weeklybible'),
     path('vote/research/<int:research_id>/', vote_views.vote_research, name='vote_research'),
+    path('vote/customer/<int:customer_id>/', vote_views.vote_customer, name='vote_customer'),
+    path('vote/activity/<int:activity_id>/', vote_views.vote_activity, name='vote_activity'),
 
     # weeklybible_views.py
     path('weeklybible/', weeklybible_views.weeklybible, name='weeklybible'),
@@ -91,6 +106,26 @@ urlpatterns = [
          research_views.research_modify, name='research_modify'),
     path('research/delete/<int:research_id>/',
          research_views.research_delete, name='research_delete'),
+
+    # customer_views.py
+    path('customer/', customer_views.customer, name='customer'),
+    path('customer/<int:customer_id>/',
+         customer_views.customer_detail, name='customer_detail'),
+    path('customer/create/',
+         customer_views.customer_create, name='customer_create'),
+    path('customer/modify/<int:customer_id>/',
+         customer_views.customer_modify, name='customer_modify'),
+    path('customer/delete/<int:customer_id>/',
+         customer_views.customer_delete, name='customer_delete'),
+
+
+    # activity_views.py
+    path('activity/create/<int:customer_id>/',
+         activity_views.activity_create, name='activity_create'),
+    path('activity/modify/<int:activity_id>/',
+         activity_views.activity_modify, name='activity_modify'),
+    path('activity/delete/<int:activity_id>/',
+         activity_views.activity_delete, name='activity_delete'),
 
 
 ]

@@ -165,6 +165,35 @@ class Research(models.Model):
         return reverse("neworld:weeklybible_detail", kwargs={"pk": self.pk})
 
 
+class Customer(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_customer', null=True)
+    name = models.TextField()
+    keyman = models.TextField()
+    position = models.TextField()
+    grade = models.CharField(max_length=2)
+    remark = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(null=True, blank=True)
+    voter = models.ManyToManyField(User, related_name='voter_customer', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Activity(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_activity', null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(null=True, blank=True)
+    voter = models.ManyToManyField(User, related_name='voter_activity', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.content
+
+
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     content = models.TextField()
@@ -174,6 +203,8 @@ class Comment(models.Model):
     answer = models.ForeignKey(Answer, null=True, blank=True, on_delete=models.CASCADE)
     meditation = models.ForeignKey(Meditation, null=True, blank=True, on_delete=models.CASCADE)
     research = models.ForeignKey(Research, null=True, blank=True, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self):

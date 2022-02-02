@@ -22,6 +22,11 @@
             <a class="nav-link " href="{% url 'neworld:question' %}" style="font-weight:bolder">게시판</a>
             {% endif %}
         </li>
+            {% if user.is_authenticated %}
+        <li class="nav-item" id="menu_tab">
+            <a class="nav-link " href="{% url 'neworld:customer' %}" style="font-weight:bolder">Biz</a>
+            {% endif %}
+        </li>
     </ul>
     <ul class="navbar-nav">
         <li class="nav-item">
