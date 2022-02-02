@@ -1,5 +1,6 @@
 from django.contrib import admin
-from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, Research, Bible, WBsummary, PubsIndex
+from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, \
+    Research, Bible, WBsummary, PubsIndex, Customer
 
 
 # class UserAdmin(admin.ModelAdmin):
@@ -66,3 +67,9 @@ class PubsIndexAdmin(admin.ModelAdmin):
     search_fields = ['pi_title']
 
 admin.site.register(PubsIndex, PubsIndexAdmin)
+
+
+class CustomerAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+admin.site.register(Customer, CustomerAdmin)

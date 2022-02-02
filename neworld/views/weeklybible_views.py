@@ -3,9 +3,9 @@ from django.core.paginator import Paginator
 from django.utils import timezone
 from django.db.models import Q, Count
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy
+# from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import permission_required
+# from django.contrib.auth.decorators import permission_required
 from neworld.models import WeeklyBible, WBsummary, Bible, PubsIndex
 from bs4 import BeautifulSoup
 import requests
