@@ -33,29 +33,29 @@
         <div class="col-11"> <!-- 기업정보 영역 -->
             <div class="card">
                 <div class="card-body">
-                        <table class="table">
+                        <table class="table table-bordered">
                             <thead>
                             <tr class="text-center thead-light">
-                                <th>단체명</th>
-                                <td>{{ customer.name|mark }}</td>
+                                <th class="align-middle">단체명</th>
+                                <td class="align-middle">{{ customer.name }}</td>
                             </tr>
                             <tr class="text-center thead-light">
-                                <th>Keyman</th>
-                                <td>{{ customer.keyman|mark }}</td>
+                                <th class="align-middle">Keyman</th>
+                                <td class="align-middle">{{ customer.keyman }}</td>
                             </tr>
                             <tr class="text-center thead-light">
-                                <th>직위</th>
-                                <td>{{ customer.position|mark }}</td>
+                                <th class="align-middle">직위</th>
+                                <td class="align-middle">{{ customer.position }}</td>
                             </tr>
                             <tr class="text-center thead-light">
-                                <th>추진등급</th>
-                                <td>{{ customer.grade|mark }}</td>
+                                <th class="align-middle">추진등급</th>
+                                <td class="align-middle">{{ customer.grade }}</td>
                             </tr>
                             </thead>
                             <tbody>
                             <tr class="text-center thead-light">
-                                <th>특이사항</th>
-                                <td>{{ customer.remark|mark }}</td>
+                                <th  class="align-middle text-center">특이사항</th>
+                                <td  class="align-middle text-left">{{ customer.remark|mark }}</td>
                             </tr>
                             </tbody>
                         </table>
