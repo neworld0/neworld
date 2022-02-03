@@ -34,7 +34,7 @@
             <div class="card">
                 <div class="card-body">
                         <table class="table table-bordered">
-                            <thead>
+                            <tbody>
                             <tr class="text-center thead-light">
                                 <th class="align-middle">단체명</th>
                                 <td class="align-middle">{{ customer.name }}</td>
@@ -48,13 +48,19 @@
                                 <td class="align-middle">{{ customer.position }}</td>
                             </tr>
                             <tr class="text-center thead-light">
-                                <th class="align-middle">추진등급</th>
+                                <th class="align-middle">등급</th>
                                 <td class="align-middle">{{ customer.grade }}</td>
                             </tr>
-                            </thead>
-                            <tbody>
                             <tr class="text-center thead-light">
-                                <th  class="align-middle text-center">특이사항</th>
+                                <th class="align-middle">전화</th>
+                                <td class="align-middle">{{ customer.tel }}</td>
+                            </tr>
+                            <tr class="text-center thead-light">
+                                <th class="align-middle">주소</th>
+                                <td class="align-middle">{{ customer.address }}</td>
+                            </tr>
+                            <tr class="text-center thead-light">
+                                <th  class="align-middle">특이사항</th>
                                 <td  class="align-middle text-left">{{ customer.remark|mark }}</td>
                             </tr>
                             </tbody>
