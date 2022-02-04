@@ -49,11 +49,8 @@
         </div>
         <div class="form-group">
             <label for="grade">추진등급(A/B/C)</label>
-            <select class="form-control" name="grade" id="grade">
-                <option>A</option>
-                <option>B</option>
-                <option>C</option>
-            </select>
+            <input type="text" class="form-control" name="grade" id="grade"
+                   value="{{ form.grade.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
             <label for="remark">특이사항</label>
