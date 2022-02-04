@@ -22,7 +22,7 @@ def customer(request):
     if so == 'recommend':
         customer_list = Customer.objects.annotate(num_voter=Count('voter')).order_by('-num_voter', '-create_date')
     elif so == 'popular':
-        customer_list = Customer.objects.annotate(num_answer=Count('activity')).order_by('-num_activity', '-create_date')
+        customer_list = Customer.objects.annotate(num_activity=Count('activity')).order_by('-num_activity', '-create_date')
     else:  # recent
         customer_list = Customer.objects.order_by('-create_date')
     # 검색
