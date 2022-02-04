@@ -17,35 +17,47 @@
 	</div>
 </div>
 {% endif %}
-{% if user.is_authenticated %}
-<div id="container">
+{% if request.user.is_authenticated %}
+    {% if request.user.username == "gfc" %}
+    <div class="col-12 text-center">
+        <div class="text-center">
+            <div class="my-3 p-2">
+                <h1>
+                    <a href="https://www.samsunglife.com">Samsung Life</a>
+                </h1>
+            </div>
+    </div>
+    {% else %}
+    <div id="container">
+        <div class="text-center">
+            <div class="my-3">
+                <h3 class="p-2">
+                    <a href="{% url 'neworld:scripture' %}" style="color:black">Examining the Scriptures Daily</a>
+                </h3>
+            </div>
+        </div>
+    </div>
     <div class="text-center">
         <div class="my-3">
-            <h3 class="p-2">
-                <a href="{% url 'neworld:scripture' %}" style="color:black">Examining the Scriptures Daily</a>
-            </h3>
+            <h4 class="p-2" style="font-bolder color:blue">
+                {{ today_html }} {{ day_of_week_html }}요일
+            </h4>
         </div>
     </div>
-</div>
-<div class="text-center">
     <div class="my-3">
-        <h4 class="p-2" style="font-bolder color:blue">
-            {{ today_html }} {{ day_of_week_html }}요일
-        </h4>
-    </div>
-</div>
-<div class="my-3">
-    <h5 class="text-center my-1 mx-4">
-        <strong><em>{{ scripture_html }}</em></strong>
-    </h5>
-    <div class="mt-1 mb-4">
-        <div class="p-4">
-            {{ bodyText_html }}
+        <h5 class="text-center my-1 mx-4">
+            <strong><em>{{ scripture_html }}</em></strong>
+        </h5>
+        <div class="mt-1 mb-4">
+            <div class="p-4">
+                {{ bodyText_html }}
+            </div>
         </div>
     </div>
-</div>
+    {% endif %}
 {% endif %}
 {% endblock %}
+
 {% block script %}
 <script type='text/javascript'>
 $(document).ready(function(){
