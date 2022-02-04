@@ -173,6 +173,7 @@ class Customer(models.Model):
     grade = models.CharField(max_length=2)
     tel = models.TextField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
