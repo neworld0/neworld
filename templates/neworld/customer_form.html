@@ -18,6 +18,10 @@
         {% endif %}
         <!-- 오류표시 End -->
         <div class="form-group">
+            <label for="name">AREA</label>
+            <input type="text" class="form-control" name="area" id="area"
+                   value="{{ form.name.value|default_if_none:'' }}">
+        </div>
             <label for="name">단체명</label>
             <input type="text" class="form-control" name="name" id="name"
                    value="{{ form.name.value|default_if_none:'' }}">
@@ -44,12 +48,12 @@
         </div>
         <div class="form-group">
             <label for="email">이메일</label>
-            <input type="text" class="form-control" name="email" id="email"
+            <input type="text" style="ime-mode:inactive;" class="form-control" name="email" id="email"
                    value="{{ form.email.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
             <label for="grade">추진등급(A/B/C)</label>
-            <input type="text" class="form-control" name="grade" id="grade"
+            <input type="text" max="2" style="ime-mode:disabled;" class="form-control" name="grade" id="grade"
                    value="{{ form.grade.value|default_if_none:'' }}">
         </div>
         <div class="form-group">

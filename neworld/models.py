@@ -167,6 +167,7 @@ class Research(models.Model):
 
 class Customer(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_customer', null=True)
+    area = models.TextField(null=True, blank=True)
     name = models.TextField()
     keyman = models.TextField()
     position = models.TextField()
