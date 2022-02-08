@@ -18,10 +18,11 @@
         {% endif %}
         <!-- 오류표시 End -->
         <div class="form-group">
-            <label for="name">AREA</label>
+            <label for="area">지역</label>
             <input type="text" class="form-control" name="area" id="area"
-                   value="{{ form.name.value|default_if_none:'' }}">
+                   value="{{ form.area.value|default_if_none:'' }}">
         </div>
+        <div>
             <label for="name">단체명</label>
             <input type="text" class="form-control" name="name" id="name"
                    value="{{ form.name.value|default_if_none:'' }}">
