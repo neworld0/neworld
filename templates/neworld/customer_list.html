@@ -31,7 +31,7 @@
         <thead>
         <tr class="text-center thead-light">
             <th>#</th>
-            <th>추천</th>
+            <th>지역</th>
             <th style="width:40%">단체명</th>
             <th>등급</th>
             <th>작성일시</th>
@@ -45,10 +45,13 @@
                 <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
                 {{ customer_list.paginator.count|sub:customer_list.start_index|sub:forloop.counter0|add:1 }}
             </td>
-            <td>
+            <!--<td>
                 {% if customer.voter.all.count > 0 %}
                 <span class="badge badge-warning px-2 py-1">{{ customer.voter.all.count }}</span>
                 {% endif %}
+            </td> -->
+            <td>
+               {{ customer.area }}
             </td>
             <td class="text-left">
                 <a href="{% url 'neworld:customer_detail' customer.id %}">{{ customer.name }}</a>
@@ -105,7 +108,7 @@
         {% endif %}
     </ul>
     <!-- 페이징처리 끝 -->
-    <a href="{% url 'neworld:customer_create' %}" class="btn btn-primary" style="font-weight:bold">글쓰기</a>
+    <a href="{% url 'neworld:customer_create' %}" class="btn btn-primary" style="font-weight:bold">고객정보등록</a>
 </div>
 <form id="searchForm" method="get" action="{% url 'neworld:customer' %}">
     <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">

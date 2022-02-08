@@ -28,8 +28,9 @@ def customer(request):
     # 검색
     if kw:
         customer_list = customer_list.filter(
-            Q(name__icontains=kw) |  # 단체명검색
-            Q(keyman__icontains=kw) |  # 키맨검색
+            Q(area__icontains=kw) |  # 지역 검색
+            Q(name__icontains=kw) |  # 단체명 검색
+            Q(keyman__icontains=kw) |  # 키맨 검색
             Q(position__icontains=kw) |  # 직위 검색
             Q(grade__icontains=kw)  #  추진등급 검색
         ).distinct()
