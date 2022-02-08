@@ -108,7 +108,7 @@
         {% endif %}
     </ul>
     <!-- 페이징처리 끝 -->
-    <a href="{% url 'neworld:customer_create' %}" class="btn btn-primary" style="font-weight:bold">고객정보등록</a>
+    <a href="{% url 'neworld:customer_create' %}" class="btn btn-primary" style="font-weight:bold">고객정보 등록</a>
 </div>
 <form id="searchForm" method="get" action="{% url 'neworld:customer' %}">
     <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">

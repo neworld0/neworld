@@ -51,8 +51,9 @@ class ResearchForm(forms.ModelForm):
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['name', 'keyman', 'position', 'grade', 'tel', 'address', 'email', 'remark']
+        fields = ['area', 'name', 'keyman', 'position', 'grade', 'tel', 'address', 'email', 'remark']
         labels = {
+            'area': '지역',
             'name': '단체명',
             'keyman': 'Keyman',
             'position': '직위',
