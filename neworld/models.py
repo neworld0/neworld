@@ -51,8 +51,8 @@ class Answer(models.Model):
 
 
 class WeeklyBible(models.Model):
-    year = models.CharField(max_length=10)
-    n_week = models.CharField(max_length=10)
+    year = models.IntegerField()
+    n_week = models.IntegerField()
     week = models.CharField(max_length=100)
     bible_range = models.CharField(max_length=100)
     bible_link = models.URLField('Site URL', null=True, blank=True)
