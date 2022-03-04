@@ -22,9 +22,9 @@ def get_number_of_week():
     return cal1
 
 cal = get_number_of_week()
-target_year = str(cal[0])
-target_week = str(cal[1])
-target_next_week = str(cal[1]+1)
+target_year = cal[0]
+target_week = cal[1]
+target_next_week = cal[1]+1
 
 
 # 다음주 성서읽기 크롤링 함수
@@ -95,7 +95,7 @@ def weeklybible(request):
     try:
         weeklybible = WeeklyBible.objects.last()
     except WeeklyBible.DoesNotExist:
-        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_week
+        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + str(target_year) + '/' + str(target_week)
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
         add_new_items(wb)
@@ -105,7 +105,7 @@ def weeklybible(request):
         pass
     else:
         # 주간 성서읽기 범위 update
-        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + target_year + '/' + target_next_week
+        url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + str(target_year) + '/' + str(target_next_week)
         tag = '#article > div.todayItems > div.todayItem > div.itemData > header'
         wb = fetch_weeklybible_latest_data(url, tag)
         add_new_items(wb)
@@ -207,6 +207,7 @@ def weeklybible_detail(request, weeklybible_id):
             for i in range(count - 1):
                 a = bible_summary3[i]
                 a1 = re.findall(r'\d+', a)
+                # print(a, a1)
                 if len(a1) < 1:
                     a2 = 0
                 else:
@@ -419,7 +420,7 @@ def weeklybible_detail(request, weeklybible_id):
         add_wbsummary_new_items(ws, ws_update[0])
         wbsummary = WBsummary.objects.last()
 
-    if int(wbsummary.weeklybible.n_week) >= int(target_next_week):
+    if wbsummary.weeklybible.n_week >= target_next_week:
         pass
     else:
         wp = ws_parameter(ws_update)
