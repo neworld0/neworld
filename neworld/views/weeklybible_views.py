@@ -25,7 +25,8 @@ cal = get_number_of_week()
 target_year = cal[0]
 target_week = cal[1]
 target_next_week = cal[1]+1
-
+target_before_week = cal[1]-1
+target_before2_week = cal[1]-2
 
 # 다음주 성서읽기 크롤링 함수
 def fetch_weeklybible_latest_data(url, tag):
@@ -102,7 +103,7 @@ def weeklybible(request):
         weeklybible = WeeklyBible.objects.last()
 
     if weeklybible.year == target_year and weeklybible.n_week > target_week:
-        pass
+       pass
     else:
         # 주간 성서읽기 범위 update
         url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + str(target_year) + '/' + str(target_next_week)
@@ -159,7 +160,7 @@ def weeklybible_detail(request, weeklybible_id):
         elif '요한 3서' in br2:
             br5 = '요한 3서'
         else:
-            br3 = re.findall(r'\D+', br2)
+            br3 = re.findall(r'\D+', br2)       # 숫자가 아닌 것 모두 추출
             br4 = br3[0]
             br5 = br4.strip()
         br6 = Bible.objects.get(bible=br5)
@@ -168,7 +169,7 @@ def weeklybible_detail(request, weeklybible_id):
 
         bs1 = weeklybible.bible_range
         bs2 = bs1.strip()
-        bs3 = re.findall(r'\d+', bs2)
+        bs3 = re.findall(r'\d+', bs2)           # 숫자 모두 추출
         if len(bs3) > 2:
             bs4 = bs3.pop(0)
         else:
@@ -204,42 +205,44 @@ def weeklybible_detail(request, weeklybible_id):
             bible_summary2 = bible_summary1.strip()
             bible_summary3 = bible_summary2.split(')')
             count = len(bible_summary3)
-            for i in range(count - 1):
-                a = bible_summary3[i]
-                a1 = re.findall(r'\d+', a)
-                # print(a, a1)
+            i = 1
+            for i in range(count):
+                a = bible_summary3[i]           # 다윗이 골리앗을 물리치다 (1-58)
+                a1 = re.findall(r'\d+', a)      # 다윗이 골리앗을 물리치다 (1-58) => [1, 58] 추출
                 if len(a1) < 1:
                     a2 = 0
                 else:
-                    a2 = int(a1[len(a1) - 1])
-                b = bible_summary3[i + 1]
-                b1 = re.findall(r'\d+', b)
-                if len(b1) < 1:
-                    b2 = 0
-                else:
-                    b2 = int(b1[len(b1) - 1])
-                if a2 > b2:
-                    b3 = '- ' + b
-                    del bible_summary3[i + 1]
-                    bible_summary3.insert(i + 1, b3)
-                elif a2 == b2:
-                    del b
-                else:
-                    del a
+                    a2 = int(a1[len(a1) - 1])   # a2 = 58
+                j = i + 1
+                for j in range(count-(j-1)):
+                    b = bible_summary3[i + j]       # 골리앗이 이스라엘을 조롱하다 (8-10)
+                    b1 = re.findall(r'\d+', b)      # 골리앗이 이스라엘을 조롱하다 (8-10) => [8, 10] 추출
+                    if len(b1) < 1:
+                        b2 = 0
+                    else:
+                        b2 = int(b1[len(b1) - 1])   # b2 = 10
+                    if a2 > b2:                     # 58 >= 10
+                        b3 = '- ' + b               # - 골리앗이 이스라엘을 조롱하다 (8-10) \ 58 > 37 \ - 다윗이 도전을 받아들이다 (32-37)
+                        del bible_summary3[i + j]
+                        bible_summary3.insert(i + j, b3)    # 다윗이 골리앗을 물리치다 (1-58) \ # - 골리앗이 이스라엘을 조롱하다 (8-10)
+                    elif a2 == b2:
+                        del b
+                    else:
+                        break
             bible_summary3.pop()
             bible_summary4 = []
-            for i in range(count - 1):
+            for i in range(count-1):
                 bible_summary4.append(bible_summary3[i] + ')')
             count1 = len(bible_summary4)
             for i in range(count1 - 1):
                 a = bible_summary4[i]
-                a1 = re.findall(r'\d+', a)
+                a1 = re.findall(r'\d+', a)      # 숫자를 모두 찾음
                 a2 = int(a1[len(a1) - 1])
                 b = bible_summary4[i + 1]
-                b1 = re.findall(r'\d+', b)
+                b1 = re.findall(r'\d+', b)      # 숫자를 모두 찾음
                 b2 = int(b1[len(b1) - 1])
                 if a2 == b2:
-                    del b
+                    break
             bible_summary5 = '\n'.join(bible_summary4)
             bible_summary = bible_summary5.replace('\n\n', '')
             page_link_raw = web_page_link_root + list_item.find('p').find('a')['href']
@@ -296,7 +299,7 @@ def weeklybible_detail(request, weeklybible_id):
         elif '요한 3서' in br2:
             br5 = '요한 3서'
         else:
-            br3 = re.findall(r'\D+', br2)
+            br3 = re.findall(r'\D+', br2)       # 숫자가 아닌 것을 모두 찾음
             br4 = br3[0]
             br5 = br4.strip()
         br6 = Bible.objects.get(bible=br5)
@@ -305,7 +308,7 @@ def weeklybible_detail(request, weeklybible_id):
 
         bs1 = weeklybible.bible_range
         bs2 = bs1.strip()
-        bs3 = re.findall(r'\d+', bs2)
+        bs3 = re.findall(r'\d+', bs2)           # 숫자를 모두 찾음
         if len(bs3) > 2:
             bs4 = bs3.pop(0)
         else:
@@ -322,8 +325,7 @@ def weeklybible_detail(request, weeklybible_id):
         tag = '#studyDiscover > div.section'
         result.append(tag)
         for i in range(pi_update[1] + 1):
-            url_current = 'https://wol.jw.org/ko/wol/b/r8/lp-ko/nwtsty/' + pi_update[0] + '/' + str(
-                pi_update[2] + i)
+            url_current = 'https://wol.jw.org/ko/wol/b/r8/lp-ko/nwtsty/' + pi_update[0] + '/' + str(pi_update[2] + i)
             result.append(url_current)
         return result
 

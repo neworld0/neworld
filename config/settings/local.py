@@ -6,6 +6,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
     '/projects/mysite/static/img/',
 ]
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
