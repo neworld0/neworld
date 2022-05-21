@@ -2,6 +2,9 @@
 {% load neworld_filter %}
 {% block content %}
 <div class="container my-3">
+    <div>
+        <a href="{% url 'neworld:question_create' %}" class="btn btn-primary">글쓰기</a>
+    </div>
     <div class="row justify-content-between my-3">  <!-- 양쪽정렬 justify-content-between으로 변경 -->
         <div class="col-6">
             <div class="btn-group" role="group">
@@ -16,16 +19,16 @@
               </button>
             </div>
         </div>
-
-        <div class="col-6 input-group input-group-sm">
-            <input type="text" class="form-control form-control-sm kw" value="{{ kw|default_if_none:'' }}" onkeypress="return search(event)">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="button" title="찾기" id="btn_search">
-                    <i class="fas fa-search"></i>
-                </button>
+        <div class="col-6">
+            <div class="col-6 input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm kw" value="{{ kw|default_if_none:'' }}" onkeypress="return search(event)">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" title="찾기" id="btn_search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
         </div>
-
     </div>
     <table class="table">
         <thead>
