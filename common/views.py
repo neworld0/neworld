@@ -1,11 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.views import PasswordChangeView, PasswordResetConfirmView, PasswordResetView
 from django.shortcuts import render, redirect, resolve_url, HttpResponse, get_object_or_404
 from django.views.generic import CreateView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 # from django.contrib.auth.hashers import check_password
 # from django.contrib.auth import get_user_model
 # from django.contrib import auth
@@ -54,6 +55,64 @@ def signup(request):
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
 
+
+def page_not_found(request, exception):
+    """
+    404 Page not found
+    """
+    return render(request, 'common/404.html', {})
+
+
+def internal_server_error(request, *args, **argv):
+    """
+    500 Internal Server Error
+    """
+    return render(request, 'common/500.html', status=500)
+
+
+# class MyPasswordChangeView(PasswordChangeView):
+#     success_url = reverse_lazy('common:profile')
+#     template_name = 'common/password_change_form.html'
+#
+#     def form_valid(self, form):
+#         messages.info(self.request, '암호 변경을 완료했습니다.')
+#         return super().form_valid(form)
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('index')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'common/change_password.html', {
+        'form': form
+    })
+
+class MyPasswordResetView(PasswordResetView):
+    success_url = reverse_lazy('common:login')
+    template_name = 'common/password_reset_form.html'
+    email_template_name = 'common/password_reset.html'
+
+    def form_valid(self, form):
+        messages.info(self.request, '암호 변경 메일을 발송했습니다.')
+        return super().form_valid(form)
+
+
+class MyPasswordResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('common:login')
+    template_name = 'common/password_reset_confirm.html'
+
+    def form_valid(self, form):
+        messages.info(self.request, '암호 초기화를 완료했습니다.')
+        return super().form_valid(form)
 
 
 # class SignupView(CreateView):
@@ -149,52 +208,3 @@ def signup(request):
 #         return redirect('neworld:index')
 #     else:
 #         return HttpResponse('비정상적인 접근입니다.')
-
-
-
-
-
-
-
-def page_not_found(request, exception):
-    """
-    404 Page not found
-    """
-    return render(request, 'common/404.html', {})
-
-
-def internal_server_error(request, *args, **argv):
-    """
-    500 Internal Server Error
-    """
-    return render(request, 'common/500.html', status=500)
-
-
-class MyPasswordChangeView(PasswordChangeView):
-    success_url = reverse_lazy('common:profile')
-    template_name = 'common/password_change_form.html'
-
-    def form_valid(self, form):
-        messages.info(self.request, '암호 변경을 완료했습니다.')
-        return super().form_valid(form)
-
-
-class MyPasswordResetView(PasswordResetView):
-    success_url = reverse_lazy('common:login')
-    template_name = 'common/password_reset_form.html'
-    email_template_name = 'common/password_reset.html'
-
-    def form_valid(self, form):
-        messages.info(self.request, '암호 변경 메일을 발송했습니다.')
-        return super().form_valid(form)
-
-
-class MyPasswordResetConfirmView(PasswordResetConfirmView):
-    success_url = reverse_lazy('common:login')
-    template_name = 'common/password_reset_confirm.html'
-
-    def form_valid(self, form):
-        messages.info(self.request, '암호 초기화를 완료했습니다.')
-        return super().form_valid(form)
-
-
