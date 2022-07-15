@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load neworld_filter %}
 {% block content %}
+<div class="container-fluid">
+    <div class="pt-3">
+        <p class="pt-3"></p>
+        <p class="pt-3"></p>
+    </div>
+</div>
 <div class="container my-3">
     <div class="border-bottom py-2">
         <table class="table">
@@ -19,7 +25,7 @@
                             {{ weeklybible.week }}
                         </td>
                         <td class="text-center">
-                            <a href="{% url 'neworld:weeklybible_detail' weeklybible.id %}">{{ weeklybible.bible_range }}</a>
+                            <a href="{% url 'neworld:weeklybible_detail' weeklybible.id %}" style="text-decoration:none">{{ weeklybible.bible_range }}</a>
                             {% if weeklybible.research_set.count > 0 %}
                             <span class="text-danger small ml-2">{{ weeklybible.research_set.count }}</span>
                             {% endif %}
@@ -85,7 +91,7 @@
                     {{ weeklybible.week }}
                 </td>
                 <td class="text-center">
-                    <a href="{% url 'neworld:weeklybible_detail' weeklybible.id %}">{{ weeklybible.bible_range }}</a>
+                    <a href="{% url 'neworld:weeklybible_detail' weeklybible.id %}" style="text-decoration:none">{{ weeklybible.bible_range }}</a>
                     {% if weeklybible.research_set.count > 0 %}
                     <span class="text-danger small ml-2">{{ weeklybible.research_set.count }}</span>
                     {% endif %}
