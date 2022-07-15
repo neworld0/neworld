@@ -174,8 +174,12 @@ def weeklybible_detail(request, weeklybible_id):
             bs4 = bs3.pop(0)
         else:
             bs4 = bs3
-        b = int(bs4[0])
-        c = int(bs4[1])
+        if len(bs4) == 1:
+            b = int(bs4[0])
+            c = int(bs4[0])
+        else:
+            b = int(bs4[0])
+            c = int(bs4[1])
         bs = c - b
         result = [br, bs, b, c, bible]
         return result
@@ -313,8 +317,12 @@ def weeklybible_detail(request, weeklybible_id):
             bs4 = bs3.pop(0)
         else:
             bs4 = bs3
-        b = int(bs4[0])
-        c = int(bs4[1])
+        if len(bs4) == 1:
+            b = int(bs4[0])
+            c = int(bs4[0])
+        else:
+            b = int(bs4[0])
+            c = int(bs4[1])
         bs = c - b
         result = [br, bs, b, c, bible]
         return result
