@@ -430,7 +430,7 @@ def weeklybible_detail(request, weeklybible_id):
         add_wbsummary_new_items(ws, ws_update[0])
         wbsummary = WBsummary.objects.last()
 
-    if wbsummary.weeklybible.n_week >= target_next_week:
+    if int(wbsummary.weeklybible.n_week) >= target_next_week:
         pass
     else:
         wp = ws_parameter(ws_update)

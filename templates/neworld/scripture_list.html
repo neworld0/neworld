@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load neworld_filter %}
 {% block content %}
+<div class="container-fluid">
+    <div class="pt-3">
+        <p class="pt-3"></p>
+        <p class="pt-3"></p>
+    </div>
+</div>
 <div class="container my-3">
     <div class="border-bottom py-2">
         <table class="table">
@@ -23,7 +29,7 @@
                             {{ scripture.d_week }}
                         </td>
                         <td class="text-left">
-                            <a href="{% url 'neworld:daily_scripture' scripture.id %}">{{ scripture.scripture }}</a>
+                            <a href="{% url 'neworld:daily_scripture' scripture.id %}" style="text-decoration:none">{{ scripture.scripture }}</a>
                             {% if scripture.meditation_set.count > 0 %}
                             <span class="text-danger small ml-2">{{ scripture.meditation_set.count }}</span>
                             {% endif %}
@@ -93,7 +99,7 @@
                     {{ scripture.d_week }}
                 </td>
                 <td class="text-left">
-                    <a href="{% url 'neworld:daily_scripture' scripture.id %}">{{ scripture.scripture }}</a>
+                    <a href="{% url 'neworld:daily_scripture' scripture.id %}" style="text-decoration:none">{{ scripture.scripture }}</a>
                     {% if scripture.meditation_set.count > 0 %}
                     <span class="text-danger small ml-2">{{ scripture.meditation_set.count }}</span>
                     {% endif %}
