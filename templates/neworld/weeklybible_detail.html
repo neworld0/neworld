@@ -17,7 +17,7 @@
     {% endfor %}
     </div>
     {% endif %}
-    <h4 class="border-bottom py-2"><a href="{{ weeklybible.bible_link }}" target="_blank">{{ weeklybible.bible_range }}</a></h4>
+    <h4 class="border-bottom py-2"><a href="{{ weeklybible.bible_link }}" target="_blank" style="text-decoration:none">{{ weeklybible.bible_range }}</a></h4>
     <div class="row my-3">
 <!--        <div class="col-1">    &lt;!&ndash; 추천영역 &ndash;&gt;-->
 <!--            <div class="card-center">-->
@@ -95,7 +95,7 @@
         <div class="form-group">
             <textarea {% if not user.is_authenticated %}disabled{% endif %}
                       name="content" id="content" class="form-control" rows="10"></textarea>
-        </div>
+        </div></br>
         <input type="submit" value="저장" class="btn btn-primary" style="font-weight:bolder">
     </form>
     {% for research in weeklybible.research_set.all %}
