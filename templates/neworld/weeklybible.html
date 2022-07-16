@@ -11,7 +11,7 @@
     <div class="border-bottom py-2">
         <table class="table">
             <thead>
-            <tr class="text-center thead-dark">
+            <tr class="text-center table-dark">
                 <th class="text-center">주간</th>
                 <th style="width:60%">이번주 성서읽기 범위</th>
             </tr>
@@ -41,7 +41,6 @@
             </tbody>
         </table>
     </div>
-
     <div class="row justify-content-between my-3">  <!-- 양쪽정렬 justify-content-between으로 변경 -->
         <div class="col-6">
             <div class="btn-group" role="group">
@@ -56,18 +55,20 @@
               </button>
             </div>
         </div>
-        <div class="col-6 input-group input-group-sm">
-            <input type="text" class="form-control form-control-sm kw" value="{{ kw|default_if_none:'' }}" onkeypress="return search(event)">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="button" title="찾기" id="btn_search">
-                    <i class="fas fa-search"></i>
-                </button>
+        <div class="col-6">
+            <div class="col-6 input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm kw" value="{{ kw|default_if_none:'' }}" onkeypress="return search(event)">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" title="찾기" id="btn_search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     <table class="table">
         <thead>
-        <tr class="text-center thead-light">
+        <tr class="text-center table-primary">
             <th>#</th>
             <th>추천</th>
             <th class="text-center">주간</th>
