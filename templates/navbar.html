@@ -10,9 +10,9 @@
     </button>
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
       <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+        <a href="{% url 'index' %}" class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
           <img src="/static/img/321SON.png" alt="" width="64" height="64" class="d-inline-block align-text-top">
-        </h5>
+        </a>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
@@ -20,10 +20,6 @@
           {% if request.user.username == "gfc" %}
           <li class="nav-item p-1">
             <a class="nav-link text-black active" href="{% url 'index' %}" style="font-weight:bolder">HOME</a>
-          </li>
-          {% else %}
-          <li class="nav-item p-1">
-            <a class="nav-link text-black active" href="{% url 'index' %}" style="font-weight:bolder">NEWORLD</a>
           </li>
           {% endif %}
           <li class="nav-item p-1">
