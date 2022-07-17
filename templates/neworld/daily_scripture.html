@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
 {% load neworld_filter %}
-
 {% block content %}
-<div class="container-fluid">
-    <div class="pt-3">
-        <p class="pt-3"></p>
-        <p class="pt-3"></p>
-    </div>
-</div>
 <div class="container my-3">
     <!-- 사용자오류 표시 -->
     {% if messages %}
@@ -65,7 +58,7 @@
         <div class="form-group">
             <textarea {% if not user.is_authenticated %}disabled{% endif %}
                       name="meditation" id="meditation" class="form-control" rows="10"></textarea>
-        </div>
+        </div></br>
         <input type="submit" value="묵상등록" class="btn btn-primary" style="font-weight:bolder">
     </form>
     {% for meditation in scripture.meditation_set.all %}

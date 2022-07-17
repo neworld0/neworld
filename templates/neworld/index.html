@@ -3,12 +3,6 @@
 
 {% if not user.is_authenticated %}
 <div class="container-fluid">
-    <div class="pt-3">
-        <p class="pt-3"></p>
-        <p class="pt-3"></p>
-    </div>
-</div>
-<div class="container-fluid">
 	<div class="row">
         <div class="col-12 text-center">
             <h3>Hi, This is Website of Neworld.</h3>
@@ -40,17 +34,11 @@
             </div>
     </div>
     {% else %}
-<div class="container-fluid">
-    <div class="pt-3">
-        <p class="pt-3"></p>
-        <p class="pt-3"></p>
-    </div>
-</div>
     <div id="container">
         <div class="text-center">
             <div class="my-3">
                 <h3 class="p-2">
-                    <a href="{% url 'neworld:scripture' %}" style="color:black">Examining the Scriptures Daily</a>
+                    <a href="{% url 'neworld:scripture' %}" style="color:black; text-decoration:none">Examining the Scriptures Daily</a>
                 </h3>
             </div>
         </div>
