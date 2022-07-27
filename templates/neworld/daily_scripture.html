@@ -13,21 +13,6 @@
     {% endif %}
     <h5 class="border-bottom py-2"><strong>{{ scripture.scripture }}</strong></h5>
     <div class="row my-3">
-<!--        <div class="col-1">    &lt;!&ndash; 추천영역 &ndash;&gt;-->
-<!--            <div class="card-center">-->
-<!--                <div class="center">-->
-<!--                    <div class="popup-ajax badge badge-light border mt-3 p-2 px-3"-->
-<!--                         data-toggle="popover" data-placement="right"-->
-<!--                         data-uri="{% url 'neworld:vote_scripture' scripture.id %}">-->
-<!--                        <i class="fas fa-thumbs-up mr-1"></i>  {{ scripture.voter.count }}-->
-<!--                    </div>-->
-<!--                    <div class="my-action-buttons">-->
-<!--                    <a href="#" data-uri="{% url 'neworld:vote_scripture' scripture.id %}"-->
-<!--                        class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="col-12"> <!-- scripture 영역 -->
             <div class="card">
                 <div class="card-body">
@@ -64,20 +49,6 @@
     {% for meditation in scripture.meditation_set.all %}
     {% if meditation.group.id in group_list %}
     <div class="row my-3">
-        <div class="col-1 p-0" style="float: none; margin: 0 auto;">    <!-- 추천영역 -->
-            <div class="btn-group-vertical btn-group-justified">
-                <div class="popup-ajax badge badge-light border my-2 p-2"
-                     data-toggle="popover" data-placement="right"
-                     data-uri="{% url 'neworld:vote_meditation' meditation.id %}">
-                    <p class="pb-1 mb-1">{{ meditation.voter.count }}</p>
-                    <i class="fas fa-thumbs-up p-1"></i>
-                </div>
-                <div class="my-action-buttons">
-                <a href="#" data-uri="{% url 'neworld:vote_meditation' meditation.id %}"
-                   class="recommend btn fas fa-thumbs-up center border"></a>
-                </div>
-            </div>
-        </div>
         <div class="col-11 p-1">  <!-- 묵상영역 -->
             <div class="card">
                 <div class="card-body">
@@ -94,14 +65,18 @@
                             <div>{{ meditation.create_date }}</div>
                         </div>
                     </div>
-                    {% if request.user == meditation.author %}
                     <div class="my-3">
-                        <a href="{% url 'neworld:meditation_modify' meditation.id %}"
+                        <a href="javascript:void(0)" data-uri="{% url 'neworld:vote_meditation' meditation.id  %}"
+                            class="recommend btn btn-sm btn-outline-secondary"> 추천
+                            <span class="badge rounded-pill bg-success">{{ meditation.voter.count }}</span>
+                        </a>
+                        {% if request.user == meditation.author %}
+                        <a href="{% url 'neworld:meditation_modify' meditation.id  %}"
                             class="btn btn-sm btn-outline-secondary">수정</a>
-                        <a href="#" class="delete btn btn-sm btn-outline-secondary "
-                            data-uri="{% url 'neworld:meditation_delete' meditation.id  %}">삭제</a>
+                            <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
+                                data-uri="{% url 'neworld:meditation_delete' meditation.id  %}">삭제</a>
+                        {% endif %}
                     </div>
-                    {% endif %}
                     {% if meditation.comment_set.count > 0 %}
                     <div class="mt-3">
                     {% for comment in meditation.comment_set.all %}
