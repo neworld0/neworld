@@ -29,7 +29,7 @@ SECRET_KEY = 'm(1kae9!%=wcde_xsgpr+walb^zsa(*fs-mx6-09twf*_)l539'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.37.207.152']
+ALLOWED_HOSTS = ['3.39.12.91']
 
 
 # Application definition
