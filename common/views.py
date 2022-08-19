@@ -22,8 +22,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 # from django.http import Http404
 
 from common.forms import UserForm
-# from config.settings import base
-from config import settings
+from config.settings import base
 from common.models import Profile
 from common.decorators import unauthenticated_user, allowed_users, son123_only
 # from common.tokens import account_activation_token
