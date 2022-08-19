@@ -7,11 +7,11 @@ import requests
 import datetime
 from neworld.lib import get_number_of_week, date_range, date_range_for_crawling, get_day_of_week, get_week_no
 
-logger = logging.getLogger('neworld')
+# logger = logging.getLogger('neworld')
 
 # index 페이지 출력 및 일용할 성구 크롤링
 def index(request):
-    logger.info("INFO 레벨로 출력")
+    # logger.info("INFO 레벨로 출력")
 
     cal = get_number_of_week()
     this_week = cal[1]
