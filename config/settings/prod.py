@@ -1,3 +1,4 @@
+import environ
 from .base import *
 
 ALLOWED_HOSTS = ['3.39.12.91', 'www.neworld.kr', 'neworld.kr']
@@ -8,3 +9,18 @@ DEBUG = False
 STATICFILES_DIRS = [
     '/projects/mysite/static/img/',
 ]
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': '5432',
+    }
+}
+
