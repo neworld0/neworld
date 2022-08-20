@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['3.39.12.91']
 
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
-    'pybo.apps.PyboConfig',
+    'neworld.apps.NeworldConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
