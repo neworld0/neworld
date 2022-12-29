@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import base_views, scripture_views, meditation_views, question_views, \
     answer_views, comment_views, vote_views, weeklybible_views, research_views, \
-    goldmembership_views, customer_views, activity_views
+    goldmembership_views, customer_views, activity_views, gpt_views, gptanswer_views
 
 app_name = 'neworld'
 
@@ -84,6 +84,19 @@ urlpatterns = [
     path('comment/delete/research/<int:comment_id>/',
          comment_views.comment_delete_research, name='comment_delete_research'),
 
+    path('comment/create/gpt/<int:gpt_id>/',
+         comment_views.comment_create_gpt, name='comment_create_gpt'),
+    path('comment/modify/gpt/<int:comment_id>/',
+         comment_views.comment_modify_gpt, name='comment_modify_gpt'),
+    path('comment/delete/gpt/<int:comment_id>/',
+         comment_views.comment_delete_gpt, name='comment_delete_gpt'),
+    path('comment/create/gptanswer/<int:gptanswer_id>/',
+         comment_views.comment_create_gptanswer, name='comment_create_gptanswer'),
+    path('comment/modify/gptanswer/<int:comment_id>/',
+         comment_views.comment_modify_gptanswer, name='comment_modify_gptanswer'),
+    path('comment/delete/gptanswer/<int:comment_id>/',
+         comment_views.comment_delete_gptanswer, name='comment_delete_gptanswer'),
+
     # vote_views.py
     path('vote/question/<int:question_id>/', vote_views.vote_question, name='vote_question'),
     path('vote/answer/<int:answer_id>/', vote_views.vote_answer, name='vote_answer'),
@@ -93,6 +106,8 @@ urlpatterns = [
     path('vote/research/<int:research_id>/', vote_views.vote_research, name='vote_research'),
     path('vote/customer/<int:customer_id>/', vote_views.vote_customer, name='vote_customer'),
     path('vote/activity/<int:activity_id>/', vote_views.vote_activity, name='vote_activity'),
+    path('vote/gpt/<int:gpt_id>/', vote_views.vote_gpt, name='vote_gpt'),
+    path('vote/gptanswer/<int:gptanswer_id>/', vote_views.vote_gptanswer, name='vote_gptanswer'),
 
     # weeklybible_views.py
     path('weeklybible/', weeklybible_views.weeklybible, name='weeklybible'),
@@ -128,4 +143,22 @@ urlpatterns = [
          activity_views.activity_delete, name='activity_delete'),
 
 
+    # gpt_views.py
+    path('gpt/', gpt_views.gpt, name='gpt'),
+    path('gpt/<int:gpt_id>/',
+         gpt_views.gpt_detail, name='gpt_detail'),
+    path('gpt/create/',
+         gpt_views.gpt_create, name='gpt_create'),
+    path('gpt/modify/<int:gpt_id>/',
+         gpt_views.gpt_modify, name='gpt_modify'),
+    path('gpt/delete/<int:gpt_id>/',
+         gpt_views.gpt_delete, name='gpt_delete'),
+
+    # gptanswer_views.py
+    path('gptanswer/create/<int:gpt_id>/',
+         gptanswer_views.gptanswer_create, name='gptanswer_create'),
+    path('gptanswer/modify/<int:gptanswer_id>/',
+         gptanswer_views.gptanswer_modify, name='gptanswer_modify'),
+    path('gptanswer/delete/<int:gptanswer_id>/',
+         gptanswer_views.gptanswer_delete, name='gptanswer_delete'),
 ]

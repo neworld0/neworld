@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load neworld_filter %}
+{% block content %}
+<div class="container my-3">
+    <!-- 사용자오류 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% if gpt.group.id in group_list %}
+    <div class="row my-3">
+        <div class="col-11"> <!-- 질문영역 -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text" >{{ gpt.content|mark }}</div>
+                    <div class="d-flex justify-content-end">
+                        {% if gpt.modify_date %}
+                        <div class="badge bg-light text-dark p-2 text-start mx-3">
+                            <div class="mb-2">modified at</div>
+                            <div>{{ gpt.modify_date }}</div>
+                        </div>
+                        {% endif %}
+                        <div class="badge bg-light text-dark p-2 text-start">
+                            <div class="mb-2">{{ gpt.author.first_name }}</div>
+                            <div>{{ gpt.create_date }}</div>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <a href="javascript:void(0)" data-uri="{% url 'neworld:vote_gpt' gpt.id  %}"
+                            class="recommend btn btn-sm btn-outline-secondary"> 추천
+                            <span class="badge rounded-pill bg-success">{{ gpt.voter.count }}</span>
+                        </a>
+                        {% if request.user == gpt.author %}
+                        <a href="{% url 'neworld:gpt_modify' gpt.id  %}"
+                            class="btn btn-sm btn-outline-secondary">수정</a>
+                            <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
+                                data-uri="{% url 'neworld:gpt_delete' gpt.id  %}">삭제</a>
+                        {% endif %}
+                    </div>
+                    <!-- 질문 댓글 Start -->
+                    {% if gpt.comment_set.count > 0 %}
+                    <div class="mt-3">
+                    {% for comment in gpt.comment_set.all %}  <!-- 등록한 댓글을 출력 -->
+                        <a name="comment_{{ comment.id }}"></a>
+                        <div class="comment py-2 text-muted">  <!-- 댓글 각각에 comment 스타일 지정 -->
+                            <span style="white-space: pre-line;">{{ comment.content }}</span>
+                            <span>
+                              - {{ comment.author.first_name }}, {{ comment.create_date }}
+                               {% if comment.modify_date %}
+                                (수정:{{ comment.modify_date }})
+                                {% endif %}
+                            </span>
+                            {% if request.user == comment.author %}
+                            <a href="{% url 'neworld:comment_modify_gpt' comment.id  %}" class="small">수정</a>,
+                            <a href="#" class="small delete"
+                               data-uri="{% url 'neworld:comment_delete_gpt' comment.id  %}">삭제</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'neworld:comment_create_gpt' gpt.id  %}"
+                           class="small"><small>댓글 추가 ..</small></a>  <!-- 댓글 추가 링크 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h5 class="border-bottom my-3 py-2">{{gpt.gptanswer_set.count}}개의 답변이 있습니다.</h5>
+    {% for gptanswer in gpt.gptanswer_set.all %}
+    <div class="row my-3">
+        <div class="col-11">  <!-- 답변영역 -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text">{{ gptanswer.content|mark }}</div>
+                    <div class="d-flex justify-content-end">
+                        {% if gptanswer.modify_date %}
+                        <div class="badge bg-light text-dark p-2 text-start mx-3">
+                            <div class="mb-2">modified at</div>
+                            <div>{{ gptanswer.modify_date }}</div>
+                        </div>
+                        {% endif %}
+                        <div class="badge bg-light text-dark p-2 text-start">
+                            <div>{{ gptanswer.create_date }}</div>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <a href="javascript:void(0)" data-uri="{% url 'neworld:vote_gptanswer' gptanswer.id  %}"
+                            class="recommend btn btn-sm btn-outline-secondary"> 추천
+                            <span class="badge rounded-pill bg-success">{{ gptanswer.voter.count }}</span>
+                        </a>
+                        {% if request.user == gptanswer.author %}
+                        <a href="{% url 'neworld:gptanswer_modify' gptanswer.id  %}"
+                            class="btn btn-sm btn-outline-secondary">수정</a>
+                            <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
+                                data-uri="{% url 'neworld:gptanswer_delete' gptanswer.id  %}">삭제</a>
+                        {% endif %}
+                    </div>
+                    {% if gptanswer.comment_set.count > 0 %}
+                    <div class="mt-3">
+                    {% for comment in gptanswer.comment_set.all %}
+                        <a name="comment_{{ comment.id }}"></a>
+                        <div class="comment py-2 text-muted">
+                            <span style="white-space: pre-line;">{{ comment.content }}</span>
+                            <span>
+                                - {{ comment.author.first_name }}, {{ comment.create_date }}
+                                {% if comment.modify_date %}
+                                (수정:{{ comment.modify_date }})
+                                {% endif %}
+                            </span>
+                            {% if request.user == comment.author %}
+                            <a href="{% url 'neworld:comment_modify_gptanswer' comment.id  %}" class="small">수정</a>,
+                            <a href="#" class="small delete"
+                               data-uri="{% url 'neworld:comment_delete_gptanswer' comment.id  %}">삭제</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'neworld:comment_create_gptanswer' gptanswer.id  %}"
+                           class="small"><small>댓글 추가 ..</small></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <a href="{% url 'neworld:gpt' %}" class="btn btn-primary" style="font-weight:bold"><i class="fas fa-list"></i>  목록으로</a>
+
+    <form action="{% url 'neworld:gptanswer_create' gpt.id %}" method="post" class="my-3">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+            {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+                      name="content" id="content" class="form-control" rows="10"></textarea>
+        </div></br>
+        <input type="submit" value="답변등록" class="btn btn-primary" style="font-weight:bold">
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(document).on('click', ".delete", function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+    $(document).on('click', ".recommend", function() {
+        if(confirm("정말로 추천하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}

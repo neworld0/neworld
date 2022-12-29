@@ -213,3 +213,49 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class Gpt(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_gpt', null=True)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(null=True, blank=True)
+    voter = models.ManyToManyField(User, related_name='voter_gpt', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
+    def __str__(self):
+        return self.content
+
+    def get_absolute_url(self):
+        return reverse("neworld:gpt_list", kwargs={"pk": self.pk})
+
+
+class GptAnswer(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_gptanswer', null=True)
+    gpt = models.ForeignKey(Gpt, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(null=True, blank=True)
+    voter = models.ManyToManyField(User, related_name='voter_gptanswer', null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        permissions = [
+            ('can_publish', 'Can Publish Posts'),
+            ('can_change', 'Can Change Posts'),
+            ('can_view', 'Can View Posts'),
+            ('can_delete', 'Can Delete Posts'),
+        ]
+
+    def __str__(self):
+        return self.content
+
+    def get_absolute_url(self):
+        return reverse("neworld:gpt_detail", kwargs={"pk": self.pk})

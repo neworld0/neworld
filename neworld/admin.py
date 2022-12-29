@@ -1,6 +1,6 @@
 from django.contrib import admin
 from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, \
-    Research, Bible, WBsummary, PubsIndex, Customer
+    Research, Bible, WBsummary, PubsIndex, Customer, Gpt, GptAnswer
 
 
 # class UserAdmin(admin.ModelAdmin):
@@ -73,3 +73,15 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 admin.site.register(Customer, CustomerAdmin)
+
+
+class GptAdmin(admin.ModelAdmin):
+    search_fields = ['content']
+
+admin.site.register(Gpt, GptAdmin)
+
+
+class GptAnswerAdmin(admin.ModelAdmin):
+    search_fields = ['content']
+
+admin.site.register(GptAnswer, GptAnswerAdmin)
