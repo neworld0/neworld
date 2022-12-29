@@ -90,7 +90,7 @@
                         </div>
                     </div>
                     <div class="my-3">
-                        <a href="javascript:void(0)" data-uri="{% url 'neworld:vote_gptanswer' gptanswer.id  %}"
+                        <a href="javascript:void(0)" data-uri="{% url 'neworld:vote_gptanswer' gptanswer.id %}"
                             class="recommend btn btn-sm btn-outline-secondary"> 추천
                             <span class="badge rounded-pill bg-success">{{ gptanswer.voter.count }}</span>
                         </a>
@@ -114,9 +114,9 @@
                                 {% endif %}
                             </span>
                             {% if request.user == comment.author %}
-                            <a href="{% url 'neworld:comment_modify_gptanswer' comment.id  %}" class="small">수정</a>,
+                            <a href="{% url 'neworld:comment_modify_gptanswer' comment.id %}" class="small">수정</a>,
                             <a href="#" class="small delete"
-                               data-uri="{% url 'neworld:comment_delete_gptanswer' comment.id  %}">삭제</a>
+                               data-uri="{% url 'neworld:comment_delete_gptanswer' comment.id %}">삭제</a>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -131,9 +131,6 @@
         </div>
     </div>
     {% endfor %}
-
-    <a href="{% url 'neworld:gpt' %}" class="btn btn-primary" style="font-weight:bold"><i class="fas fa-list"></i>  목록으로</a>
-
     <form action="{% url 'neworld:gptanswer_create' gpt.id %}" method="post" class="my-3">
         {% csrf_token %}
         {% if form.errors %}
@@ -146,12 +143,11 @@
         {% endfor %}
         </div>
         {% endif %}
-        <div class="form-group">
-            <textarea {% if not user.is_authenticated %}disabled{% endif %}
-                      name="content" id="content" class="form-control" rows="10"></textarea>
-        </div></br>
-        <input type="submit" value="답변등록" class="btn btn-primary" style="font-weight:bold">
+        </br>
+        <input type="submit" value="답변요청" class="btn btn-primary" style="font-weight:bold">
     </form>
+    </br>
+    <a href="{% url 'neworld:gpt' %}" class="btn btn-primary" style="font-weight:bold"><i class="fas fa-list"></i>  목록으로</a>
     {% endif %}
 </div>
 {% endblock %}
