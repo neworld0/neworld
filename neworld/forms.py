@@ -1,5 +1,5 @@
 from django import forms
-from neworld.models import Question, Answer, Meditation, Comment, Research, Customer, Activity
+from neworld.models import Question, Answer, Meditation, Comment, Research, Customer, Activity, Gpt, GptAnswer
 
 
 class QuestionForm(forms.ModelForm):
@@ -71,4 +71,21 @@ class ActivityForm(forms.ModelForm):
         fields = ['content']
         labels = {
             'content': '활동내용',
+        }
+
+
+class GptForm(forms.ModelForm):
+    class Meta:
+        model = Gpt
+        fields = ['content']
+        labels = {
+            'content': '질문내용',
+        }
+
+class GptAnswerForm(forms.ModelForm):
+    class Meta:
+        model = GptAnswer
+        fields = ['content']
+        labels = {
+            'content': '답변내용',
         }
