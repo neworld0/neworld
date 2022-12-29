@@ -122,9 +122,9 @@
                                 {% endif %}
                             </span>
                             {% if request.user == comment.author %}
-                            <a href="{% url 'neworld:comment_modify_research' comment.id  %}" class="small">수정</a>,
+                            <a href="{% url 'neworld:comment_modify_research' comment.id %}" class="small">수정</a>,
                             <a href="#" class="small delete"
-                               data-uri="{% url 'neworld:comment_delete_research' comment.id  %}">삭제</a>
+                               data-uri="{% url 'neworld:comment_delete_research' comment.id %}">삭제</a>
                             {% endif %}
                         </div>
                     {% endfor %}
