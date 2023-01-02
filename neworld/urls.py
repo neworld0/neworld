@@ -157,8 +157,4 @@ urlpatterns = [
     # gptanswer_views.py
     path('gptanswer/create/<int:gpt_id>/',
          gptanswer_views.gptanswer_create, name='gptanswer_create'),
-    path('gptanswer/modify/<int:gptanswer_id>/',
-         gptanswer_views.gptanswer_modify, name='gptanswer_modify'),
-    path('gptanswer/delete/<int:gptanswer_id>/',
-         gptanswer_views.gptanswer_delete, name='gptanswer_delete'),
 ]

@@ -11,7 +11,7 @@
     {% endfor %}
     </div>
     {% endif %}
-    {% if gpt.group.id in group_list %}
+<!--    {% if gpt.group.id in group_list %}-->
     <div class="row my-3">
         <div class="col-11"> <!-- 질문영역 -->
             <div class="card">
@@ -79,12 +79,6 @@
                 <div class="card-body">
                     <div class="card-text">{{ gptanswer.content|mark }}</div>
                     <div class="d-flex justify-content-end">
-                        {% if gptanswer.modify_date %}
-                        <div class="badge bg-light text-dark p-2 text-start mx-3">
-                            <div class="mb-2">modified at</div>
-                            <div>{{ gptanswer.modify_date }}</div>
-                        </div>
-                        {% endif %}
                         <div class="badge bg-light text-dark p-2 text-start">
                             <div>{{ gptanswer.create_date }}</div>
                         </div>
@@ -94,12 +88,6 @@
                             class="recommend btn btn-sm btn-outline-secondary"> 추천
                             <span class="badge rounded-pill bg-success">{{ gptanswer.voter.count }}</span>
                         </a>
-                        {% if request.user == gptanswer.author %}
-                        <a href="{% url 'neworld:gptanswer_modify' gptanswer.id  %}"
-                            class="btn btn-sm btn-outline-secondary">수정</a>
-                            <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
-                                data-uri="{% url 'neworld:gptanswer_delete' gptanswer.id  %}">삭제</a>
-                        {% endif %}
                     </div>
                     {% if gptanswer.comment_set.count > 0 %}
                     <div class="mt-3">
@@ -148,7 +136,7 @@
     </form>
     </br>
     <a href="{% url 'neworld:gpt' %}" class="btn btn-primary" style="font-weight:bold"><i class="fas fa-list"></i>  목록으로</a>
-    {% endif %}
+<!--    {% endif %}-->
 </div>
 {% endblock %}
 {% block script %}
