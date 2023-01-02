@@ -98,7 +98,7 @@ def comment_modify_answer(request, comment_id):
     else:
         form = CommentForm(instance=comment)
     context = {'form': form}
-    return render(request, 'neworld/comment_form.html', context)
+    return render(request, 'neworld/comment_answer_form.html', context)
 
 
 # Bulletin Board 답변댓글 삭제
@@ -345,7 +345,7 @@ def comment_create_gpt(request, gpt_id):
     else:
         form = CommentForm()
     context = {'form': form}
-    return render(request, 'neworld/comment_form.html', context)
+    return render(request, 'neworld/comment_gpt_form.html', context)
 
 
 # Gpt 질문댓글 수정
@@ -366,7 +366,7 @@ def comment_modify_gpt(request, comment_id):
     else:
         form = CommentForm(instance=comment)
     context = {'form': form}
-    return render(request, 'neworld/comment_form.html', context)
+    return render(request, 'neworld/comment_gpt_form.html', context)
 
 
 # Gpt 질문댓글 삭제
@@ -384,7 +384,7 @@ def comment_delete_gpt(request, comment_id):
 # Gpt 답변 댓글 등록
 @login_required(login_url='common:login')
 def comment_create_gptanswer(request, gptanswer_id):
-    answer = get_object_or_404(GptAnswer, pk=gptanswer_id)
+    gptanswer = get_object_or_404(GptAnswer, pk=gptanswer_id)
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -398,7 +398,7 @@ def comment_create_gptanswer(request, gptanswer_id):
     else:
         form = CommentForm()
     context = {'form': form}
-    return render(request, 'neworld/comment_answer_form.html', context)
+    return render(request, 'neworld/comment_gptanswer_form.html', context)
 
 
 # Gpt 답변 댓글 수정
@@ -419,7 +419,7 @@ def comment_modify_gptanswer(request, comment_id):
     else:
         form = CommentForm(instance=comment)
     context = {'form': form}
-    return render(request, 'neworld/comment_form.html', context)
+    return render(request, 'neworld/comment_gptanswer_form.html', context)
 
 
 # Gpt 답변댓글 삭제

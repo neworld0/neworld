@@ -109,8 +109,5 @@ def vote_gpt(request, gpt_id):
 @login_required(login_url='common:login')
 def vote_gptanswer(request, gptanswer_id):
     gptanswer = get_object_or_404(GptAnswer, pk=gptanswer_id)
-    if request.user == gptanswer.author:
-        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
-    else:
-        gptanswer.voter.add(request.user)
+    gptanswer.voter.add(request.user)
     return redirect('neworld:gpt_detail', gpt_id=gptanswer.gpt.id)
