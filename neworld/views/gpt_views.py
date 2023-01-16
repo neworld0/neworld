@@ -22,7 +22,7 @@ def gpt(request):
     if so == 'recommend':
         gpt_list = Gpt.objects.annotate(num_voter=Count('voter')).order_by('-num_voter', '-create_date')
     elif so == 'popular':
-        gpt_list = Gpt.objects.annotate(num_answer=Count('answer')).order_by('-num_answer', '-create_date')
+        gpt_list = Gpt.objects.annotate(num_answer=Count('gptanswer')).order_by('-num_answer', '-create_date')
     else:  # recent
         gpt_list = Gpt.objects.order_by('-create_date')
     # 검색
