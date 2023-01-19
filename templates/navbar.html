@@ -45,13 +45,13 @@
             {% endif %}
             {% endif %}
           </li>
-          <li class="nav-item p-1">
-            {% if request.user.is_authenticated %}
-            {% if request.user.username != "gfc" %}
-            <a class="nav-link text-black" href="{% url 'neworld:gpt' %}" style="font-weight:bolder">GPT</a>
-            {% endif %}
-            {% endif %}
-          </li>
+<!--          <li class="nav-item p-1">-->
+<!--            {% if request.user.is_authenticated %}-->
+<!--            {% if request.user.username != "gfc" %}-->
+<!--            <a class="nav-link text-black" href="{% url 'neworld:gpt' %}" style="font-weight:bolder">GPT</a>-->
+<!--            {% endif %}-->
+<!--            {% endif %}-->
+<!--          </li>-->
             {% if request.user.username == "gfc" %}
           <li class="nav-item p-1">
             <a class="nav-link text-black" href="{% url 'neworld:customer' %}" style="font-weight:bolder">Business</a>
