@@ -19,6 +19,7 @@ class Question(models.Model):
             ('can_view', 'Can View Posts'),
             ('can_delete', 'Can Delete Posts'),
         ]
+
     def __str__(self):
         return self.subject
 
@@ -66,10 +67,12 @@ class WeeklyBible(models.Model):
             ('can_view', 'Can View Posts'),
             ('can_delete', 'Can Delete Posts'),
         ]
+
     def __str__(self):
         return self.week
 
     def get_absolute_url(self):
+        # noinspection SpellCheckingInspection
         return reverse("neworld:weeklybible", kwargs={"pk": self.pk})
 
 
@@ -101,6 +104,7 @@ class Meditation(models.Model):
             ('can_view', 'Can View Posts'),
             ('can_delete', 'Can Delete Posts'),
         ]
+
     def __str__(self):
         return self.real_date
 
@@ -158,6 +162,7 @@ class Research(models.Model):
             ('can_view', 'Can View Posts'),
             ('can_delete', 'Can Delete Posts'),
         ]
+
     def __str__(self):
         return self.content
 
@@ -230,6 +235,7 @@ class Gpt(models.Model):
             ('can_view', 'Can View Posts'),
             ('can_delete', 'Can Delete Posts'),
         ]
+
     def __str__(self):
         return self.content
 

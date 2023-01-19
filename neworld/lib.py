@@ -31,6 +31,7 @@ def get_date(y, m, d):
     '''y: year(4 digits)
      m: month(2 digits)
      d: day(2 digits'''
+    # noinspection PyCompatibility
     s = f'{y:04d}-{m:02d}-{d:02d}'
     return datetime.datetime.strptime(s, '%Y-%m-%d')
 

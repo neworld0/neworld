@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import requests
 import datetime
 import re
+# noinspection PyCompatibility
 from urllib.parse import urlparse
 
 
@@ -21,12 +22,14 @@ def get_number_of_week():
     cal1 = last_monday.isocalendar()
     return cal1
 
+
 cal = get_number_of_week()
 target_year = cal[0]
 target_week = cal[1]
-target_next_week = cal[1]+1
-target_before_week = cal[1]-1
-target_before2_week = cal[1]-2
+target_next_week = cal[1] + 1
+target_before_week = cal[1] - 1
+target_before2_week = cal[1] - 2
+
 
 # 다음주 성서읽기 크롤링 함수
 def fetch_weeklybible_latest_data(url, tag):
@@ -46,7 +49,7 @@ def fetch_weeklybible_latest_data(url, tag):
     page_link_parts = urlparse(page_link_raw)
     normalized_page_link = page_link_parts.scheme + '://' + page_link_parts.hostname + page_link_parts.path
     # specific id
-    specific_id = page_link_parts.path.split('/')[-3]       # list의 인덱싱 : [-3] -> 끝에서 3번째 요소(/202021321/) 선택
+    specific_id = page_link_parts.path.split('/')[-3]  #list의 인덱싱 : [-3] -> 끝에서 3번째 요소(/202021321/) 선택
     item_obj = {
         'year': target_year,
         'n_week': target_next_week,
@@ -58,6 +61,7 @@ def fetch_weeklybible_latest_data(url, tag):
     }
     result.append(item_obj)
     return result
+
 
 # 성서읽기 크롤링 데이터 DB 저장 함수
 def add_new_items(crawled_items):
@@ -87,7 +91,6 @@ def add_new_items(crawled_items):
     return items_to_insert_into_db
 
 
-
 # weeklybible 페이지 호출
 @login_required(login_url='common:login')
 # @permission_required('views.permission_view', login_url=reverse_lazy('neworld:goldmembership_guide'))
@@ -103,7 +106,7 @@ def weeklybible(request):
         weeklybible = WeeklyBible.objects.last()
 
     if weeklybible.year == target_year and weeklybible.n_week > target_week:
-       pass
+        pass
     else:
         # 주간 성서읽기 범위 update
         url = 'https://wol.jw.org/ko/wol/meetings/r8/lp-ko/' + str(target_year) + '/' + str(target_next_week)
@@ -120,7 +123,8 @@ def weeklybible(request):
     if so == 'recommend':
         weeklybible_list = WeeklyBible.objects.annotate(num_voter=Count('voter')).order_by('-num_voter', '-create_date')
     elif so == 'popular':
-        weeklybible_list = WeeklyBible.objects.annotate(num_meditation=Count('content')).order_by('-num_content', '-create_date')
+        weeklybible_list = WeeklyBible.objects.annotate(num_meditation=Count('content')).order_by('-num_content',
+                                                                                                  '-create_date')
     else:  # recent
         weeklybible_list = WeeklyBible.objects.order_by('-year', '-n_week')
 
@@ -160,7 +164,7 @@ def weeklybible_detail(request, weeklybible_id):
         elif '요한 3서' in br2:
             br5 = '요한 3서'
         else:
-            br3 = re.findall(r'\D+', br2)       # 숫자가 아닌 것 모두 추출
+            br3 = re.findall(r'\D+', br2)  # 숫자가 아닌 것 모두 추출
             br4 = br3[0]
             br5 = br4.strip()
         br6 = Bible.objects.get(bible=br5)
@@ -169,7 +173,7 @@ def weeklybible_detail(request, weeklybible_id):
 
         bs1 = weeklybible.bible_range
         bs2 = bs1.strip()
-        bs3 = re.findall(r'\d+', bs2)           # 숫자 모두 추출
+        bs3 = re.findall(r'\d+', bs2)  # 숫자 모두 추출
         if len(bs3) > 2:
             bs4 = bs3.pop(0)
         else:
@@ -194,7 +198,6 @@ def weeklybible_detail(request, weeklybible_id):
         result.append(url_current)
         return result
 
-
     def fetch_wbsummary_latest_data(tag, url):
         result = []
         response = requests.get(url)
@@ -211,39 +214,39 @@ def weeklybible_detail(request, weeklybible_id):
             count = len(bible_summary3)
             i = 1
             for i in range(count):
-                a = bible_summary3[i]           # 다윗이 골리앗을 물리치다 (1-58)
-                a1 = re.findall(r'\d+', a)      # 다윗이 골리앗을 물리치다 (1-58) => [1, 58] 추출
+                a = bible_summary3[i]  # 다윗이 골리앗을 물리치다 (1-58)
+                a1 = re.findall(r'\d+', a)  # 다윗이 골리앗을 물리치다 (1-58) => [1, 58] 추출
                 if len(a1) < 1:
                     a2 = 0
                 else:
-                    a2 = int(a1[len(a1) - 1])   # a2 = 58
+                    a2 = int(a1[len(a1) - 1])  # a2 = 58
                 j = i + 1
-                for j in range(count-(j-1)):
-                    b = bible_summary3[i + j]       # 골리앗이 이스라엘을 조롱하다 (8-10)
-                    b1 = re.findall(r'\d+', b)      # 골리앗이 이스라엘을 조롱하다 (8-10) => [8, 10] 추출
+                for j in range(count - (j - 1)):
+                    b = bible_summary3[i + j]  # 골리앗이 이스라엘을 조롱하다 (8-10)
+                    b1 = re.findall(r'\d+', b)  # 골리앗이 이스라엘을 조롱하다 (8-10) => [8, 10] 추출
                     if len(b1) < 1:
                         b2 = 0
                     else:
-                        b2 = int(b1[len(b1) - 1])   # b2 = 10
-                    if a2 > b2:                     # 58 >= 10
-                        b3 = '- ' + b               # - 골리앗이 이스라엘을 조롱하다 (8-10) \ 58 > 37 \ - 다윗이 도전을 받아들이다 (32-37)
+                        b2 = int(b1[len(b1) - 1])  # b2 = 10
+                    if a2 > b2:  # 58 >= 10
+                        b3 = '- ' + b  # - 골리앗이 이스라엘을 조롱하다 (8-10) \ 58 > 37 \ - 다윗이 도전을 받아들이다 (32-37)
                         del bible_summary3[i + j]
-                        bible_summary3.insert(i + j, b3)    # 다윗이 골리앗을 물리치다 (1-58) \ # - 골리앗이 이스라엘을 조롱하다 (8-10)
+                        bible_summary3.insert(i + j, b3)  # 다윗이 골리앗을 물리치다 (1-58) \ # - 골리앗이 이스라엘을 조롱하다 (8-10)
                     elif a2 == b2:
                         del b
                     else:
                         break
             bible_summary3.pop()
             bible_summary4 = []
-            for i in range(count-1):
+            for i in range(count - 1):
                 bible_summary4.append(bible_summary3[i] + ')')
             count1 = len(bible_summary4)
             for i in range(count1 - 1):
                 a = bible_summary4[i]
-                a1 = re.findall(r'\d+', a)      # 숫자를 모두 찾음
+                a1 = re.findall(r'\d+', a)  # 숫자를 모두 찾음
                 a2 = int(a1[len(a1) - 1])
                 b = bible_summary4[i + 1]
-                b1 = re.findall(r'\d+', b)      # 숫자를 모두 찾음
+                b1 = re.findall(r'\d+', b)  # 숫자를 모두 찾음
                 b2 = int(b1[len(b1) - 1])
                 if a2 == b2:
                     break
@@ -252,7 +255,8 @@ def weeklybible_detail(request, weeklybible_id):
             page_link_raw = web_page_link_root + list_item.find('p').find('a')['href']
             page_link_parts = urlparse(page_link_raw)
             # specific id
-            specific_id = page_link_parts.path.split('/')[-3:]  # list의 인덱싱 : [-2:] -> 끝에서 2번째~마지막 요소(/5/33) 선택
+            specific_id = page_link_parts.path.split('/')[
+                          -3:]  # list의 인덱싱 : [-3:] -> 끝에서 3번째~마지막 요소(1001070517/5/33) 선택
             item_obj = {
                 'chapter': chapter,
                 'bible_summary': bible_summary,
@@ -303,7 +307,7 @@ def weeklybible_detail(request, weeklybible_id):
         elif '요한 3서' in br2:
             br5 = '요한 3서'
         else:
-            br3 = re.findall(r'\D+', br2)       # 숫자가 아닌 것을 모두 찾음
+            br3 = re.findall(r'\D+', br2)  # 숫자가 아닌 것을 모두 찾음
             br4 = br3[0]
             br5 = br4.strip()
         br6 = Bible.objects.get(bible=br5)
@@ -312,7 +316,7 @@ def weeklybible_detail(request, weeklybible_id):
 
         bs1 = weeklybible.bible_range
         bs2 = bs1.strip()
-        bs3 = re.findall(r'\d+', bs2)           # 숫자를 모두 찾음
+        bs3 = re.findall(r'\d+', bs2)  # 숫자를 모두 찾음
         if len(bs3) > 2:
             bs4 = bs3.pop(0)
         else:
@@ -383,6 +387,7 @@ def weeklybible_detail(request, weeklybible_id):
 
     # 크롤링 데이터 DB 저장 함수
     def add_pilink_new_items(crawled_items, bible_id, chapter):
+        global last_inserted_items
         try:
             last_inserted_items = PubsIndex.objects.last()
         except PubsIndex.DoesNotExist:
@@ -418,7 +423,6 @@ def weeklybible_detail(request, weeklybible_id):
                 ).save()
         return items_to_insert_into_db
 
-
     # wbsummary 및 pubsindex update 여부 판단 및 크롤링
     ws_update = wbsummary_update_prep(target_year, target_next_week)
     pi_update = pi_update_prep(target_year, target_next_week)
@@ -426,7 +430,7 @@ def weeklybible_detail(request, weeklybible_id):
         wbsummary = WBsummary.objects.last()
     except WBsummary.DoesNotExist:
         wp = ws_parameter(ws_update)
-        ws = fetch_wbsummary_latest_data(wp[0:(len(wp)-1)], wp[-1])     # (tag, url)
+        ws = fetch_wbsummary_latest_data(wp[0:(len(wp) - 1)], wp[-1])  # (tag, url)
         add_wbsummary_new_items(ws, ws_update[0])
         wbsummary = WBsummary.objects.last()
 
@@ -434,7 +438,7 @@ def weeklybible_detail(request, weeklybible_id):
         pass
     else:
         wp = ws_parameter(ws_update)
-        ws = fetch_wbsummary_latest_data(wp[0:(len(wp)-1)], wp[-1])     # (tag, url)
+        ws = fetch_wbsummary_latest_data(wp[0:(len(wp) - 1)], wp[-1])  # (tag, url)
         add_wbsummary_new_items(ws, ws_update[0])
         pi = pi_parameter(pi_update)
         ps = fetch_pilink_latest_data(pi[0], pi[1:], pi_update[2])
