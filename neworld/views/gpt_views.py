@@ -1,3 +1,4 @@
+"""
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -37,7 +38,7 @@ def gpt(request):
     paginator = Paginator(gpt_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
     context = {'gpt_list': page_obj, 'page': page, 'kw': kw, 'so': so}
-    return render(request, 'neworld/gpt_list.html', context)
+    return render(request, 'neworld/gpt_list_.html', context)
 
 
 # Bulletin Board 상세내용 출력
@@ -52,7 +53,7 @@ def gpt_detail(request, gpt_id):
         gr = g.id
         group.append(gr)
     context = {'gpt': gpt, 'group_list': group}
-    return render(request, 'neworld/gpt_detail.html', context)
+    return render(request, 'neworld/gpt_detail_.html', context)
 
 
 
@@ -76,7 +77,7 @@ def gpt_create(request):
     else:
         form = GptForm()
     context = {'form': form}
-    return render(request, 'neworld/gpt_form.html', context)
+    return render(request, 'neworld/gpt_form_.html', context)
 
 
 # Bulletin Board 질문 수정
@@ -97,7 +98,7 @@ def gpt_modify(request, gpt_id):
     else:
         form = GptForm(instance=gpt)
     context = {'form': form}
-    return render(request, 'neworld/gpt_form.html', context)
+    return render(request, 'neworld/gpt_form_.html', context)
 
 
 # Bulletin Board 질문 삭제
@@ -110,3 +111,4 @@ def gpt_delete(request, gpt_id):
         return redirect('neworld:gpt_detail', gpt_id=gpt.id)
     gpt.delete()
     return redirect('neworld:gpt')
+"""
