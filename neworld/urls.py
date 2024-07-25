@@ -141,20 +141,4 @@ urlpatterns = [
          activity_views.activity_modify, name='activity_modify'),
     path('activity/delete/<int:activity_id>/',
          activity_views.activity_delete, name='activity_delete'),
-
-
-    # gpt_views.py
-    path('gpt/', gpt_views.gpt, name='gpt'),
-    path('gpt/<int:gpt_id>/',
-         gpt_views.gpt_detail, name='gpt_detail'),
-    path('gpt/create/',
-         gpt_views.gpt_create, name='gpt_create'),
-    path('gpt/modify/<int:gpt_id>/',
-         gpt_views.gpt_modify, name='gpt_modify'),
-    path('gpt/delete/<int:gpt_id>/',
-         gpt_views.gpt_delete, name='gpt_delete'),
-
-    # gptanswer_views.py
-    path('gptanswer/create/<int:gpt_id>/',
-         gptanswer_views.gptanswer_create, name='gptanswer_create'),
 ]
