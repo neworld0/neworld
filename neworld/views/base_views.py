@@ -46,9 +46,8 @@ def index(request):
             url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + date_range_crawling[i]
             r = requests.get(url)
             parser = BeautifulSoup(r.text, 'html.parser')
-            scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > p.themeScrp')
-            body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(2) > div.bodyTxt > '
-                                      'div.section > div.pGroup > p.sb')
+            scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > p.themeScrp')
+            body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > div.bodyTxt > p.sb')
             target_day = datetime.date.today() + datetime.timedelta(1+i)
             yyyy = target_day.year
             mm = target_day.month
