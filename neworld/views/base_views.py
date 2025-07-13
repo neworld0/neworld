@@ -4,10 +4,19 @@ from django.utils import timezone
 from bs4 import BeautifulSoup
 import logging
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import datetime
 from neworld.lib import get_number_of_week, date_range, date_range_for_crawling, get_day_of_week
 
 logger = logging.getLogger('neworld')
+
+# requests 세션 생성 (재시도 + 백오프)
+session = requests.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('https://', adapter)
+session.mount('http://', adapter)
 
 def index(request):
     logger.info("INFO 레벨로 출력")
@@ -29,13 +38,17 @@ def index(request):
         for i in range(len(date_range_RealDay)):
             crawl_day = t_day + datetime.timedelta(i + 1)
             url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + crawl_day.strftime('%Y/%m/%d')
-            r = requests.get(url)
-            parser = BeautifulSoup(r.text, 'html.parser')
-            scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > p.themeScrp')
-            body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > div.bodyTxt > p.sb')
-
-            scrip_text = scrip1.text if scrip1 else "데이터 준비 중"
-            body_text = body1.text if body1 else "데이터 준비 중"
+            try:
+                r = session.get(url, timeout=10)
+                parser = BeautifulSoup(r.text, 'html.parser')
+                scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > p.themeScrp')
+                body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > div.bodyTxt > p.sb')
+                scrip_text = scrip1.text if scrip1 else "데이터 준비 중"
+                body_text = body1.text if body1 else "데이터 준비 중"
+            except Exception as e:
+                logger.error(f"크롤링 오류: {e}")
+                scrip_text = "데이터 준비 중"
+                body_text = "데이터 준비 중"
 
             target_day = t_day + datetime.timedelta(i)
             yyyy, mm, dd = target_day.year, target_day.month, target_day.day
