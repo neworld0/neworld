@@ -20,20 +20,22 @@ def index(request):
     # DB에 실제로 기록할 날짜 리스트
     date_range_RealDay = date_range(Today, Seventh_day)
 
-    last_real_date = Scripture.objects.last()
-    last_real_day = datetime.datetime.strptime(last_real_date.real_date, "%Y-%m-%d").date()
-
-    if last_real_day < t_day:
+    try:
+        # 오늘 날짜의 성구가 이미 있는지 확인
+        Scripture.objects.get(real_date=Today)
+    except Scripture.DoesNotExist:
+        # 오늘 데이터가 없으면 오늘부터 다시 크롤링
         d_week = []
         for i in range(len(date_range_RealDay)):
-            # 크롤링할 실제 페이지는 하루 뒤 페이지를 기준으로 함
             crawl_day = t_day + datetime.timedelta(i + 1)
             url = 'https://wol.jw.org/ko/wol/h/r8/lp-ko/' + crawl_day.strftime('%Y/%m/%d')
-
             r = requests.get(url)
             parser = BeautifulSoup(r.text, 'html.parser')
             scrip1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > p.themeScrp')
             body1 = parser.select_one('#dailyText > div.articlePositioner > div:nth-child(1) > div.bodyTxt > p.sb')
+
+            scrip_text = scrip1.text if scrip1 else "데이터 준비 중"
+            body_text = body1.text if body1 else "데이터 준비 중"
 
             target_day = t_day + datetime.timedelta(i)
             yyyy, mm, dd = target_day.year, target_day.month, target_day.day
@@ -41,8 +43,8 @@ def index(request):
             d_week.append(t_week)
 
             scrt = Scripture(
-                scripture=scrip1.text,
-                bodytext=body1.text,
+                scripture=scrip_text,
+                bodytext=body_text,
                 real_date=date_range_RealDay[i],
                 d_week=t_week,
                 create_date=timezone.now()
