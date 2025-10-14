@@ -1,8 +1,8 @@
 from django.urls import path
 
 from .views import base_views, scripture_views, meditation_views, question_views, \
-    answer_views, comment_views, vote_views, weeklybible_views, research_views, \
-    goldmembership_views, customer_views, activity_views, gpt_views, gptanswer_views
+    answer_views, comment_views, vote_views, research_views, \
+    goldmembership_views, customer_views, activity_views, gpt_views, gptanswer_views, weeklybible_views
 
 app_name = 'neworld'
 
