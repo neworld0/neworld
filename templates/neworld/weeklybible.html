@@ -2,6 +2,11 @@
 {% load neworld_filter %}
 {% block content %}
 <div class="container my-3">
+    {% if weeklybible_is_fallback %}
+    <div class="alert alert-warning" role="status">이번 주 자료가 없어 저장된 주간 성서읽기 자료를 표시합니다.</div>
+    {% elif weeklybible_is_empty %}
+    <div class="alert alert-info" role="status">아직 수집된 주간 성서읽기 자료가 없습니다.</div>
+    {% endif %}
     <div class="border-bottom py-2">
         <table class="table">
             <thead>
@@ -13,7 +18,7 @@
             <tbody>
             {% if weeklybible_list %}
                 {% for weeklybible in weeklybible_list %}
-                    {% if weeklybible.n_week == target_week %}
+                    {% if weeklybible.year == target_year and weeklybible.n_week == target_week %}
                     <tr class="text-center">
                         <td>
                             {{ weeklybible.week }}

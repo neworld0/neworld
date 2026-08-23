@@ -61,7 +61,10 @@
                      class="btn btn-sm btn-outline-secondary">마이페이지 [{{ user.username }}]</a>
               </li>
               <li class="nav-item p-1">
-                  <a href="{% url 'common:logout' %}" class="btn btn-sm btn-outline-secondary">Logout</a>
+                  <form method="post" action="{% url 'common:logout' %}" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-secondary">Logout</button>
+                  </form>
               </li>
               {% else %}
               <li class="nav-item p-1">

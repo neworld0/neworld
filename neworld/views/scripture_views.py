@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from django.db.models import Q, Count
+from django.db.models import Case, Count, IntegerField, Q, Value, When
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
@@ -36,11 +36,18 @@ def scripture(request):
             Q(author__first_name__icontains=kw) |  # 성구 글쓴이검색
             Q(meditation__author__first_name__icontains=kw)  # 묵상 글쓴이검색
         ).distinct()
+    scripture_list = scripture_list.annotate(
+        today_rank=Case(When(real_date=d_today, then=Value(0)), default=Value(1), output_field=IntegerField())
+    ).order_by("today_rank", "-create_date")
+
 
     # 페이징처리
     paginator = Paginator(scripture_list, 10)  # 페이지당 10개씩 보여주기
     page_obj = paginator.get_page(page)
-    context = {'scripture_list': page_obj, 'd_today': d_today, 'page': page, 'kw': kw, 'so': so}
+    today_scripture = (Scripture.objects.filter(real_date=d_today).exclude(scripture="").exclude(bodytext="")
+                        .order_by("id").first())
+    context = {'scripture_list': page_obj, 'today_scripture': today_scripture,
+               'd_today': d_today, 'page': page, 'kw': kw, 'so': so}
     return render(request, 'neworld/scripture_list.html', context)
 
 

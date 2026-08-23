@@ -1,0 +1,29 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Home</a>
+  &rsaquo; <a href="{% url 'admin:neworld_scripture_changelist' %}">Scriptures</a>
+  &rsaquo; &#50672;&#48324; TXT ZIP &#44032;&#51256;&#50724;&#44592;
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>&#50672;&#48324; Scripture TXT ZIP &#44032;&#51256;&#50724;&#44592;</h1>
+<p>&#50672;&#48324; TXT ZIP &#54028;&#51068;&#51012; &#49440;&#53469;&#54616;&#49464;&#50836;. *_00.txt&#45716; &#51088;&#46041;&#51004;&#47196; &#51228;&#50808;&#46121;&#47728;, 01~12&#50900; &#47784;&#46160;&#44032; &#50756;&#51204;&#54644;&#50556; &#51200;&#51109;&#46121;&#45768;&#45796;.</p>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <fieldset class="module aligned">
+    <div class="form-row">
+      {{ form.year.errors }}
+      {{ form.year.label_tag }} {{ form.year }}
+    </div>
+    <div class="form-row">
+      {{ form.zip_file.errors }}
+      {{ form.zip_file.label_tag }} {{ form.zip_file }}
+    </div>
+  </fieldset>
+  <div class="submit-row"><input type="submit" value="&#44032;&#51256;&#50724;&#44592;"></div>
+</form>
+{% endblock %}
