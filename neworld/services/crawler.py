@@ -19,9 +19,7 @@ def persist_scripture(item, dry_run=False):
         logger.warning("event=SCRIPTURE_PERSIST_SKIP target_date=%s reason=invalid_payload", item.source_date)
         return "skipped"
     matches = Scripture.objects.filter(real_date=item.source_date.isoformat()).order_by("id")
-    if matches.count() > 1:
-        logger.warning("event=SCRIPTURE_DUPLICATE_DATE target_date=%s", item.source_date)
-    existing = matches.filter(scripture=item.scripture_text, bodytext=item.body_text).first()
+    existing = matches.first()
     if existing or dry_run:
         logger.info("event=SCRIPTURE_PERSIST_SKIP target_date=%s reason=%s", item.source_date, "exists" if existing else "dry_run")
         return "skipped"

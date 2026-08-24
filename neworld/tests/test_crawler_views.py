@@ -13,10 +13,9 @@ class CrawlerViewTests(TestCase):
         self.user = User.objects.create_user(username="offline-user", password="test-password")
 
     @patch("neworld.views.base_views.prefetch_future_scriptures")
-    def test_home_prefetches_after_current_duplicate_safely(self, prefetch):
+    def test_home_prefetches_after_current_scripture_is_saved(self, prefetch):
         today = datetime.date.today().isoformat()
         Scripture.objects.create(scripture="first", bodytext="body", real_date=today, d_week="일")
-        Scripture.objects.create(scripture="second", bodytext="body", real_date=today, d_week="일")
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["scripture_html"], "first")

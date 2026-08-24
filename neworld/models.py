@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.shortcuts import reverse
 
@@ -9,7 +10,7 @@ class Question(models.Model):
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_question', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_question')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -33,7 +34,7 @@ class Answer(models.Model):
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_answer', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_answer')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -67,6 +68,9 @@ class WeeklyBible(models.Model):
             ('can_view', 'Can View Posts'),
             ('can_delete', 'Can Delete Posts'),
         ]
+        constraints = [
+            models.UniqueConstraint(fields=['year', 'n_week'], name='weeklybible_year_week_uniq'),
+        ]
 
     def __str__(self):
         return self.week
@@ -86,6 +90,11 @@ class Scripture(models.Model):
     def __str__(self):
         return self.real_date
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['real_date'], name='scripture_real_date_uniq'),
+        ]
+
 
 class Meditation(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_meditation', null=True)
@@ -94,7 +103,7 @@ class Meditation(models.Model):
     real_date = models.CharField(max_length=10)
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_meditation', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_meditation')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -118,6 +127,11 @@ class Bible(models.Model):
 
     def __str__(self):
         return self.bible
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['bible_id'], name='bible_bible_id_uniq'),
+        ]
 
 
 class WBsummary(models.Model):
@@ -152,7 +166,7 @@ class Research(models.Model):
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_research', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_research')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -183,7 +197,7 @@ class Customer(models.Model):
     remark = models.TextField(null=True, blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_customer', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_customer')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -196,7 +210,7 @@ class Activity(models.Model):
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_activity', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_activity')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -219,13 +233,34 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
 
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    Q(question__isnull=False, answer__isnull=True, meditation__isnull=True,
+                      research__isnull=True, customer__isnull=True, activity__isnull=True)
+                    | Q(question__isnull=True, answer__isnull=False, meditation__isnull=True,
+                        research__isnull=True, customer__isnull=True, activity__isnull=True)
+                    | Q(question__isnull=True, answer__isnull=True, meditation__isnull=False,
+                        research__isnull=True, customer__isnull=True, activity__isnull=True)
+                    | Q(question__isnull=True, answer__isnull=True, meditation__isnull=True,
+                        research__isnull=False, customer__isnull=True, activity__isnull=True)
+                    | Q(question__isnull=True, answer__isnull=True, meditation__isnull=True,
+                        research__isnull=True, customer__isnull=False, activity__isnull=True)
+                    | Q(question__isnull=True, answer__isnull=True, meditation__isnull=True,
+                        research__isnull=True, customer__isnull=True, activity__isnull=False)
+                ),
+                name='comment_exactly_one_target',
+            ),
+        ]
+
 
 class Gpt(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_gpt', null=True)
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_gpt', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_gpt')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -247,7 +282,7 @@ class GptAnswer(models.Model):
     gpt = models.ForeignKey(Gpt, on_delete=models.CASCADE)
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
-    voter = models.ManyToManyField(User, related_name='voter_gptanswer', null=True)
+    voter = models.ManyToManyField(User, related_name='voter_gptanswer')
 
     class Meta:
         permissions = [

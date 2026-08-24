@@ -51,12 +51,12 @@ class PersistenceTests(TestCase):
         self.assertEqual(persist_scripture(item), "skipped")
         self.assertFalse(Scripture.objects.exists())
 
-    def test_duplicate_date_does_not_overwrite_and_is_idempotent(self):
+    def test_existing_date_is_not_overwritten_and_is_idempotent(self):
         item = ParsedScripture(datetime.date(2026, 8, 23), "성구", "해설", "url")
         Scripture.objects.create(scripture="old", bodytext="old", real_date="2026-08-23")
-        self.assertEqual(persist_scripture(item), "inserted")
         self.assertEqual(persist_scripture(item), "skipped")
-        self.assertEqual(Scripture.objects.count(), 2)
+        self.assertEqual(persist_scripture(item), "skipped")
+        self.assertEqual(Scripture.objects.count(), 1)
 
     def test_weekly_deduplicates_specific_id_and_week(self):
         item = ParsedWeeklyBible(2026, 35, "주간", "범위", "https://wol.jw.org/x", "202026321")
