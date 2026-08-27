@@ -83,8 +83,8 @@
                     {{ scripture_list.paginator.count|sub:scripture_list.start_index|sub:forloop.counter0|add:1 }}
                 </td>
                 <td>
-                {% if scripture.voter.count > 0 %}
-                <span class="badge badge-warning px-2 py-1">{{ scripture.voter.count }}</span>
+                {% if scripture.num_voter > 0 %}
+                <span class="badge badge-warning px-2 py-1">{{ scripture.num_voter }}</span>
                 {% endif %}
                 </td>
                 <td class="text-right">
