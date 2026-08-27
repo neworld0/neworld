@@ -4,6 +4,32 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+def collapse_scripture_duplicates(apps, schema_editor):
+    """Keep one complete Scripture per date before the unique constraint is added."""
+    Scripture = apps.get_model("neworld", "Scripture")
+    Meditation = apps.get_model("neworld", "Meditation")
+    duplicate_dates = (
+        Scripture.objects.values("real_date")
+        .annotate(row_count=models.Count("id"))
+        .filter(row_count__gt=1)
+    )
+    for duplicate in duplicate_dates:
+        rows = list(Scripture.objects.filter(real_date=duplicate["real_date"]).order_by("id"))
+        keeper = max(
+            rows,
+            key=lambda row: (
+                bool(row.scripture and row.scripture.strip()),
+                bool(row.bodytext and row.bodytext.strip()),
+                len(row.scripture or ""),
+                len(row.bodytext or ""),
+                -row.id,
+            ),
+        )
+        duplicate_ids = [row.id for row in rows if row.id != keeper.id]
+        Meditation.objects.filter(scripture_id__in=duplicate_ids).update(scripture_id=keeper.id)
+        Scripture.objects.filter(id__in=duplicate_ids).delete()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -52,6 +78,7 @@ class Migration(migrations.Migration):
             name='voter',
             field=models.ManyToManyField(related_name='voter_research', to=settings.AUTH_USER_MODEL),
         ),
+        migrations.RunPython(collapse_scripture_duplicates, migrations.RunPython.noop),
         migrations.AddConstraint(
             model_name='bible',
             constraint=models.UniqueConstraint(fields=('bible_id',), name='bible_bible_id_uniq'),
