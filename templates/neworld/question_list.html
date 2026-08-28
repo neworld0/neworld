@@ -8,13 +8,13 @@
     <div class="row justify-content-between my-3">  <!-- 양쪽정렬 justify-content-between으로 변경 -->
         <div class="col-6">
             <div class="btn-group" role="group">
-              <button type="button" class="btn btn-sm btn-secondary so active" data-so="recent" data-original-title="최신순">
+              <button type="button" class="btn btn-sm btn-secondary so {% if so == 'recent' %}active{% endif %}" data-so="recent" data-original-title="최신순">
                   <i class="fas fa-list"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-secondary so " data-so="recommend" data-original-title="추천순">
+              <button type="button" class="btn btn-sm btn-secondary so {% if so == 'recommend' %}active{% endif %}" data-so="recommend" data-original-title="추천순">
                   <i class="fas fa-thumbs-up"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-secondary so " data-so="popular" data-original-title="인기순">
+              <button type="button" class="btn btn-sm btn-secondary so {% if so == 'popular' %}active{% endif %}" data-so="popular" data-original-title="인기순">
                   <i class="fas fa-fire"></i>
               </button>
             </div>
@@ -49,14 +49,14 @@
                 {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
             </td>
             <td>
-                {% if question.voter.all.count > 0 %}
-                <span class="badge badge-warning px-2 py-1">{{ question.voter.all.count }}</span>
+                {% if question.num_voter > 0 %}
+                <span class="badge bg-warning text-dark px-2 py-1">{{ question.num_voter }}</span>
                 {% endif %}
             </td>
             <td class="text-left">
                 <a href="{% url 'neworld:detail' question.id %}" style="text-decoration:none">{{ question.subject }}</a>
                 {% if question.answer_set.count > 0 %}
-                <span class="text-danger small ml-2">{{ question.answer_set.count }}</span>
+                    <span class="text-danger small ml-2">{{ question.num_answer }}</span>
                 {% endif %}
             </td>
             <td>{{ question.author.first_name }}</td>

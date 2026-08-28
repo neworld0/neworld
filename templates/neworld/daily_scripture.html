@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load neworld_filter %}
 {% block content %}
-<div class="container my-3">
+<div class="container editorial-page my-3">
     <!-- 사용자오류 표시 -->
     {% if messages %}
     <div class="alert alert-danger my-3" role="alert">
@@ -11,10 +11,11 @@
     {% endfor %}
     </div>
     {% endif %}
-    <h5 class="border-bottom py-2"><strong>{{ scripture.scripture }}</strong></h5>
+    <div class="editorial-kicker">DAILY SCRIPTURE · {{ scripture.real_date }}</div>
+    <h1 class="editorial-title">{{ scripture.scripture }}</h1>
     <div class="row my-3">
         <div class="col-12"> <!-- scripture 영역 -->
-            <div class="card">
+            <div class="card scripture-detail__body">
                 <div class="card-body">
                     <div class="card-text" style="white-space: pre-line;">{{ scripture.bodytext }}</div>
                     <div class="d-flex justify-content-end">
@@ -26,7 +27,7 @@
             </div>
         </div>
     </div>
-    <h5 class="border-bottom my-3 py-2">{{ scripture.meditation_set.count }}개의 일용할 성구 묵상이 있습니다.</h5>
+    <h5 class="border-bottom my-4 py-2">{{ scripture.meditation_set.count }}개의 일용할 성구 묵상이 있습니다.</h5>
     <a name="meditation_{{ meditation.id }}"></a>
     <form action="{% url 'neworld:meditation_create' scripture.id %}" method="post" class="my-3">
         {% csrf_token %}
@@ -50,7 +51,7 @@
     {% if meditation.group.id in group_list %}
     <div class="row my-3">
         <div class="col-11 p-1">  <!-- 묵상영역 -->
-            <div class="card">
+            <div class="card meditation-entry">
                 <div class="card-body">
                     <div class="card-text">{{ meditation.meditation|mark }}</div>
                     <div class="d-flex justify-content-end">

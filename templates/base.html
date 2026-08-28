@@ -10,7 +10,7 @@
     <!-- Bootstrap CSS -->
     <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet" type="text/css">
     <!-- neworld CSS -->
-    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'style.css' %}?v=20260828-editorial-2" rel="stylesheet" type="text/css">
     <title>NEWORLD</title>
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" >
@@ -92,24 +92,16 @@
     </svg>
 {% include "navbar.html" %}
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
-<main>
-<div class="container-fluid">
-    <div class="pt-3">
-        <p class="pt-3"></p>
-        <p class="pt-3"></p>
-    </div>
-</div>
+<main class="site-main">
 {% block content %}
 {% endblock %}
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
 </main>
-<footer class="container-fluid navbar-fixed-bottom">
-    <div class="border-top mt-3">
-        <div class="text-center">
+<footer class="site-footer">
+        <div class="container text-center">
             <span class="text-muted">Copyright © 2026 321son Family. All rights reserved.</span>
             <address class="text-muted">Contact webmaster for more information. <a href="mailto:neworld0@gmail.com"><i class="fa fa-envelope"></i></a></address>
         </div>
-    </div>
 </footer>
 <!-- jQuery JS -->
 <script src="{% static 'jquery-3.6.0.min.js' %}"></script>

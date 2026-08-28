@@ -1,66 +1,42 @@
 {% extends 'base.html' %}
 {% load neworld_filter %}
 {% block content %}
-<div class="container my-3">
-    <div class="border-bottom py-2">
-        <table class="table">
-            <thead>
-            <tr class="text-center table-dark">
-                <th class="text-right">날짜</th>
-                <th>  </th>
-                <th style="width:70%">오늘의 성구</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% if today_scripture %}
-                <tr class="text-right">
-                    <td>
-                        {{ today_scripture.real_date }}
-                    </td>
-                    <td class="text-left">
-                        {{ today_scripture.d_week }}
-                    </td>
-                    <td class="text-left">
-                        <a href="{% url 'neworld:daily_scripture' today_scripture.id %}" style="text-decoration:none">{{ today_scripture.scripture }}</a>
-                        {% if today_scripture.meditation_set.count > 0 %}
-                        <span class="text-danger small ml-2">{{ today_scripture.meditation_set.count }}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="3">성구가 없습니다.</td>
-                </tr>
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
-    <div class="row justify-content-between my-3">  <!-- 양쪽정렬 justify-content-between으로 변경 -->
-        <div class="col-6">
+<div class="container editorial-page my-3">
+    <div class="editorial-kicker">DAILY SCRIPTURE</div>
+    <h1 class="editorial-title">성구묵상</h1>
+    <section class="today-scripture">
+        <div class="today-scripture__label">오늘의 성구</div>
+        {% if today_scripture %}
+        <a class="today-scripture__verse" href="{% url 'neworld:daily_scripture' today_scripture.id %}">{{ today_scripture.scripture }}</a>
+        <div class="today-scripture__meta">{{ today_scripture.real_date }} · {{ today_scripture.d_week }}{% if today_scripture.meditation_set.count > 0 %} · 묵상 {{ today_scripture.meditation_set.count }}{% endif %}</div>
+        {% else %}
+        <div class="today-scripture__meta">등록된 성구가 없습니다.</div>
+        {% endif %}
+    </section>
+    <div class="list-toolbar">
+        <div>
             <div class="btn-group" role="group">
-              <button type="button" data-original-title="최신순" class="btn btn-sm btn-secondary so active" data-so="recent" >
+              <button type="button" data-original-title="최신순" class="btn btn-sm btn-secondary so {% if so == 'recent' %}active{% endif %}" data-so="recent" >
                   <i class="fas fa-list"></i>
               </button>
-              <button type="button" data-original-title="추천순" class="btn btn-sm btn-secondary so " data-so="recommend" >
+              <button type="button" data-original-title="추천순" class="btn btn-sm btn-secondary so {% if so == 'recommend' %}active{% endif %}" data-so="recommend" >
                   <i class="fas fa-thumbs-up"></i>
               </button>
-              <button type="button" data-original-title="인기순" class="btn btn-sm btn-secondary so " data-so="popular" >
+              <button type="button" data-original-title="인기순" class="btn btn-sm btn-secondary so {% if so == 'popular' %}active{% endif %}" data-so="popular" >
                   <i class="fas fa-fire"></i>
               </button>
             </div>
         </div>
-        <div class="col-6">
-            <div class="col-6 input-group input-group-sm">
+        <div class="input-group input-group-sm">
                 <input type="text" class="form-control form-control-sm kw" value="{{ kw|default_if_none:'' }}" onkeypress="return search(event)">
                 <div class="input-group-append">
                     <button class="btn btn-secondary" type="button" title="찾기" id="btn_search">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-            </div>
         </div>
     </div>
-    <table class="table">
+    <table class="table scripture-table">
         <thead>
         <tr class="text-center table-primary">
             <th>#</th>
@@ -74,25 +50,25 @@
         {% if scripture_list %}
             {% for scripture in scripture_list %}
             <tr class="text-center">
-                <td>
+                <td data-label="번호">
                     <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
                     {{ scripture_list.paginator.count|sub:scripture_list.start_index|sub:forloop.counter0|add:1 }}
                 </td>
-                <td>
+                <td data-label="추천">
                 {% if scripture.num_voter > 0 %}
                 <span class="badge bg-warning text-dark px-2 py-1">{{ scripture.num_voter }}</span>
                 {% endif %}
                 </td>
-                <td class="text-right">
+                <td class="text-right scripture-date" data-label="날짜">
                     {{ scripture.real_date }}
                 </td>
-                <td class="text-left">
+                <td class="text-left" data-label="요일">
                     {{ scripture.d_week }}
                 </td>
-                <td class="text-left">
+                <td class="text-left" data-label="성구">
                     <a href="{% url 'neworld:daily_scripture' scripture.id %}" style="text-decoration:none">{{ scripture.scripture }}</a>
                     {% if scripture.meditation_set.count > 0 %}
-                    <span class="text-danger small ml-2">{{ scripture.meditation_set.count }}</span>
+                    <span class="scripture-count ms-2">묵상 {{ scripture.meditation_set.count }}</span>
                     {% endif %}
                 </td>
             </tr>
