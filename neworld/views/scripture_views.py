@@ -19,14 +19,13 @@ def scripture(request):
     kw = request.GET.get('kw', '')  # 검색어
     so = request.GET.get('so', 'recent')  # 정렬기준
     d_today = str(datetime.date.today())
+    d_tomorrow = str(datetime.date.today() + datetime.timedelta(days=1))
+
+    scripture_list = Scripture.objects.annotate(num_voter=Count('meditation__voter'))
 
     # 정렬
-    if so == 'recommend':
-        scripture_list = Scripture.objects.annotate(num_voter=Count('meditation__voter'))
-    elif so == 'popular':
-        scripture_list = Scripture.objects.annotate(num_meditation=Count('meditation'))
-    else:  # recent
-        scripture_list = Scripture.objects.all()
+    if so == 'popular':
+        scripture_list = scripture_list.annotate(num_meditation=Count('meditation', distinct=True))
 
     # 검색
     if kw:
@@ -36,14 +35,19 @@ def scripture(request):
             Q(meditation__author__first_name__icontains=kw)  # 묵상 글쓴이검색
         ).distinct()
     scripture_list = scripture_list.annotate(
-        today_rank=Case(When(real_date=d_today, then=Value(0)), default=Value(1), output_field=IntegerField())
+        date_rank=Case(
+            When(real_date=d_tomorrow, then=Value(0)),
+            When(real_date=d_today, then=Value(1)),
+            default=Value(2),
+            output_field=IntegerField(),
+        )
     )
     if so == 'recommend':
-        scripture_list = scripture_list.order_by('today_rank', '-num_voter', '-create_date')
+        scripture_list = scripture_list.order_by('date_rank', '-num_voter', '-create_date')
     elif so == 'popular':
-        scripture_list = scripture_list.order_by('today_rank', '-num_meditation', '-create_date')
+        scripture_list = scripture_list.order_by('date_rank', '-num_meditation', '-create_date')
     else:
-        scripture_list = scripture_list.order_by('today_rank', '-create_date')
+        scripture_list = scripture_list.order_by('date_rank', '-create_date')
 
 
     # 페이징처리

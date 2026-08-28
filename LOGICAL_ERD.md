@@ -1,6 +1,6 @@
 # 논리 ERD
 
-기준: `common/models.py`, `neworld/models.py`의 **현재 모델 정의**와 최신 마이그레이션(`common` 0013, `neworld` 0025).  
+기준: `common/models.py`, `neworld/models.py`의 **현재 모델 정의**와 최신 마이그레이션(`common` 0013, `neworld` 0027).
 `User`, `Group`은 Django 기본 인증 모델(`auth_user`, `auth_group`)이며, 현재 마이그레이션의 기본키는 Django가 생성한 정수형 `id` (`AutoField`)이다.
 
 ```mermaid
@@ -30,29 +30,12 @@ erDiagram
     GROUP o|--o{ RESEARCH : "접근 그룹"
     USER }o--o{ RESEARCH : "투표"
 
-    USER o|--o{ CUSTOMER : "등록"
-    GROUP o|--o{ CUSTOMER : "접근 그룹"
-    USER }o--o{ CUSTOMER : "투표"
-    CUSTOMER ||--o{ ACTIVITY : "활동 이력"
-    USER o|--o{ ACTIVITY : "작성"
-    GROUP o|--o{ ACTIVITY : "접근 그룹"
-    USER }o--o{ ACTIVITY : "투표"
-
     USER o|--o{ COMMENT : "작성"
     GROUP o|--o{ COMMENT : "접근 그룹"
     QUESTION o|--o{ COMMENT : "댓글 대상"
     ANSWER o|--o{ COMMENT : "댓글 대상"
     MEDITATION o|--o{ COMMENT : "댓글 대상"
     RESEARCH o|--o{ COMMENT : "댓글 대상"
-    CUSTOMER o|--o{ COMMENT : "댓글 대상"
-    ACTIVITY o|--o{ COMMENT : "댓글 대상"
-
-    USER o|--o{ GPT : "작성"
-    GROUP o|--o{ GPT : "접근 그룹"
-    USER }o--o{ GPT : "투표"
-    GPT ||--o{ GPT_ANSWER : "응답"
-    USER }o--o{ GPT_ANSWER : "투표"
-
     USER {
         integer id PK
         varchar username UK
@@ -150,31 +133,6 @@ erDiagram
         datetime create_date
         datetime modify_date NULL
     }
-    CUSTOMER {
-        integer id PK
-        integer author_id FK_NULL
-        integer group_id FK_NULL
-        text area NULL
-        text name
-        text keyman
-        text position
-        varchar grade
-        text tel NULL
-        text address NULL
-        varchar email NULL
-        text remark NULL
-        datetime create_date
-        datetime modify_date NULL
-    }
-    ACTIVITY {
-        integer id PK
-        integer customer_id FK
-        integer author_id FK_NULL
-        integer group_id FK_NULL
-        text content
-        datetime create_date
-        datetime modify_date NULL
-    }
     COMMENT {
         integer id PK
         integer author_id FK_NULL
@@ -183,25 +141,9 @@ erDiagram
         integer answer_id FK_NULL
         integer meditation_id FK_NULL
         integer research_id FK_NULL
-        integer customer_id FK_NULL
-        integer activity_id FK_NULL
         text content
         datetime create_date
         datetime modify_date NULL
-    }
-    GPT {
-        integer id PK
-        integer author_id FK_NULL
-        integer group_id FK_NULL
-        text content
-        datetime create_date
-        datetime modify_date NULL
-    }
-    GPT_ANSWER {
-        integer id PK
-        integer gpt_id FK
-        text content
-        datetime create_date
     }
 ```
 
@@ -211,10 +153,10 @@ erDiagram
 |---|---|---|
 | `User`–`Profile` | 1 : 0..1 | 사용자 생성 시 시그널로 Profile 생성. User 삭제 시 Profile 삭제(CASCADE). |
 | `User`–`Group` | N : M | Django 기본 `auth_user_groups` 연결 테이블. |
-| 작성자·그룹 연결 | 부모 1 : 자식 0..N | `Question`, `Answer`, `Meditation`, `Research`, `Customer`, `Activity`, `Comment`, `Gpt`의 FK는 nullable이며 CASCADE. |
-| 투표자 연결 | `User` N : M 게시물 | `Question`, `Answer`, `Meditation`, `Research`, `Customer`, `Activity`, `Gpt`, `GptAnswer`별 자동 연결 테이블이 생성됨. |
-| 콘텐츠 부모–자식 | 부모 1 : 자식 0..N | `Question`–`Answer`, `Scripture`–`Meditation`, `Customer`–`Activity`, `Gpt`–`GptAnswer`은 자식의 부모 FK가 필수이고 CASCADE. `WeeklyBible`/`Bible`에서 `WBsummary`·`PubsIndex`·`Research`로 향하는 FK는 선택 사항이다. |
-| `Comment`–대상 | 대상 0..1 : 댓글 0..N | 대상 FK 6개 중 정확히 하나만 연결되도록 `comment_exactly_one_target` CHECK 제약을 둠. |
+| 작성자·그룹 연결 | 부모 1 : 자식 0..N | `Question`, `Answer`, `Meditation`, `Research`, `Comment`의 FK는 nullable이며 CASCADE. |
+| 투표자 연결 | `User` N : M 게시물 | `Question`, `Answer`, `Meditation`, `Research`별 자동 연결 테이블이 생성됨. |
+| 콘텐츠 부모–자식 | 부모 1 : 자식 0..N | `Question`–`Answer`, `Scripture`–`Meditation`은 자식의 부모 FK가 필수이고 CASCADE. `WeeklyBible`/`Bible`에서 `WBsummary`·`PubsIndex`·`Research`로 향하는 FK는 선택 사항이다. |
+| `Comment`–대상 | 대상 0..1 : 댓글 0..N | 대상 FK 4개 중 정확히 하나만 연결되도록 `comment_exactly_one_target` CHECK 제약을 둠. |
 
 ## 설계상 확인할 점
 

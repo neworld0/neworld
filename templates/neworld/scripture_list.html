@@ -12,25 +12,21 @@
             </tr>
             </thead>
             <tbody>
-            {% if scripture_list %}
-                {% for scripture in scripture_list %}
-                    {% if scripture.real_date == d_today %}
-                    <tr class="text-right">
-                        <td>
-                            {{ scripture.real_date }}
-                        </td>
-                        <td class="text-left">
-                            {{ scripture.d_week }}
-                        </td>
-                        <td class="text-left">
-                            <a href="{% url 'neworld:daily_scripture' scripture.id %}" style="text-decoration:none">{{ scripture.scripture }}</a>
-                            {% if scripture.meditation_set.count > 0 %}
-                            <span class="text-danger small ml-2">{{ scripture.meditation_set.count }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% endfor %}
+            {% if today_scripture %}
+                <tr class="text-right">
+                    <td>
+                        {{ today_scripture.real_date }}
+                    </td>
+                    <td class="text-left">
+                        {{ today_scripture.d_week }}
+                    </td>
+                    <td class="text-left">
+                        <a href="{% url 'neworld:daily_scripture' today_scripture.id %}" style="text-decoration:none">{{ today_scripture.scripture }}</a>
+                        {% if today_scripture.meditation_set.count > 0 %}
+                        <span class="text-danger small ml-2">{{ today_scripture.meditation_set.count }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
             {% else %}
                 <tr>
                     <td colspan="3">성구가 없습니다.</td>
@@ -84,7 +80,7 @@
                 </td>
                 <td>
                 {% if scripture.num_voter > 0 %}
-                <span class="badge badge-warning px-2 py-1">{{ scripture.num_voter }}</span>
+                <span class="badge bg-warning text-dark px-2 py-1">{{ scripture.num_voter }}</span>
                 {% endif %}
                 </td>
                 <td class="text-right">

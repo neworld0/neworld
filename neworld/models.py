@@ -184,39 +184,6 @@ class Research(models.Model):
         return reverse("neworld:weeklybible_detail", kwargs={"pk": self.pk})
 
 
-class Customer(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_customer', null=True)
-    area = models.TextField(null=True, blank=True)
-    name = models.TextField()
-    keyman = models.TextField()
-    position = models.TextField()
-    grade = models.CharField(max_length=2)
-    tel = models.TextField(null=True, blank=True)
-    address = models.TextField(null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    remark = models.TextField(null=True, blank=True)
-    create_date = models.DateTimeField(auto_now_add=True)
-    modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_customer')
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Activity(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_activity', null=True)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    content = models.TextField()
-    create_date = models.DateTimeField(auto_now_add=True)
-    modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_activity')
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return self.content
-
-
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     content = models.TextField()
@@ -226,8 +193,6 @@ class Comment(models.Model):
     answer = models.ForeignKey(Answer, null=True, blank=True, on_delete=models.CASCADE)
     meditation = models.ForeignKey(Meditation, null=True, blank=True, on_delete=models.CASCADE)
     research = models.ForeignKey(Research, null=True, blank=True, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.CASCADE)
-    activity = models.ForeignKey(Activity, null=True, blank=True, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -238,62 +203,14 @@ class Comment(models.Model):
             models.CheckConstraint(
                 check=(
                     Q(question__isnull=False, answer__isnull=True, meditation__isnull=True,
-                      research__isnull=True, customer__isnull=True, activity__isnull=True)
+                      research__isnull=True)
                     | Q(question__isnull=True, answer__isnull=False, meditation__isnull=True,
-                        research__isnull=True, customer__isnull=True, activity__isnull=True)
+                        research__isnull=True)
                     | Q(question__isnull=True, answer__isnull=True, meditation__isnull=False,
-                        research__isnull=True, customer__isnull=True, activity__isnull=True)
+                        research__isnull=True)
                     | Q(question__isnull=True, answer__isnull=True, meditation__isnull=True,
-                        research__isnull=False, customer__isnull=True, activity__isnull=True)
-                    | Q(question__isnull=True, answer__isnull=True, meditation__isnull=True,
-                        research__isnull=True, customer__isnull=False, activity__isnull=True)
-                    | Q(question__isnull=True, answer__isnull=True, meditation__isnull=True,
-                        research__isnull=True, customer__isnull=True, activity__isnull=False)
+                        research__isnull=False)
                 ),
                 name='comment_exactly_one_target',
             ),
         ]
-
-
-class Gpt(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_gpt', null=True)
-    content = models.TextField()
-    create_date = models.DateTimeField(auto_now_add=True)
-    modify_date = models.DateTimeField(null=True, blank=True)
-    voter = models.ManyToManyField(User, related_name='voter_gpt')
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
-
-    class Meta:
-        permissions = [
-            ('can_publish', 'Can Publish Posts'),
-            ('can_change', 'Can Change Posts'),
-            ('can_view', 'Can View Posts'),
-            ('can_delete', 'Can Delete Posts'),
-        ]
-
-    def __str__(self):
-        return self.content
-
-    def get_absolute_url(self):
-        return reverse("neworld:gpt_list", kwargs={"pk": self.pk})
-
-
-class GptAnswer(models.Model):
-    gpt = models.ForeignKey(Gpt, on_delete=models.CASCADE)
-    content = models.TextField()
-    create_date = models.DateTimeField(auto_now_add=True)
-    voter = models.ManyToManyField(User, related_name='voter_gptanswer')
-
-    class Meta:
-        permissions = [
-            ('can_publish', 'Can Publish Posts'),
-            ('can_change', 'Can Change Posts'),
-            ('can_view', 'Can View Posts'),
-            ('can_delete', 'Can Delete Posts'),
-        ]
-
-    def __str__(self):
-        return self.content
-
-    def get_absolute_url(self):
-        return reverse("neworld:gpt_detail", kwargs={"pk": self.pk})

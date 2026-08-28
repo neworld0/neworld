@@ -13,7 +13,7 @@ from neworld.services.crawler import persist_scripture
 from neworld.services.scripture_parser import parse_yearly_scripture_texts
 from neworld.services.wol_client import WolClientError
 from neworld.models import Question, Scripture, Answer, Meditation, Comment, WeeklyBible, \
-    Research, Bible, WBsummary, PubsIndex, Customer, Gpt, GptAnswer
+    Research, Bible, WBsummary, PubsIndex
 
 
 # class UserAdmin(admin.ModelAdmin):
@@ -167,20 +167,3 @@ class PubsIndexAdmin(admin.ModelAdmin):
 
 admin.site.register(PubsIndex, PubsIndexAdmin)
 
-
-class CustomerAdmin(admin.ModelAdmin):
-    search_fields = ['name']
-
-admin.site.register(Customer, CustomerAdmin)
-
-
-class GptAdmin(admin.ModelAdmin):
-    search_fields = ['content']
-
-admin.site.register(Gpt, GptAdmin)
-
-
-class GptAnswerAdmin(admin.ModelAdmin):
-    search_fields = ['content']
-
-admin.site.register(GptAnswer, GptAnswerAdmin)
