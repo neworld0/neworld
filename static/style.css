@@ -73,8 +73,11 @@ a:hover { color: #28483a; }
     .scripture-table td:nth-child(2) { position: absolute; top: .85rem; right: 1rem; display: block; width: auto; padding: 0; }
     .scripture-table td:nth-child(2)::before { display: none; }
     .scripture-table td:nth-child(3) { padding-right: 3.5rem; }
-    .scripture-table td:nth-child(5) { margin-top: .35rem; font-size: 1rem; }
-    .scripture-count { display: block; width: fit-content; margin: .45rem 0 0 !important; }
+    .scripture-table td:nth-child(5) { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); column-gap: .4rem; align-items: start; margin-top: .35rem; font-size: 1rem; }
+    .scripture-table td:nth-child(5)::before { grid-column: 1; margin-right: 0; }
+    .scripture-title-line { display: flex; grid-column: 2; align-items: flex-end; gap: .65rem; min-width: 0; }
+    .scripture-title-line > a { flex: 1 1 auto; min-width: 0; }
+    .scripture-table .scripture-count { display: inline-block; flex: 0 0 auto; width: auto; margin: 0 !important; white-space: nowrap; }
     .scripture-table td[colspan] { display: block; }
     .pagination .page-link { padding: .45rem .65rem; }
     .site-footer { padding-bottom: 1rem; }

@@ -35,6 +35,7 @@ class ScriptureListViewTests(TestCase):
             if scripture.id == self.recommended.id)
         self.assertEqual(recommended.num_voter, 1)
         self.assertContains(response, 'badge bg-warning text-dark px-2 py-1')
+        self.assertContains(response, 'scripture-title-line')
 
     def test_keyword_search_does_not_query_missing_scripture_author(self):
         response = self.client.get(reverse('neworld:scripture'), {'kw': '추천'})

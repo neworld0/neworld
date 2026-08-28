@@ -66,10 +66,12 @@
                     {{ scripture.d_week }}
                 </td>
                 <td class="text-left" data-label="성구">
+                    <div class="scripture-title-line">
                     <a href="{% url 'neworld:daily_scripture' scripture.id %}" style="text-decoration:none">{{ scripture.scripture }}</a>
                     {% if scripture.meditation_set.count > 0 %}
                     <span class="scripture-count ms-2">묵상 {{ scripture.meditation_set.count }}</span>
                     {% endif %}
+                    </div>
                 </td>
             </tr>
             {% endfor %}
