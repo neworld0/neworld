@@ -36,7 +36,7 @@ class CrawlerViewTests(TestCase):
 
         response = self.client.get(reverse("index"))
 
-        self.assertContains(response, "말씀과 묵상을 나누는")
+        self.assertContains(response, "일용할 성구와 묵상을 나누는")
         self.assertNotContains(response, "비공개 성구")
         self.assertNotContains(response, "비공개 본문")
 
