@@ -1,0 +1,22 @@
+[project]
+name = "neworld"
+version = "0.1.0"
+description = "NEWORLD Django application"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "beautifulsoup4==4.15.0",
+    "Django==4.2.30",
+    "Markdown==3.10.3",
+    "requests==2.34.2",
+    "six==1.17.0",
+]
+
+[dependency-groups]
+production = [
+    "django-environ>=0.11,<1",
+    "gunicorn>=21,<24",
+    "psycopg2-binary>=2.9,<3",
+]
+worker = [
+    "celery>=5.4,<6",
+]
