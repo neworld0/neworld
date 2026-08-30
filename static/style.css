@@ -52,6 +52,19 @@ a:hover { color: #28483a; }
 .scripture-detail__body .card-text { font-family: Georgia, "Noto Serif KR", serif; font-size: 1.05rem; line-height: 1.9; }
 .meditation-entry { margin-bottom: 1rem; border-left: 3px solid #b8c7b3; }
 .meditation-entry .card-body { padding: 1.25rem; }
+.home-editorial { max-width: 760px; padding-top: clamp(1.5rem, 6vw, 4.5rem); }
+.home-editorial__intro { padding-bottom: 2rem; }
+.home-editorial__intro .editorial-title { text-align: center; }
+.home-editorial__title-link { color: inherit; font-size: .9em; text-decoration: none; }
+.home-editorial__title-link:hover { color: var(--nw-green); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+.home-editorial__notice { border: 0; border-radius: 0; }
+.home-scripture-card { padding: clamp(1.35rem, 4vw, 2.25rem); background: var(--nw-wash); border-left: 4px solid var(--nw-gold); }
+.home-scripture-card__meta { margin-bottom: .75rem; color: var(--nw-gold); font-size: .82rem; font-weight: 700; letter-spacing: .04em; }
+.home-scripture-card__verse { margin: 0; color: var(--nw-ink); font-family: Georgia, "Noto Serif KR", serif; font-size: clamp(1.3rem, 3.6vw, 2rem); font-weight: 700; line-height: 1.5; }
+.home-scripture-card__body { margin-top: 1.15rem; color: var(--nw-ink); font-family: Georgia, "Noto Serif KR", serif; font-size: 1.03rem; line-height: 1.9; white-space: pre-line; }
+.home-scripture-card__action { margin-top: 1.5rem; }
+.home-welcome { max-width: 610px; padding: clamp(2.25rem, 10vw, 7rem) 0; }
+.home-welcome__copy { max-width: 30rem; margin: 0 0 1.75rem; color: var(--nw-muted); font-size: 1rem; line-height: 1.8; }
 
 @media (max-width: 991.98px) { .site-navbar .offcanvas { background: var(--nw-paper); } .site-navbar .offcanvas-header { border-bottom: 1px solid var(--nw-line); } }
 @media (max-width: 575.98px) {
@@ -60,6 +73,8 @@ a:hover { color: #28483a; }
     .brand-word { font-size: 1.05rem; }
     .card-body { padding: 1.15rem; }
     .editorial-title { font-size: 1.7rem; }
+    .home-editorial { padding-top: 2rem; }
+    .home-welcome { padding: 3.5rem 0; }
     .today-scripture { padding: 1.15rem; }
     .today-scripture__verse { font-size: 1.12rem; }
     .list-toolbar { align-items: stretch; flex-direction: column; }

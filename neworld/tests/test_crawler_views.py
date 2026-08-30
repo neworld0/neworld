@@ -28,6 +28,32 @@ class CrawlerViewTests(TestCase):
         response = self.client.get(reverse("index"))
         self.assertTrue(response.context["scripture_is_fallback"])
 
+    @patch("neworld.views.base_views.prefetch_future_scriptures")
+    def test_home_keeps_scripture_private_for_guests(self, prefetch):
+        today = datetime.date.today().isoformat()
+        Scripture.objects.create(
+            scripture="비공개 성구", bodytext="비공개 본문", real_date=today, d_week="일")
+
+        response = self.client.get(reverse("index"))
+
+        self.assertContains(response, "말씀과 묵상을 나누는")
+        self.assertNotContains(response, "비공개 성구")
+        self.assertNotContains(response, "비공개 본문")
+
+    @patch("neworld.views.base_views.prefetch_future_scriptures")
+    def test_home_shows_editorial_scripture_card_to_authenticated_user(self, prefetch):
+        today = datetime.date.today().isoformat()
+        Scripture.objects.create(
+            scripture="오늘의 성구", bodytext="오늘의 본문", real_date=today, d_week="일")
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("index"))
+
+        self.assertContains(response, "Examining the Scriptures Daily")
+        self.assertContains(response, "오늘의 성구")
+        self.assertContains(response, "오늘의 본문")
+        self.assertContains(response, reverse("neworld:scripture"))
+
     @patch("requests.get", side_effect=AssertionError("view attempted network"))
     def test_weekly_failure_cannot_hide_saved_rows(self, unused):
         self.client.force_login(self.user)
