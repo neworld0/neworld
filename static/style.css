@@ -33,6 +33,11 @@ a:hover { color: #28483a; }
 .table > :not(caption) > * > * { padding: .9rem .75rem; }
 .table-primary, .table-dark { --bs-table-bg: var(--nw-wash) !important; --bs-table-color: var(--nw-ink) !important; }
 .pagination { --bs-pagination-color: var(--nw-green); --bs-pagination-border-color: var(--nw-line); --bs-pagination-hover-color: #fff; --bs-pagination-hover-bg: var(--nw-green); --bs-pagination-hover-border-color: var(--nw-green); --bs-pagination-active-bg: var(--nw-green); --bs-pagination-active-border-color: var(--nw-green); }
+.editorial-pagination { gap: .35rem; margin: 1.75rem 0 0; }
+.editorial-pagination .page-link { min-width: 2.25rem; padding: .45rem .55rem; border: 1px solid var(--nw-line); border-radius: 0; background: #fffdf8; color: var(--nw-green); font-size: .86rem; font-weight: 700; line-height: 1.2; text-align: center; }
+.editorial-pagination .page-item:not(.active):not(.disabled) .page-link:hover { background: var(--nw-green); border-color: var(--nw-green); color: #fff; }
+.editorial-pagination .page-item.active .page-link { background: var(--nw-green); border-color: var(--nw-green); color: #fff; box-shadow: 0 3px 8px rgba(65, 101, 79, .22); }
+.editorial-pagination .page-item.disabled .page-link { background: transparent; color: #a9afa8; }
 .comment { border-top: 1px solid var(--nw-line); color: var(--nw-muted); font-size: .82rem; }
 .editorial-page { padding-bottom: 2rem; }
 .editorial-kicker { color: var(--nw-gold); font-size: .73rem; font-weight: 700; letter-spacing: .12em; }
@@ -95,6 +100,7 @@ a:hover { color: #28483a; }
     .scripture-title-line > a { flex: 1 1 auto; min-width: 0; }
     .scripture-table .scripture-count { display: inline-block; flex: 0 0 auto; width: auto; margin: 0 !important; white-space: nowrap; }
     .scripture-table td[colspan] { display: block; }
-    .pagination .page-link { padding: .45rem .65rem; }
+    .editorial-pagination { gap: .25rem; }
+    .editorial-pagination .page-link { min-width: 1.9rem; padding: .4rem .3rem; }
     .site-footer { padding-bottom: 1rem; }
 }

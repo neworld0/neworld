@@ -32,3 +32,14 @@ class QuestionListViewTests(TestCase):
         questions = list(response.context['question_list'].object_list)
         self.assertEqual(questions[0], self.popular)
         self.assertEqual(questions[0].num_answer, 2)
+
+    def test_pagination_has_at_most_eight_controls(self):
+        Question.objects.bulk_create([
+            Question(author=self.author, subject='질문 %s' % number, content='내용')
+            for number in range(80)
+        ])
+
+        response = self.client.get(reverse('neworld:question'), {'page': 5})
+
+        self.assertContains(response, 'editorial-pagination')
+        self.assertEqual(response.content.count(b'class="page-item'), 10)

@@ -72,3 +72,16 @@ class ScriptureListViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '항상 보이는 오늘 성구')
         self.assertEqual(response.context['scripture_list'].number, 2)
+
+    def test_pagination_has_at_most_eight_controls(self):
+        start_date = datetime.date(2020, 1, 1)
+        Scripture.objects.bulk_create([
+            Scripture(scripture='성구 %s' % day, bodytext='본문',
+                      real_date=(start_date + datetime.timedelta(days=day)).isoformat())
+            for day in range(80)
+        ])
+
+        response = self.client.get(reverse('neworld:scripture'), {'page': 5})
+
+        self.assertContains(response, 'editorial-pagination')
+        self.assertEqual(response.content.count(b'class="page-item'), 10)
