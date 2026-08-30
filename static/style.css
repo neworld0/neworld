@@ -73,6 +73,7 @@ a:hover { color: #28483a; }
     .brand-word { font-size: 1.05rem; }
     .card-body { padding: 1.15rem; }
     .editorial-title { font-size: 1.7rem; }
+    .home-editorial__title-link { font-size: clamp(1.1rem, 5.4vw, 1.35rem); white-space: nowrap; }
     .home-editorial { padding-top: 2rem; }
     .home-welcome { padding: 3.5rem 0; }
     .today-scripture { padding: 1.15rem; }
