@@ -15,6 +15,19 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
+# TLS is terminated by Nginx, which forwards X-Forwarded-Proto from its
+# verified connection scheme. Keep authentication cookies on HTTPS only.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Start with a short HSTS lifetime. Increase it only after sustained HTTPS
+# verification; do not enable subdomain inclusion or preload implicitly.
+SECURE_HSTS_SECONDS = 300
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
